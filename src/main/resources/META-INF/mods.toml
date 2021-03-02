@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[35,)"
+license="All rights reserved"
+[[mods]]
+modId="carlettosmod"
+version="${file.jarVersion}"
+displayName="Carlettos' mod"
+credits="Creditos a mi madre"
+authors="Carlettos"
+description='''
+nya~
+'''
+[[dependencies.carlettosmod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[35,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.carlettosmod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
+    ordering="NONE"
+    side="BOTH"
