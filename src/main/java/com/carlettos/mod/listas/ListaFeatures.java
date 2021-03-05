@@ -1,4 +1,4 @@
-package com.carlettos.mod;
+package com.carlettos.mod.listas;
 
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;

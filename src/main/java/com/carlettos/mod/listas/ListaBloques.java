@@ -1,4 +1,4 @@
-package com.carlettos.mod;
+package com.carlettos.mod.listas;
 
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
