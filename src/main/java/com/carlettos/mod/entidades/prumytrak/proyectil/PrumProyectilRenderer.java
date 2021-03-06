@@ -20,8 +20,8 @@ public class PrumProyectilRenderer extends EntityRenderer<PrumProyectilEntity> {
 	@Override
 	public void render(PrumProyectilEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
-		System.out.println("Rendering");
 		matrixStackIn.push();
+		matrixStackIn.translate(0, -1.375F, 0);
 		IVertexBuilder ivertex = bufferIn.getBuffer(this.modelo.getRenderType(PRUM_PROYECTILE_TEXTURE));
 		this.modelo.render(matrixStackIn, ivertex, packedLightIn, packedLightIn, packedLightIn, entityYaw, partialTicks, packedLightIn);
 		this.modelo.setRotationAngles(entityIn, 0, 0, 0, entityIn.getYaw(partialTicks), entityIn.getPitch(partialTicks));

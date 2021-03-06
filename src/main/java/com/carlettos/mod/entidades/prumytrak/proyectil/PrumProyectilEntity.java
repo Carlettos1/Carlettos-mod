@@ -8,9 +8,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class PrumProyectilEntity extends AbstractArrowEntity{
@@ -26,11 +26,25 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	public PrumProyectilEntity(World worldIn, LivingEntity shooter) {
 		super(ListaEntidades.prum_proyectil, shooter, worldIn);
 	}
-
+	
 	@Override
-	public void handleStatusUpdate(byte id) {
-		System.out.println(this.getPosX() + ", " + this.getPosY() + ", " + this.getPosZ());
-		this.world.addParticle(ParticleTypes.END_ROD, this.getPosX(), this.getPosY(), this.getPosZ(), 0, 0, 0);
+	protected void func_225516_i_() {
+		this.remove();
+	}
+	
+	
+	@Override
+	public void tick() {
+		if(this.world.isRemote) {
+			for (int i = 0; i < 3; i++) {
+	            float f1 = this.rand.nextFloat() * ((float)Math.PI * 2F);
+	            float f2 = MathHelper.sqrt(this.rand.nextFloat()) * 0.2F;
+	            float f3 = MathHelper.cos(f1) * f2;
+	            float f4 = MathHelper.sin(f1) * f2;
+				this.world.addParticle(ParticleTypes.PORTAL, this.getPosX() + f3, this.getPosY(), this.getPosZ() + f4, 0, 0, 0);
+			}
+		}
+		super.tick();
 	}
 
 	@Override
