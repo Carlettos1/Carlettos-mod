@@ -1,4 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak;
+package com.carlettos.mod.entidades.prumytrak.ia;
+
+import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -64,7 +66,7 @@ public class PrumTrakLookController extends LookController {
 	public void tick() {
 		if (this.shouldResetPitch()) {
 			this.entity.rotationPitch = 0;
-			this.entity.setRotationPitch(0);
+			this.entity.setRotationPitchCabeza2(0);
 		}
 
 		if (this.isLooking) {
@@ -77,20 +79,20 @@ public class PrumTrakLookController extends LookController {
 
 			this.entity.rotationPitch = this.clampedRotate(this.entity.rotationPitch, this.getTargetPitch(),
 					this.deltaLookPitch);
-			this.entity.setRotationPitch(this.clampedRotate(this.entity.getRotationPitch(),
+			this.entity.setRotationPitchCabeza2(this.clampedRotate(this.entity.getRotationPitchCabeza2(),
 					this.getTargetPitchCabeza2(), this.deltaLookPitch));
 		} else {
 			this.entity.rotationYawHead = this.clampedRotate(this.entity.rotationYawHead, this.entity.renderYawOffset,
 					10F);
 			this.entity.setRotationYawHead(
-					this.clampedRotate(this.entity.getRotationYawHead(), this.entity.getRenderYawOffset(), 10F));
+					this.clampedRotate(this.entity.getRotationYawHead(), this.entity.getRenderYawOffsetCabeza2(), 10F));
 		}
 
 		if (!this.entity.getNavigator().noPath()) {
 			this.entity.rotationYawHead = MathHelper.func_219800_b(this.entity.rotationYawHead,
 					this.entity.renderYawOffset, this.entity.getHorizontalFaceSpeed());
 			this.entity.setRotationYawHead(MathHelper.func_219800_b(this.entity.getRotationYawHead(),
-					this.entity.getRenderYawOffset(), this.entity.getHorizontalFaceSpeed()));
+					this.entity.getRenderYawOffsetCabeza2(), this.entity.getHorizontalFaceSpeed()));
 		}
 	}
 

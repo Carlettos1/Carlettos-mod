@@ -1,4 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak;
+package com.carlettos.mod.entidades.prumytrak.ia;
+
+import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.entity.ai.controller.BodyController;
 import net.minecraft.util.math.MathHelper;
@@ -18,7 +20,7 @@ public class PrumTrakBodyController extends BodyController {
 	public void updateRenderAngles() {
 		if (this.hasMovidoUnPoco()) {
 			this.entity.renderYawOffset = this.entity.rotationYaw;
-			this.entity.setRenderYawOffSet(this.entity.rotationYaw);
+			this.entity.setRenderYawOffSetCabeza2(this.entity.rotationYaw);
 			
 			this.cambiarRotationYawHead();
 			
@@ -47,8 +49,8 @@ public class PrumTrakBodyController extends BodyController {
 				this.entity.rotationYawHead, 
 				(float) this.entity.getHorizontalFaceSpeed());
 		
-		this.entity.setRenderYawOffSet(MathHelper.func_219800_b(
-				this.entity.getRenderYawOffset(),
+		this.entity.setRenderYawOffSetCabeza2(MathHelper.func_219800_b(
+				this.entity.getRenderYawOffsetCabeza2(),
 				this.entity.getRotationYawHead(), 
 				(float) this.entity.getHorizontalFaceSpeed()));
 	}
@@ -61,7 +63,7 @@ public class PrumTrakBodyController extends BodyController {
 		
 		this.entity.setRotationYawHead(MathHelper.func_219800_b(
 				this.entity.getRotationYawHead(),
-				this.entity.getRenderYawOffset(), 
+				this.entity.getRenderYawOffsetCabeza2(), 
 				(float) this.entity.getHorizontalFaceSpeed()));
 	}
 
@@ -73,8 +75,8 @@ public class PrumTrakBodyController extends BodyController {
 				this.entity.renderYawOffset, 
 				this.entity.rotationYawHead, 
 				f1);
-		this.entity.setRenderYawOffSet(MathHelper.func_219800_b(
-				this.entity.getRenderYawOffset(),
+		this.entity.setRenderYawOffSetCabeza2(MathHelper.func_219800_b(
+				this.entity.getRenderYawOffsetCabeza2(),
 				this.entity.getRotationYawHead(), 
 				f1));
 	}

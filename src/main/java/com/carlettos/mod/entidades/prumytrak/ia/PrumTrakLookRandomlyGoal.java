@@ -1,4 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak;
+package com.carlettos.mod.entidades.prumytrak.ia;
+
+import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;

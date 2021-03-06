@@ -2,6 +2,8 @@ package com.carlettos.mod;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRender;
+import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
+import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilRenderer;
 import com.carlettos.mod.listas.ListaBloques;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaFeatures;
@@ -44,9 +46,10 @@ public class CarlettosMod {
 		});
 	}
 	
-	//@SubscribeEvent
+	@SubscribeEvent
 	public void clientSetup(FMLClientSetupEvent evento) {
-		RenderingRegistry.registerEntityRenderingHandler(ListaEntidades.prum_y_trak, PrumTrakRender::new);
+		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.prum_y_trak, PrumTrakRender::new);
+		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.prum_proyectil, PrumProyectilRenderer::new);
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Util.MOD_ID)
@@ -57,6 +60,8 @@ public class CarlettosMod {
 			ListaItem.bola_ender_corrupta.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
 			ListaItem.bloque_ender_corrupto.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
 			ListaItem.prum_y_trak_spawn_egg.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
+			ListaItem.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
+			
 			ListaItem.runa_aman.setRegistryName(Util.getResLoc("runa_aman"));
 			ListaItem.runa_dur.setRegistryName(Util.getResLoc("runa_dur"));
 			ListaItem.runa_ersa.setRegistryName(Util.getResLoc("runa_ersa"));
@@ -73,9 +78,12 @@ public class CarlettosMod {
 			ListaItem.runa_sila.setRegistryName(Util.getResLoc("runa_sila"));
 			ListaItem.runa_trak.setRegistryName(Util.getResLoc("runa_trak"));
 			ListaItem.runa_unk.setRegistryName(Util.getResLoc("runa_unk"));
+			
 			event.getRegistry().register(ListaItem.bola_ender_corrupta);
 			event.getRegistry().register(ListaItem.bloque_ender_corrupto);
 			event.getRegistry().register(ListaItem.prum_y_trak_spawn_egg);
+			event.getRegistry().register(ListaItem.prum_proyectil);
+			
 			event.getRegistry().register(ListaItem.runa_aman);
 			event.getRegistry().register(ListaItem.runa_dur);
 			event.getRegistry().register(ListaItem.runa_ersa);
@@ -108,7 +116,9 @@ public class CarlettosMod {
 		@SubscribeEvent
 		public static void entidades(RegistryEvent.Register<EntityType<?>> evento) {
 			ListaEntidades.prum_y_trak.setRegistryName(Util.getResLoc("prum_y_trak"));
+			ListaEntidades.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
 			evento.getRegistry().register(ListaEntidades.prum_y_trak);
+			evento.getRegistry().register(ListaEntidades.prum_proyectil);
 		}
 	}
 }

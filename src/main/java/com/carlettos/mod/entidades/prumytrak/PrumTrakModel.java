@@ -172,14 +172,14 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 						entity.rotationPitch);
 		
 		float yaw2 = (interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRotationYawHead(), 
+						entity.getPrevRotationYawHeadCabeza2(), 
 						entity.getRotationYawHead())
 					- interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRenderYawOffset(), 
-						entity.getRenderYawOffset()));
+						entity.getPrevRenderYawOffsetCabeza2(), 
+						entity.getRenderYawOffsetCabeza2()));
 		float pitch2 = MathHelper.lerp(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRotationPitch(), 
-						entity.getRotationPitch());
+						entity.getPrevRotationPitchCabeza2(), 
+						entity.getRotationPitchCabeza2());
 		
 		this.cabezaderecha.rotateAngleX = pitch1 * (float)Math.PI/180f;
 		this.cabezaderecha.rotateAngleY = yaw1 * (float)Math.PI/180f;
