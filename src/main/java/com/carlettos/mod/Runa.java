@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.BowItem;
+import net.minecraft.item.EnderPearlItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
@@ -48,21 +49,22 @@ public class Runa extends Item{
 				PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.prum_proyectil).createArrow(worldIn, new ItemStack(ListaItem.prum_proyectil), playerIn);
 				proyectil.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, 3, 1);
 				
-				proyectil.setDamage(proyectil.getDamage() + 2D);
+				proyectil.setDamage(proyectil.getDamage() + 1D);
 				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_rudu))) {
-					proyectil.setDamage(proyectil.getDamage() + 2D);
+					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
 				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_unk))) {
-					proyectil.setDamage(proyectil.getDamage() + 2D);
+					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
 				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_mih))) {
-					proyectil.setDamage(proyectil.getDamage() + 2D);
+					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
 				proyectil.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
 				worldIn.addEntity(proyectil);
 			}
 			worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1F, 1F);
 			playerIn.addStat(Stats.ITEM_USED.get(this));
+			playerIn.getCooldownTracker().setCooldown(this, 20);
 			return ActionResult.resultConsume(playerIn.getHeldItem(handIn));
 		}
 		return ActionResult.resultPass(playerIn.getHeldItem(handIn));

@@ -21,5 +21,8 @@
   
   "block.carlettosmod.bloque_ender_corrupto": "Corrupted Ender Block",
   
+  "entity.carlettosmod.prum_y_trak": "Prum and Trak",
+  "entity.carlettosmod.prum_proyectil": "Prum Projectile",
+  
   "itemGroup.carlettosmodtab" : "Carlettos' Mod"
 }

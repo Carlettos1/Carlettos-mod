@@ -2,20 +2,26 @@ package com.carlettos.mod;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRender;
+import com.carlettos.mod.entidades.prumytrak.particulas.PrumProyectilParticle;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilRenderer;
 import com.carlettos.mod.listas.ListaBloques;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaFeatures;
 import com.carlettos.mod.listas.ListaItem;
+import com.carlettos.mod.listas.ListaParticulas;
 import com.carlettos.mod.util.Util;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -33,23 +39,30 @@ public class CarlettosMod {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
-
-	@SubscribeEvent
-	public void biomasCargando(BiomeLoadingEvent ble) {
-		ble.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> ListaFeatures.ore_bloque_ender_corrupto);
-	}
 	
-	//@SubscribeEvent
 	public void commonSetup(FMLCommonSetupEvent evento) {
 		evento.enqueueWork(() -> {
 			GlobalEntityTypeAttributes.put(ListaEntidades.prum_y_trak, PrumTrakEntity.getAtributos().create());
 		});
 	}
 	
-	@SubscribeEvent
 	public void clientSetup(FMLClientSetupEvent evento) {
 		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.prum_y_trak, PrumTrakRender::new);
 		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.prum_proyectil, PrumProyectilRenderer::new);
+	}
+
+	@SubscribeEvent
+	public static void biomasCargando(BiomeLoadingEvent ble) {
+		ble.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> ListaFeatures.ore_bloque_ender_corrupto);
+	}
+	
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Util.MOD_ID, value = Dist.CLIENT)
+	public static class RegistrosCliente {
+		@SuppressWarnings("resource")
+		@SubscribeEvent
+		public static void particulas(ParticleFactoryRegisterEvent evento) {
+			Minecraft.getInstance().particles.registerFactory(ListaParticulas.prum_proyectil.getType(), PrumProyectilParticle.Factory::new);
+		}
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Util.MOD_ID)
@@ -119,6 +132,12 @@ public class CarlettosMod {
 			ListaEntidades.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
 			evento.getRegistry().register(ListaEntidades.prum_y_trak);
 			evento.getRegistry().register(ListaEntidades.prum_proyectil);
+		}
+		
+		@SubscribeEvent
+		public static void particulas(RegistryEvent.Register<ParticleType<?>> evento) {
+			ListaParticulas.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
+			evento.getRegistry().register(ListaParticulas.prum_proyectil);
 		}
 	}
 }
