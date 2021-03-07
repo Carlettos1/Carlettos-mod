@@ -8,12 +8,15 @@ Prum y Trak
 : una especie de ogro de 2 cabezas.
 
 Prum
-: La cabeza izquierda (vista de frente), la que está enojada, es el encargado de ataques a distancia.
+: La cabeza izquierda (vista de frente), la que está enojada, es el encargado de ataques a distancia. Ataca directamente al jugador que cumpla con la condición de ataque más cercano utilizando su propio proyectil. Además, lanza 10 - 30 proyectiles con dirección aleatoria, dependiendo de la fase en la que se encuentre.
 
 Trak
 : La cabeza derecha (vista de frente), la que tiene un solo ojo, es el encargado de ataques a melé.
 
 # Items
+
+1. Prum y Trak SpawnEgg.
+2. Prum Proyectil
 
 >Runas
 
@@ -40,6 +43,10 @@ Por orden de su alfabeto, estas son:
 16. Runa Unk
 
 # Extras
+
+>Partículas
+
+1. Partícula del proyectil de prum, la cual es la runa prum.
 
 >Letras
 
