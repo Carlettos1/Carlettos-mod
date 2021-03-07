@@ -14,6 +14,7 @@ import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAreaAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
+import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.listas.ListaParticulas;
@@ -141,15 +142,15 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	
 	public void ataqueEnArea(double radio) {
 		if(!this.world.isRemote) {
-			for(int i = 0; i < 4 * radio * radio; i++) {
-				double r = this.getRNG().nextDouble() * radio;
-				double phi = this.getRNG().nextDouble() * 2D * Math.PI;
-				double theta = this.getRNG().nextDouble() * Math.PI / 2D;
-				double x = r * Math.sin(theta) * Math.cos(phi);
-				double y = r * Math.cos(theta);
-				double z = r * Math.sin(theta) * Math.sin(phi);
+			for(int i = 0; i < radio * radio * radio * 4; i++) {
+				double x = 2D * radio * (0.5D - this.getRNG().nextDouble());
+				double y = radio * this.getRNG().nextDouble();
+				double z = 2D * radio * (0.5D - this.getRNG().nextDouble());
 				((ServerWorld)this.world).spawnParticle(ListaParticulas.prum_proyectil, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 0, 0, 0, 0, 0);
 			}
+			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), null).forEach((entidad) -> {
+				entidad.attackEntityFrom(ListaDamageSources.TRAK_AOE(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+			});;
 		}
 	}
 	
