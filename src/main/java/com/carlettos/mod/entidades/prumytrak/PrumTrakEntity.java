@@ -10,10 +10,13 @@ import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakBodyControll
 import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakLookController;
 import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRandomRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAreaAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaItem;
+import com.carlettos.mod.listas.ListaParticulas;
 
 import net.minecraft.command.arguments.EntityAnchorArgument.Type;
 import net.minecraft.entity.Entity;
@@ -28,12 +31,15 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvents;
@@ -44,6 +50,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 
 /* 
@@ -83,8 +90,10 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new PrumTrakLookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new PrumTrakLookAtGoal(this, PlayerEntity.class, 20));
-		this.goalSelector.addGoal(4, new PrumRangedAttackGoal(this, 1D, 20, 32F));
-		this.goalSelector.addGoal(5, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(3, new TrakMeleAreaAttackGoal(this, 7D, 20));
+		this.goalSelector.addGoal(4, new TrakMeleAttackGoal(this, 1D, true));
+		this.goalSelector.addGoal(5, new PrumRangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
 
 		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, TARGET_RUNE_PLAYER));
 	}
@@ -128,6 +137,20 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	@Override
 	protected void updateAITasks() {
 		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+	}
+	
+	public void ataqueEnArea(double radio) {
+		if(!this.world.isRemote) {
+			for(int i = 0; i < 4 * radio * radio; i++) {
+				double r = this.getRNG().nextDouble() * radio;
+				double phi = this.getRNG().nextDouble() * 2D * Math.PI;
+				double theta = this.getRNG().nextDouble() * Math.PI / 2D;
+				double x = r * Math.sin(theta) * Math.cos(phi);
+				double y = r * Math.cos(theta);
+				double z = r * Math.sin(theta) * Math.sin(phi);
+				((ServerWorld)this.world).spawnParticle(ListaParticulas.prum_proyectil, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 0, 0, 0, 0, 0);
+			}
+		}
 	}
 	
 	public void attackRandomly(int quantity) {
@@ -301,6 +324,14 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			this.setFase(3);
 		}
 		this.world.getProfiler().endSection();
+		if(this.isInWater()) {
+			if(this.getAttackTarget() != null) {
+				this.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 2, 3));
+				LivingEntity target = this.getAttackTarget();
+				this.setMotion(new Vector3d(target.getPosX() - this.getPosX(), 0, target.getPosZ() - this.getPosZ()).normalize());
+				this.jump();
+			}
+		}
 	}
 
 	@Override
