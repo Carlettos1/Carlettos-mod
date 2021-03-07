@@ -3,11 +3,14 @@ package com.carlettos.mod.entidades.prumytrak;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakBodyController;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakLookAtGoal;
-import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakLookController;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakLookRandomlyGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakNearestAttackableTargetGoal;
+import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakBodyController;
+import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakLookController;
+import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRandomRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaItem;
@@ -20,8 +23,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.BodyController;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -82,10 +83,10 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new PrumTrakLookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new PrumTrakLookAtGoal(this, PlayerEntity.class, 20));
-		this.goalSelector.addGoal(4, new RangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(4, new PrumRangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(5, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
 
-		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, TARGET_RUNE_PLAYER));
+		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, TARGET_RUNE_PLAYER));
 	}
 
 	@Override
@@ -128,6 +129,20 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	protected void updateAITasks() {
 		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
 	}
+	
+	public void attackRandomly(int quantity) {
+		for(;quantity > 0; quantity--) {
+			PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.prum_proyectil).createArrow(this.world, new ItemStack(ListaItem.prum_proyectil), this);
+			double phi = this.getRNG().nextDouble() * 2D * Math.PI;
+			double theta = this.getRNG().nextDouble() * Math.PI;
+			double x = Math.sin(theta) * Math.cos(phi);
+			double y = Math.cos(theta);
+			double z = Math.sin(theta) * Math.sin(phi);
+			proyectil.shoot(x, y, z, 1.6F, 0);
+			this.world.addEntity(proyectil);
+		}
+		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1);
+	}
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
@@ -141,7 +156,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.world.addEntity(abstractArrowEntity);
 	}
 	
-	public float getFase() {
+	public int getFase() {
 		return this.dataManager.get(FASE);
 	}
 	

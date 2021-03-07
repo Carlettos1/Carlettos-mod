@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.prumytrak.ia;
+package com.carlettos.mod.entidades.prumytrak.ia.controllers;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 

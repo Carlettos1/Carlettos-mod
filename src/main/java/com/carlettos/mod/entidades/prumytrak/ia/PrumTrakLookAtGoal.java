@@ -1,6 +1,7 @@
 package com.carlettos.mod.entidades.prumytrak.ia;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
+import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakLookController;
 
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
