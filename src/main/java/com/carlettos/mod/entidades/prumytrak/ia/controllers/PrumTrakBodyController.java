@@ -20,7 +20,7 @@ public class PrumTrakBodyController extends BodyController {
 	public void updateRenderAngles() {
 		if (this.hasMovidoUnPoco()) {
 			this.entity.renderYawOffset = this.entity.rotationYaw;
-			this.entity.setRenderYawOffSetCabeza2(this.entity.rotationYaw);
+			this.entity.setRenderYawOffsetCabeza2(this.entity.rotationYaw);
 			
 			this.cambiarRotationYawHead();
 			
@@ -49,7 +49,7 @@ public class PrumTrakBodyController extends BodyController {
 				this.entity.rotationYawHead, 
 				(float) this.entity.getHorizontalFaceSpeed());
 		
-		this.entity.setRenderYawOffSetCabeza2(MathHelper.func_219800_b(
+		this.entity.setRenderYawOffsetCabeza2(MathHelper.func_219800_b(
 				this.entity.getRenderYawOffsetCabeza2(),
 				this.entity.getRotationYawHead(), 
 				(float) this.entity.getHorizontalFaceSpeed()));
@@ -75,7 +75,7 @@ public class PrumTrakBodyController extends BodyController {
 				this.entity.renderYawOffset, 
 				this.entity.rotationYawHead, 
 				f1);
-		this.entity.setRenderYawOffSetCabeza2(MathHelper.func_219800_b(
+		this.entity.setRenderYawOffsetCabeza2(MathHelper.func_219800_b(
 				this.entity.getRenderYawOffsetCabeza2(),
 				this.entity.getRotationYawHead(), 
 				f1));

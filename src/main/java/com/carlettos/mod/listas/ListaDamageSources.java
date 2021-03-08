@@ -1,6 +1,6 @@
 package com.carlettos.mod.listas;
 
-import com.carlettos.mod.TrakAOEDamageSource;
+import com.carlettos.mod.damagesources.TrakAOEDamageSource;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.util.DamageSource;

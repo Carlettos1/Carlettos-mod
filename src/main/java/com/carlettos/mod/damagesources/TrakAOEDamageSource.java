@@ -1,4 +1,4 @@
-package com.carlettos.mod;
+package com.carlettos.mod.damagesources;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 

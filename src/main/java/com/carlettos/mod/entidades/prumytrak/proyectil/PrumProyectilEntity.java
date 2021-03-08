@@ -12,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,28 +28,57 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class PrumProyectilEntity extends AbstractArrowEntity{
+	public static final DataParameter<BlockPos> TARGET_BLOCKPOS = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BLOCK_POS);
+	public static final DataParameter<Float> ACELERACION = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.FLOAT);
+	public static final DataParameter<Boolean> HAS_TARGET = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BOOLEAN);
 
 	public PrumProyectilEntity(EntityType<? extends AbstractArrowEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
 	
 	public PrumProyectilEntity(World worldIn, double x, double y, double z) {
-		 super(ListaEntidades.prum_proyectil, x, y, z, worldIn);
+		 super(ListaEntidades.PRUM_PROYECTIL, x, y, z, worldIn);
 	}
 	
 	public PrumProyectilEntity(World worldIn, LivingEntity shooter) {
-		super(ListaEntidades.prum_proyectil, shooter, worldIn);
+		super(ListaEntidades.PRUM_PROYECTIL, shooter, worldIn);
+	}
+	
+	public PrumProyectilEntity(World worldIn, LivingEntity shooter, LivingEntity target, float aceleracion) {
+		super(ListaEntidades.PRUM_PROYECTIL, shooter, worldIn);
+		this.dataManager.set(HAS_TARGET, true);
+		this.dataManager.set(TARGET_BLOCKPOS, target.getPosition());
+		this.dataManager.set(ACELERACION, aceleracion);
+	}
+	
+	public BlockPos getTargetPos() {
+		return this.dataManager.get(TARGET_BLOCKPOS);
+	}
+	
+	public float getAceleracion() {
+		return this.dataManager.get(ACELERACION);
+	}
+	
+	public boolean hasTarget() {
+		return this.dataManager.get(HAS_TARGET);
+	}
+	
+	@Override
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(TARGET_BLOCKPOS, new BlockPos(0, 0, 0));
+		this.dataManager.register(ACELERACION, 0F);
+		this.dataManager.register(HAS_TARGET, false);
 	}
 	
 	@Override
 	protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
-		super.onEntityHit(p_213868_1_);
+		super.onEntityHit(p_213868_1_); //TODO: reescribir esto para cambiar damageSources y comportamientos
 	}
 	
-	//onBlockHit
 	@Override
 	protected void func_230299_a_(BlockRayTraceResult p_230299_1_) {
-		this.remove();
+		this.remove(); //onBlockHit
 	}
 	
 	@Override
@@ -54,7 +86,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		this.remove();
 	}
 	
-	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void tick() {
 		if (!this.world.isRemote) {
@@ -120,7 +152,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		double velz = motion.z;
 		
 		for(double i = 0; i < 10; i++) {
-			this.world.addParticle(ListaParticulas.prum_proyectil, this.getPosX() + velx * i / 10D, this.getPosY() + vely * i / 10D + 0.125F, this.getPosZ() + velz * i / 10D, -velx, -vely + 0.2D, -velz);
+			this.world.addParticle(ListaParticulas.PRUM_PARTICULA, this.getPosX() + velx * i / 10D, this.getPosY() + vely * i / 10D + 0.125F, this.getPosZ() + velz * i / 10D, -velx, -vely + 0.2D, -velz);
 		}
 		double xfinal = this.getPosX() + velx;
 		double yfinal = this.getPosY() + vely;
@@ -139,19 +171,23 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 				this.world.addParticle(ParticleTypes.BUBBLE, xfinal - velx * 0.25D, yfinal - vely * 0.25D, zfinal - velz * 0.25D, velx, vely, velz);
 			}
 		}
-
-		if (!this.hasNoGravity() && !flag) {
-			Vector3d vector3d4 = this.getMotion();
-			this.setMotion(vector3d4.x, vector3d4.y, vector3d4.z);
+		
+		Vector3d vector3d4 = this.getMotion();
+		
+		if(this.hasTarget()) {
+			BlockPos target = this.getTargetPos();
+			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), 2 * (target.getY() - this.getPosY()), target.getZ() - this.getPosZ()).normalize().scale((1 + this.ticksExisted / 10D) * this.getAceleracion());
+			
+			vector3d4 = vector3d4.add(radioVector);
 		}
-
+		this.setMotion(vector3d4.x, vector3d4.y, vector3d4.z);
 		this.setPosition(xfinal, yfinal, zfinal);
 		this.doBlockCollisions();
 	}
 
 	@Override
 	protected ItemStack getArrowStack() {
-		return new ItemStack(ListaItem.prum_proyectil);
+		return new ItemStack(ListaItem.PRUM_PROYECTIL);
 	}
 	
 	@Override

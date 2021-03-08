@@ -6,17 +6,15 @@ import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.util.math.MathHelper;
 
-public class PrumRangedAttackGoal extends RangedAttackGoal{
+public class PrumRangedAttackGoal extends Goal{
 	private PrumTrakEntity entity;
 	private int attackTime;
 	private int aps;
 	private float rango;
 
 	public PrumRangedAttackGoal(PrumTrakEntity attacker, double movespeed, int attackTime, float ditanciaAtaque) {
-		super(attacker, movespeed, attackTime, ditanciaAtaque);
 		this.entity = attacker;
 		this.aps = attackTime;
 		this.rango = ditanciaAtaque;
@@ -56,12 +54,10 @@ public class PrumRangedAttackGoal extends RangedAttackGoal{
 		boolean flag = this.entity.getEntitySenses().canSee(target);
 		
 		this.entity.getLookController().setLookPositionWithEntity(target, 30F, 30F);
-		System.out.println(attackTime);
 		if(--this.attackTime <= 0) {
 			if(!flag) {
 				return;
 			}
-			
 			double f = d0 / this.rango;
 			double f1 = MathHelper.clamp(f, 0.1D, 1D);
 			this.entity.attackEntityWithRangedAttack(target, (float)f1);

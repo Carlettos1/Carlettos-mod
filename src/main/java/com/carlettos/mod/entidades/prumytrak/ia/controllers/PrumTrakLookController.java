@@ -57,9 +57,6 @@ public class PrumTrakLookController extends LookController {
 		this.posYCabeza2 = y;
 		this.posZCabeza2 = z;
 		this.isLooking = true;
-		// System.out.println(entity.getPosX() + ", " + entity.getPosYEye() + ", " +
-		// entity.getPosZ());
-		// System.out.println(x + ", " + y + ", " + z);
 	}
 
 	@Override

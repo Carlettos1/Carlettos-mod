@@ -6,20 +6,16 @@ import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
 
-public class PrumRandomRangedAttackGoal extends RangedAttackGoal{
+public class PrumRandomRangedAttackGoal extends Goal{
 	private PrumTrakEntity entity;
 	private int attackTime;
 	private int aps;
-	private float rango;
 	
 	public PrumRandomRangedAttackGoal(PrumTrakEntity attacker, double movespeed, int maxAttackTime,
 			float maxAttackDistanceIn) {
-		super(attacker, movespeed, maxAttackTime, maxAttackDistanceIn);
 		this.entity = attacker;
 		this.aps = maxAttackTime;
-		this.rango = maxAttackDistanceIn;
 		this.setMutexFlags(EnumSet.noneOf(Goal.Flag.class));
 	}
 	
@@ -51,7 +47,6 @@ public class PrumRandomRangedAttackGoal extends RangedAttackGoal{
 	
 	@Override
 	public void tick() {
-		System.out.println(attackTime);
 		if(--this.attackTime <= 0) {
 			this.entity.attackRandomly(10 * this.entity.getFase());
 			this.attackTime = aps;

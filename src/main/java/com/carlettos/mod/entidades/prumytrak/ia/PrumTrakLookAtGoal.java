@@ -1,22 +1,31 @@
 package com.carlettos.mod.entidades.prumytrak.ia;
 
+import java.util.EnumSet;
+
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakLookController;
 
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class PrumTrakLookAtGoal extends LookAtGoal{
+public class PrumTrakLookAtGoal extends Goal{
 	protected final PrumTrakEntity entity;
+	protected LivingEntity closestEntity;
+	protected final float maxDistance;
 	protected int lookTime;
 	protected final EntityPredicate predicate;
+	protected final float chance;
+	protected final Class<? extends LivingEntity> watchedClass;
 
 	public PrumTrakLookAtGoal(PrumTrakEntity entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance) {
-		super(entityIn, watchTargetClass, maxDistance);
 		this.entity = entityIn;
+		this.watchedClass = watchTargetClass;
+		this.maxDistance = maxDistance;
 		this.predicate = new EntityPredicate().setDistance(maxDistance).allowFriendlyFire().allowInvulnerable().setSkipAttackChecks();
+		this.chance = 0.2F;
+		this.setMutexFlags(EnumSet.of(Goal.Flag.LOOK));
 	}
 	
 	@Override
@@ -59,8 +68,9 @@ public class PrumTrakLookAtGoal extends LookAtGoal{
 	
 	@Override
 	public void tick() {
-		this.entity.getLookController().setLookPosition(this.closestEntity.getPosX(), this.closestEntity.getPosYEye(), this.closestEntity.getPosZ());
-		((PrumTrakLookController)this.entity.getLookController()).setLookPositionCabeza2(this.closestEntity.getPosX(), this.closestEntity.getPosYEye(), this.closestEntity.getPosZ());
+		PrumTrakLookController lookController = (PrumTrakLookController) this.entity.getLookController();
+		lookController.setLookPosition(this.closestEntity.getPosX(), this.closestEntity.getPosYEye(), this.closestEntity.getPosZ());
+		lookController.setLookPositionCabeza2(this.closestEntity.getPosX(), this.closestEntity.getPosYEye(), this.closestEntity.getPosZ());
 		--this.lookTime;
 	}
 }

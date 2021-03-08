@@ -2,24 +2,25 @@ package com.carlettos.mod;
 
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRender;
-import com.carlettos.mod.entidades.prumytrak.particulas.PrumProyectilParticle;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilRenderer;
+import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaBloques;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaFeatures;
 import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.listas.ListaParticulas;
+import com.carlettos.mod.particulas.ParticulaGenericaInmovil;
 import com.carlettos.mod.util.Util;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,18 +43,18 @@ public class CarlettosMod {
 	
 	public void commonSetup(FMLCommonSetupEvent evento) {
 		evento.enqueueWork(() -> {
-			GlobalEntityTypeAttributes.put(ListaEntidades.prum_y_trak, PrumTrakEntity.getAtributos().create());
+			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_Y_TRAK, PrumTrakEntity.getAtributos().create());
 		});
 	}
 	
 	public void clientSetup(FMLClientSetupEvent evento) {
-		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.prum_y_trak, PrumTrakRender::new);
-		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.prum_proyectil, PrumProyectilRenderer::new);
+		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_Y_TRAK, PrumTrakRender::new);
+		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_PROYECTIL, PrumProyectilRenderer::new);
 	}
 
 	@SubscribeEvent
-	public static void biomasCargando(BiomeLoadingEvent ble) {
-		ble.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> ListaFeatures.ore_bloque_ender_corrupto);
+	public void biomasCargando(BiomeLoadingEvent ble) {
+		ble.getGeneration().getFeatures(Decoration.UNDERGROUND_ORES).add(() -> ListaFeatures.ORE_BLOQUE_ENDER_CORRUPTO);
 	}
 	
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Util.MOD_ID, value = Dist.CLIENT)
@@ -61,7 +62,8 @@ public class CarlettosMod {
 		@SuppressWarnings("resource")
 		@SubscribeEvent
 		public static void particulas(ParticleFactoryRegisterEvent evento) {
-			Minecraft.getInstance().particles.registerFactory(ListaParticulas.prum_proyectil.getType(), PrumProyectilParticle.Factory::new);
+			Minecraft.getInstance().particles.registerFactory(ListaParticulas.PRUM_PARTICULA, ParticulaGenericaInmovil.Factory::new);
+			Minecraft.getInstance().particles.registerFactory(ListaParticulas.TRAK_PARTICULA, ParticulaGenericaInmovil.Factory::new);
 		}
 	}
 
@@ -70,74 +72,77 @@ public class CarlettosMod {
 
 		@SubscribeEvent
 		public static void items(RegistryEvent.Register<Item> event) {
-			ListaItem.bola_ender_corrupta.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
-			ListaItem.bloque_ender_corrupto.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
-			ListaItem.prum_y_trak_spawn_egg.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
-			ListaItem.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
+			ListaItem.BOLA_ENDER_CORRUPTA.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
+			ListaItem.BLOQUE_ENDER_CORRUPTO.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
+			ListaItem.PRUM_Y_TRAK_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
+			ListaItem.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
 			
-			ListaItem.runa_aman.setRegistryName(Util.getResLoc("runa_aman"));
-			ListaItem.runa_dur.setRegistryName(Util.getResLoc("runa_dur"));
-			ListaItem.runa_ersa.setRegistryName(Util.getResLoc("runa_ersa"));
-			ListaItem.runa_fen.setRegistryName(Util.getResLoc("runa_fen"));
-			ListaItem.runa_hul.setRegistryName(Util.getResLoc("runa_hul"));
-			ListaItem.runa_ior.setRegistryName(Util.getResLoc("runa_ior"));
-			ListaItem.runa_kel.setRegistryName(Util.getResLoc("runa_kel"));
-			ListaItem.runa_lir.setRegistryName(Util.getResLoc("runa_lir"));
-			ListaItem.runa_mih.setRegistryName(Util.getResLoc("runa_mih"));
-			ListaItem.runa_nak.setRegistryName(Util.getResLoc("runa_nak"));
-			ListaItem.runa_oshi.setRegistryName(Util.getResLoc("runa_oshi"));
-			ListaItem.runa_prum.setRegistryName(Util.getResLoc("runa_prum"));
-			ListaItem.runa_rudu.setRegistryName(Util.getResLoc("runa_rudu"));
-			ListaItem.runa_sila.setRegistryName(Util.getResLoc("runa_sila"));
-			ListaItem.runa_trak.setRegistryName(Util.getResLoc("runa_trak"));
-			ListaItem.runa_unk.setRegistryName(Util.getResLoc("runa_unk"));
+			ListaItem.RUNA_AMAN.setRegistryName(Util.getResLoc("runa_aman"));
+			ListaItem.RUNA_DUR.setRegistryName(Util.getResLoc("runa_dur"));
+			ListaItem.RUNA_ERSA.setRegistryName(Util.getResLoc("runa_ersa"));
+			ListaItem.RUNA_FEN.setRegistryName(Util.getResLoc("runa_fen"));
+			ListaItem.RUNA_HUL.setRegistryName(Util.getResLoc("runa_hul"));
+			ListaItem.RUNA_IOR.setRegistryName(Util.getResLoc("runa_ior"));
+			ListaItem.RUNA_KEL.setRegistryName(Util.getResLoc("runa_kel"));
+			ListaItem.RUNA_LIR.setRegistryName(Util.getResLoc("runa_lir"));
+			ListaItem.RUNA_MIH.setRegistryName(Util.getResLoc("runa_mih"));
+			ListaItem.RUNA_NAK.setRegistryName(Util.getResLoc("runa_nak"));
+			ListaItem.RUNA_OSHI.setRegistryName(Util.getResLoc("runa_oshi"));
+			ListaItem.RUNA_PRUM.setRegistryName(Util.getResLoc("runa_prum"));
+			ListaItem.RUNA_RUDU.setRegistryName(Util.getResLoc("runa_rudu"));
+			ListaItem.RUNA_SILA.setRegistryName(Util.getResLoc("runa_sila"));
+			ListaItem.RUNA_TRAK.setRegistryName(Util.getResLoc("runa_trak"));
+			ListaItem.RUNA_UNK.setRegistryName(Util.getResLoc("runa_unk"));
 			
-			event.getRegistry().register(ListaItem.bola_ender_corrupta);
-			event.getRegistry().register(ListaItem.bloque_ender_corrupto);
-			event.getRegistry().register(ListaItem.prum_y_trak_spawn_egg);
-			event.getRegistry().register(ListaItem.prum_proyectil);
+			event.getRegistry().register(ListaItem.BOLA_ENDER_CORRUPTA);
+			event.getRegistry().register(ListaItem.BLOQUE_ENDER_CORRUPTO);
+			event.getRegistry().register(ListaItem.PRUM_Y_TRAK_SPAWN_EGG);
+			event.getRegistry().register(ListaItem.PRUM_PROYECTIL);
 			
-			event.getRegistry().register(ListaItem.runa_aman);
-			event.getRegistry().register(ListaItem.runa_dur);
-			event.getRegistry().register(ListaItem.runa_ersa);
-			event.getRegistry().register(ListaItem.runa_fen);
-			event.getRegistry().register(ListaItem.runa_hul);
-			event.getRegistry().register(ListaItem.runa_ior);
-			event.getRegistry().register(ListaItem.runa_kel);
-			event.getRegistry().register(ListaItem.runa_lir);
-			event.getRegistry().register(ListaItem.runa_mih);
-			event.getRegistry().register(ListaItem.runa_nak);
-			event.getRegistry().register(ListaItem.runa_oshi);
-			event.getRegistry().register(ListaItem.runa_prum);
-			event.getRegistry().register(ListaItem.runa_rudu);
-			event.getRegistry().register(ListaItem.runa_sila);
-			event.getRegistry().register(ListaItem.runa_trak);
-			event.getRegistry().register(ListaItem.runa_unk);
+			event.getRegistry().register(ListaItem.RUNA_AMAN);
+			event.getRegistry().register(ListaItem.RUNA_DUR);
+			event.getRegistry().register(ListaItem.RUNA_ERSA);
+			event.getRegistry().register(ListaItem.RUNA_FEN);
+			event.getRegistry().register(ListaItem.RUNA_HUL);
+			event.getRegistry().register(ListaItem.RUNA_IOR);
+			event.getRegistry().register(ListaItem.RUNA_KEL);
+			event.getRegistry().register(ListaItem.RUNA_LIR);
+			event.getRegistry().register(ListaItem.RUNA_MIH);
+			event.getRegistry().register(ListaItem.RUNA_NAK);
+			event.getRegistry().register(ListaItem.RUNA_OSHI);
+			event.getRegistry().register(ListaItem.RUNA_PRUM);
+			event.getRegistry().register(ListaItem.RUNA_RUDU);
+			event.getRegistry().register(ListaItem.RUNA_SILA);
+			event.getRegistry().register(ListaItem.RUNA_TRAK);
+			event.getRegistry().register(ListaItem.RUNA_UNK);
 		}
 
 		@SubscribeEvent
 		public static void bloques(RegistryEvent.Register<Block> evento) {
-			ListaBloques.bloque_ender_corrupto.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
-			evento.getRegistry().register(ListaBloques.bloque_ender_corrupto);
-		}
-
-		@SubscribeEvent
-		public static void features(RegistryEvent.Register<Feature<?>> evento) {
-			//evento.getRegistry().register(ListaFeatures.ore_bloque_ender_corrupto.feature);
+			ListaBloques.BLOQUE_ENDER_CORRUPTO.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
+			evento.getRegistry().register(ListaBloques.BLOQUE_ENDER_CORRUPTO);
 		}
 		
 		@SubscribeEvent
 		public static void entidades(RegistryEvent.Register<EntityType<?>> evento) {
-			ListaEntidades.prum_y_trak.setRegistryName(Util.getResLoc("prum_y_trak"));
-			ListaEntidades.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
-			evento.getRegistry().register(ListaEntidades.prum_y_trak);
-			evento.getRegistry().register(ListaEntidades.prum_proyectil);
+			ListaEntidades.PRUM_Y_TRAK.setRegistryName(Util.getResLoc("prum_y_trak"));
+			ListaEntidades.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
+			evento.getRegistry().register(ListaEntidades.PRUM_Y_TRAK);
+			evento.getRegistry().register(ListaEntidades.PRUM_PROYECTIL);
 		}
 		
 		@SubscribeEvent
 		public static void particulas(RegistryEvent.Register<ParticleType<?>> evento) {
-			ListaParticulas.prum_proyectil.setRegistryName(Util.getResLoc("prum_proyectil"));
-			evento.getRegistry().register(ListaParticulas.prum_proyectil);
+			ListaParticulas.PRUM_PARTICULA.setRegistryName(Util.getResLoc("prum_particula"));
+			ListaParticulas.TRAK_PARTICULA.setRegistryName(Util.getResLoc("trak_particula"));
+			evento.getRegistry().register(ListaParticulas.PRUM_PARTICULA);
+			evento.getRegistry().register(ListaParticulas.TRAK_PARTICULA);
+		}
+		
+		@SubscribeEvent
+		public static void atributos(RegistryEvent.Register<Attribute> evento) {
+			ListaAtributos.AOE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("aoe_attack_damage"));
+			evento.getRegistry().register(ListaAtributos.AOE_ATTACK_DAMAGE);
 		}
 	}
 }

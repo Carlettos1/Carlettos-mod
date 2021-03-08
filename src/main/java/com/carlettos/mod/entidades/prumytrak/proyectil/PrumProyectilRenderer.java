@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
 public class PrumProyectilRenderer extends EntityRenderer<PrumProyectilEntity> {
-	private static final ResourceLocation PRUM_PROYECTILE_TEXTURE = Util.getResLoc("textures/entity/prum_proyectil.png");
+	public static final ResourceLocation PRUM_PROYECTILE_TEXTURE = Util.getResLoc("textures/entity/prum_proyectil.png");
 	private final PrumProyectilModel modelo = new PrumProyectilModel();
 	
 	public PrumProyectilRenderer(EntityRendererManager renderManagerIn) {
@@ -22,7 +22,7 @@ public class PrumProyectilRenderer extends EntityRenderer<PrumProyectilEntity> {
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
 		matrixStackIn.push();
 		matrixStackIn.translate(0, -1.375F, 0);
-		IVertexBuilder ivertex = bufferIn.getBuffer(this.modelo.getRenderType(PRUM_PROYECTILE_TEXTURE));
+		IVertexBuilder ivertex = bufferIn.getBuffer(this.modelo.getRenderType(this.getEntityTexture(entityIn)));
 		this.modelo.render(matrixStackIn, ivertex, packedLightIn, packedLightIn, packedLightIn, entityYaw, partialTicks, packedLightIn);
 		this.modelo.setRotationAngles(entityIn, 0, 0, 0, entityIn.getYaw(partialTicks), entityIn.getPitch(partialTicks));
 		matrixStackIn.pop();

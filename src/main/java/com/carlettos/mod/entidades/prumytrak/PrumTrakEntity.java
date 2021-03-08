@@ -14,6 +14,7 @@ import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAreaAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
+import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaItem;
@@ -24,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.BodyController;
@@ -31,10 +33,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -45,7 +44,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
@@ -59,9 +57,9 @@ import net.minecraftforge.common.ForgeHooks;
  * Trak es el que ataca a melé, el de su lado izquierdo
  */
 public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
-	public static final Set<Item> RUNAS_PRUM = Set.of(ListaItem.runa_prum, ListaItem.runa_rudu, ListaItem.runa_unk, ListaItem.runa_mih);
-	public static final Set<Item> RUNAS_TRAK = Set.of(ListaItem.runa_trak, ListaItem.runa_rudu, ListaItem.runa_aman, ListaItem.runa_kel);
-	public static final Set<Item> RUNAS_PRUM_Y_TRAK = Set.of(ListaItem.runa_prum, ListaItem.runa_rudu, ListaItem.runa_unk, ListaItem.runa_mih, ListaItem.runa_trak, ListaItem.runa_aman, ListaItem.runa_kel);
+	public static final Set<Item> RUNAS_PRUM = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH);
+	public static final Set<Item> RUNAS_TRAK = Set.of(ListaItem.RUNA_TRAK, ListaItem.RUNA_RUDU, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
+	public static final Set<Item> RUNAS_PRUM_Y_TRAK = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH, ListaItem.RUNA_TRAK, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
 
 	public static final Predicate<LivingEntity> TARGET_RUNE_PLAYER = (entidad) -> {
 		if (!(entidad instanceof PlayerEntity)) {
@@ -73,7 +71,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 
 	public static final DataParameter<Float> RENDER_YAW_OFFSET_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> PREV_RENDER_YAW_OFFSET_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
-	public static final DataParameter<Float> ROTATION_PITCH_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class,DataSerializers.FLOAT);
+	public static final DataParameter<Float> ROTATION_PITCH_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> PREV_ROTATION_PITCH_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> PREV_ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
@@ -82,7 +80,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS);
 
 	public PrumTrakEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
-		super(ListaEntidades.prum_y_trak, worldIn);
+		super(ListaEntidades.PRUM_Y_TRAK, worldIn);
 		this.lookController = new PrumTrakLookController(this);
 		this.setRotationYawHead(this.rotationYaw);
 	}
@@ -95,8 +93,8 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.goalSelector.addGoal(4, new TrakMeleAttackGoal(this, 1D, true));
 		this.goalSelector.addGoal(5, new PrumRangedAttackGoal(this, 1D, 20, 32F));
 		this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
-
-		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, TARGET_RUNE_PLAYER));
+		
+		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false, TARGET_RUNE_PLAYER));
 	}
 
 	@Override
@@ -146,17 +144,21 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 				double x = 2D * radio * (0.5D - this.getRNG().nextDouble());
 				double y = radio * this.getRNG().nextDouble();
 				double z = 2D * radio * (0.5D - this.getRNG().nextDouble());
-				((ServerWorld)this.world).spawnParticle(ListaParticulas.prum_proyectil, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 0, 0, 0, 0, 0);
+				((ServerWorld)this.world).spawnParticle(ListaParticulas.TRAK_PARTICULA, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 0, 0, 0, 0, 0.05D);
 			}
 			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), null).forEach((entidad) -> {
-				entidad.attackEntityFrom(ListaDamageSources.TRAK_AOE(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+				entidad.attackEntityFrom(ListaDamageSources.TRAK_AOE(this), (float) this.getAttributeValue(ListaAtributos.AOE_ATTACK_DAMAGE));
 			});;
 		}
 	}
 	
+	@Override
+    public void checkDespawn() {
+    }
+	
 	public void attackRandomly(int quantity) {
 		for(;quantity > 0; quantity--) {
-			PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.prum_proyectil).createArrow(this.world, new ItemStack(ListaItem.prum_proyectil), this);
+			PrumProyectilEntity proyectil = ((PrumProyectilItem)ListaItem.PRUM_PROYECTIL).createArrow(this.world, this, this.getAttackTarget(), 0.5F);
 			double phi = this.getRNG().nextDouble() * 2D * Math.PI;
 			double theta = this.getRNG().nextDouble() * Math.PI;
 			double x = Math.sin(theta) * Math.cos(phi);
@@ -165,19 +167,18 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			proyectil.shoot(x, y, z, 1.6F, 0);
 			this.world.addEntity(proyectil);
 		}
-		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1);
+		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1); //TODO: Sonido
 	}
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-		AbstractArrowEntity abstractArrowEntity = ((PrumProyectilItem) ListaItem.prum_proyectil).createArrow(this.world, new ItemStack(ListaItem.prum_proyectil), this);
-		double d0 = target.getPosX() - this.getPosX();
-		double d1 = target.getPosYHeight(0.3333333D) - abstractArrowEntity.getPosY();
-		double d2 = target.getPosZ() - this.getPosZ();
-		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-		abstractArrowEntity.shoot(d0, d1 + d3 * 0.2D, d2, 1.6F, 2);
-		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1);
-		this.world.addEntity(abstractArrowEntity);
+		PrumProyectilEntity proyectil = ((PrumProyectilItem) ListaItem.PRUM_PROYECTIL).createArrow(this.world, this, this.getAttackTarget(), 0.5F);
+		double d0 = target.getPosX() - proyectil.getPosX();
+		double d1 = target.getPosYHeight(0.3333333D) - proyectil.getPosY();
+		double d2 = target.getPosZ() - proyectil.getPosZ();
+		proyectil.shoot(d0, d1, d2, 2F, 0);
+		this.world.addEntity(proyectil);
+		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1); //TODO: Sonido
 	}
 	
 	public int getFase() {
@@ -192,7 +193,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		return this.dataManager.get(RENDER_YAW_OFFSET_CABEZA2);
 	}
 
-	public void setRenderYawOffSetCabeza2(float yawOffset) {
+	public void setRenderYawOffsetCabeza2(float yawOffset) {
 		this.dataManager.set(RENDER_YAW_OFFSET_CABEZA2, yawOffset);
 	}
 
@@ -200,7 +201,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		return this.dataManager.get(PREV_RENDER_YAW_OFFSET_CABEZA2);
 	}
 
-	public void setPrevRenderYawOffSetCabeza2(float yawOffset) {
+	public void setPrevRenderYawOffsetCabeza2(float yawOffset) {
 		this.dataManager.set(PREV_RENDER_YAW_OFFSET_CABEZA2, yawOffset);
 	}
 
@@ -246,8 +247,8 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		super.baseTick();
 		this.world.getProfiler().startSection("prumTrakEntityBaseTick");
 		this.setPrevRotationPitchCabeza2(this.getRotationPitchCabeza2());
-		this.setPrevRenderYawOffSetCabeza2(this.getRenderYawOffsetCabeza2());
-		this.setPrevRotationYawHeadCabeza2(this.getRotationYawHead());
+		this.setPrevRenderYawOffsetCabeza2(this.getRenderYawOffsetCabeza2());
+		this.setPrevRotationYawHeadCabeza2(this.getRotationYawHeadCabeza2());
 		this.world.getProfiler().endSection();
 	}
 
@@ -272,7 +273,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		}
 		this.world.getProfiler().startSection("secondHeadTurn");
 		float f13 = MathHelper.wrapDegrees(f1 - this.getRenderYawOffsetCabeza2());
-		this.setRenderYawOffSetCabeza2(this.getRenderYawOffsetCabeza2() + f13 * 0.3F);
+		this.setRenderYawOffsetCabeza2(this.getRenderYawOffsetCabeza2() + f13 * 0.3F);
 		float f14 = MathHelper.wrapDegrees(this.rotationYaw - this.getRenderYawOffsetCabeza2());
 		if (f14 < -75.0F) {
 			f14 = -75.0F;
@@ -282,19 +283,19 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			f14 = 75.0F;
 		}
 
-		this.setRenderYawOffSetCabeza2(this.rotationYaw - f14);
+		this.setRenderYawOffsetCabeza2(this.rotationYaw - f14);
 		if (f14 * f14 > 2500.0F) {
-			this.setRenderYawOffSetCabeza2(this.getRenderYawOffsetCabeza2() + f14 * 0.2F);
+			this.setRenderYawOffsetCabeza2(this.getRenderYawOffsetCabeza2() + f14 * 0.2F);
 		}
 		this.world.getProfiler().endSection();
-		this.world.getProfiler().startSection("rangeeCheck2");
+		this.world.getProfiler().startSection("rangeeCheckSecondHead");
 
 		while (this.getRenderYawOffsetCabeza2() - this.getPrevRenderYawOffsetCabeza2() < -180.0F) {
-			this.setPrevRenderYawOffSetCabeza2(this.getPrevRenderYawOffsetCabeza2() - 360F);
+			this.setPrevRenderYawOffsetCabeza2(this.getPrevRenderYawOffsetCabeza2() - 360F);
 		}
 
 		while (this.getRenderYawOffsetCabeza2() - this.getPrevRenderYawOffsetCabeza2() >= 180.0F) {
-			this.setPrevRenderYawOffSetCabeza2(this.getPrevRenderYawOffsetCabeza2() + 360F);
+			this.setPrevRenderYawOffsetCabeza2(this.getPrevRenderYawOffsetCabeza2() + 360F);
 		}
 
 		while (this.getRotationPitchCabeza2() - this.getPrevRotationPitchCabeza2() < -180.0F) {
@@ -305,11 +306,11 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			this.setPrevRotationPitchCabeza2(this.getPrevRotationPitchCabeza2() + 360.0F);
 		}
 
-		while (this.getRotationYawHead() - this.getPrevRotationYawHeadCabeza2() < -180.0F) {
+		while (this.getRotationYawHeadCabeza2() - this.getPrevRotationYawHeadCabeza2() < -180.0F) {
 			this.setPrevRotationYawHeadCabeza2(this.getPrevRotationYawHeadCabeza2() - 360.0F);
 		}
 
-		while (this.getRotationYawHead() - this.getPrevRotationYawHeadCabeza2() >= 180.0F) {
+		while (this.getRotationYawHeadCabeza2() - this.getPrevRotationYawHeadCabeza2() >= 180.0F) {
 			this.setPrevRotationYawHeadCabeza2(this.getPrevRotationYawHeadCabeza2() + 360.0F);
 		}
 		this.world.getProfiler().endSection();
@@ -320,11 +321,18 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		} else if (ratio > 1F/3F) {
 			if(this.getFase() < 2) {
 				this.setFase(2);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 9D, AttributeModifier.Operation.ADDITION));
 			}
 		} else {
-			this.setFase(3);
+			if(this.getFase() < 3) {
+				this.setFase(3);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
+			}
 		}
 		this.world.getProfiler().endSection();
+		//TODO: mover esto a un goal.
 		if(this.isInWater()) {
 			if(this.getAttackTarget() != null) {
 				this.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 2, 3));
@@ -343,9 +351,9 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.setRotationYawHeadCabeza2(this.rotationYaw);
 		this.setPrevRotationPitchCabeza2(this.getRotationPitchCabeza2());
 
-		this.setPrevRotationYawHeadCabeza2(this.getRotationYawHead());
-		this.setRenderYawOffSetCabeza2(this.getRotationYawHead());
-		this.setPrevRenderYawOffSetCabeza2(this.getRenderYawOffsetCabeza2());
+		this.setPrevRotationYawHeadCabeza2(this.getRotationYawHeadCabeza2());
+		this.setRenderYawOffsetCabeza2(this.getRotationYawHeadCabeza2());
+		this.setPrevRenderYawOffsetCabeza2(this.getRenderYawOffsetCabeza2());
 	}
 
 	@Override
@@ -376,17 +384,9 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.setRotationPitchCabeza2(this.updateRotation(this.getRotationPitchCabeza2(), f1, maxPitchIncrease));
 	}
 
-	public Vector2f getPitchYawCabeza2() {
-		return new Vector2f(this.getRotationPitchCabeza2(), this.rotationYaw);
-	}
-
 	public float getPitchCabeza2(float partialTicks) {
 		return partialTicks == 1.0F ? this.getRotationPitchCabeza2()
 				: MathHelper.lerp(partialTicks, this.getPrevRotationPitchCabeza2(), this.getRotationPitchCabeza2());
-	}
-
-	public Vector3d getLookVecCabeza2() {
-		return this.getVectorForRotation(this.getRotationPitchCabeza2(), this.rotationYaw);
 	}
 
 	private float updateRotation(float angle, float targetAngle, float maxIncrease) {
@@ -405,7 +405,6 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	@Override
 	protected void setRotation(float yaw, float pitch) {
 		super.setRotation(yaw, pitch);
-		this.setRotationPitchCabeza2(this.rotationPitch);
 	}
 
 	public void setPositionAndRotationAmbasCabezas(double x, double y, double z, float yaw, float pitch, float yaw2,
@@ -418,14 +417,11 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	@Override
 	public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch) {
 		super.setPositionAndRotation(x, y, z, yaw, pitch);
-		this.setRotationPitchCabeza2(MathHelper.clamp(pitch, -90.0F, 90.0F) % 360.0F);
-		this.setPrevRotationPitchCabeza2(this.getRotationPitchCabeza2());
 	}
 
 	@Override
 	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
-		this.setRotationPitchCabeza2(pitch);
 	}
 
 	@Override
@@ -438,15 +434,6 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		return false;
 	}
 	
-	public float getStageArmor() {
-		return this.getFase() * 4F;
-	}
-	
-	@Override
-	public int getTotalArmorValue() {
-		return MathHelper.floor(getAttributeValue(Attributes.ARMOR) + this.getStageArmor());
-	}
-	
 	@Override
 	protected float applyArmorCalculations(DamageSource source, float damage) {
 		this.damageArmor(source, damage);
@@ -457,16 +444,6 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			damage *= (2 - 5 / (5 - armadura));
 		}
 		return damage;
-	}
-	
-	@Override
-	protected float applyPotionDamageCalculations(DamageSource source, float damage) {
-		return super.applyPotionDamageCalculations(source, damage);
-	}
-	
-	@Override
-	protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-		super.damageEntity(damageSrc, damageAmount);
 	}
 	
 	@Override
@@ -484,6 +461,9 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			return true;
 		}
 		if(source == DamageSource.FALLING_BLOCK) {
+			return true;
+		}
+		if(source.getTrueSource() instanceof PrumTrakEntity) {
 			return true;
 		}
 		return this.isInvulnerable();
@@ -585,11 +565,13 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	}
 
 	public static AttributeModifierMap.MutableAttribute getAtributos() {
-		return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MAX_HEALTH, 180D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1F)
+		return MonsterEntity.func_234295_eP_()
+				.createMutableAttribute(Attributes.MAX_HEALTH, 210D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 128D)
-				.createMutableAttribute(Attributes.ARMOR, 4)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 20)
-				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D);
+				.createMutableAttribute(Attributes.ARMOR, 7D)
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 20D)
+				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D)
+				.createMutableAttribute(ListaAtributos.AOE_ATTACK_DAMAGE, 8D);
 	}
 }

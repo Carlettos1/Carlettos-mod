@@ -46,17 +46,17 @@ public class Runa extends Item{
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if(this.letra.equals(Letra.PRUM)) {
 			if(!worldIn.isRemote){
-				PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.prum_proyectil).createArrow(worldIn, new ItemStack(ListaItem.prum_proyectil), playerIn);
+				PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.PRUM_PROYECTIL).createArrow(worldIn, new ItemStack(ListaItem.PRUM_PROYECTIL), playerIn);
 				proyectil.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, 3, 1);
 				
 				proyectil.setDamage(proyectil.getDamage() + 1D);
-				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_rudu))) {
+				if(playerIn.inventory.hasAny(Set.of(ListaItem.RUNA_RUDU))) {
 					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
-				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_unk))) {
+				if(playerIn.inventory.hasAny(Set.of(ListaItem.RUNA_UNK))) {
 					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
-				if(playerIn.inventory.hasAny(Set.of(ListaItem.runa_mih))) {
+				if(playerIn.inventory.hasAny(Set.of(ListaItem.RUNA_MIH))) {
 					proyectil.setDamage(proyectil.getDamage() + 1D);
 				}
 				proyectil.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;

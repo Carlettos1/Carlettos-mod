@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.prumytrak.particulas;
+package com.carlettos.mod.particulas;
 
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;
@@ -9,9 +9,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
 
-public class PrumProyectilParticle extends SpriteTexturedParticle {
+public class ParticulaGenericaInmovil extends SpriteTexturedParticle {
 
-	protected PrumProyectilParticle(ClientWorld world, double x, double y, double z) {
+	protected ParticulaGenericaInmovil(ClientWorld world, double x, double y, double z) {
 		super(world, x, y, z, 0D, 0D, 0D);
 		this.motionX *= 0.01F;
 		this.motionY *= 0.01F;
@@ -66,7 +66,7 @@ public class PrumProyectilParticle extends SpriteTexturedParticle {
 		@Override
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
-			PrumProyectilParticle particle = new PrumProyectilParticle(worldIn, x, y, z);
+			ParticulaGenericaInmovil particle = new ParticulaGenericaInmovil(worldIn, x, y, z);
 			particle.selectSpriteRandomly(this.sprite);
 			return particle;
 		}

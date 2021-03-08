@@ -18,4 +18,8 @@ public class PrumProyectilItem extends ArrowItem{
 	public AbstractArrowEntity createArrow(World worldIn, ItemStack stack, LivingEntity shooter) {
 		return new PrumProyectilEntity(worldIn, shooter);
 	}
+	
+	public PrumProyectilEntity createArrow(World world, LivingEntity shooter, LivingEntity target, float aceleracion) {
+		return new PrumProyectilEntity(world, shooter, target, aceleracion);
+	}
 }

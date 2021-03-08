@@ -1,12 +1,13 @@
 package com.carlettos.mod.entidades.prumytrak.ia;
 
+import java.util.EnumSet;
+
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.ia.controllers.PrumTrakLookController;
 
-import net.minecraft.entity.ai.controller.LookController;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.Goal;
 
-public class PrumTrakLookRandomlyGoal extends LookRandomlyGoal{
+public class PrumTrakLookRandomlyGoal extends Goal {
 	private PrumTrakEntity entity;
 	private double lookX1;
 	private double lookX2;
@@ -15,15 +16,15 @@ public class PrumTrakLookRandomlyGoal extends LookRandomlyGoal{
 	private int idleTime;
 
 	public PrumTrakLookRandomlyGoal(PrumTrakEntity entidad) {
-		super(entidad);
 		this.entity = entidad;
+		this.setMutexFlags(EnumSet.of(Goal.Flag.LOOK));
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return this.entity.getRNG().nextFloat() < 0.02F;
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		return this.idleTime >= 0;
@@ -43,22 +44,10 @@ public class PrumTrakLookRandomlyGoal extends LookRandomlyGoal{
 	@Override
 	public void tick() {
 		--this.idleTime;
-		LookController lookController = entity.getLookController();
-		if (lookController instanceof PrumTrakLookController) {
-			PrumTrakLookController ptlc = (PrumTrakLookController) lookController;
-			ptlc.setLookPosition(
-					this.entity.getPosX() + this.lookX1,
-					this.entity.getPosYEye(),
-					this.entity.getPosZ() + this.lookZ1);
-			ptlc.setLookPositionCabeza2(
-					this.entity.getPosX() + this.lookX2, 
-					this.entity.getPosYEye(), 
-					this.entity.getPosZ() + this.lookZ2);
-		} else {
-			lookController.setLookPosition(
-					this.entity.getPosX() + this.lookX1,
-					this.entity.getPosYEye(),
-					this.entity.getPosZ() + this.lookZ1);
-		}
+		PrumTrakLookController lookController = (PrumTrakLookController) entity.getLookController();
+		lookController.setLookPosition(this.entity.getPosX() + this.lookX1, this.entity.getPosYEye(),
+				this.entity.getPosZ() + this.lookZ1);
+		lookController.setLookPositionCabeza2(this.entity.getPosX() + this.lookX2, this.entity.getPosYEye(),
+				this.entity.getPosZ() + this.lookZ2);
 	}
 }

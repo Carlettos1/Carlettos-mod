@@ -24,7 +24,7 @@ public class PrumProyectilPacketHandler extends SSpawnObjectPacket{
 		this.world = ((ClientPlayNetHandler)handler).getWorld();
 		Entity entity;
 		
-		if(getType() == ListaEntidades.prum_proyectil) {
+		if(getType() == ListaEntidades.PRUM_PROYECTIL) {
 			Entity entity2 = this.world.getEntityByID(getData());
 			entity = new PrumProyectilEntity(this.world, getX(), getY(), getZ());
 			if(entity2 != null) {

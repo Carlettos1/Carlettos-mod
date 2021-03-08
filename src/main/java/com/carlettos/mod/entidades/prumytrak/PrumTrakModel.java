@@ -185,6 +185,13 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 		this.cabezaderecha.rotateAngleY = yaw1 * (float)Math.PI/180f;
 		this.cabezaizquierda.rotateAngleX = pitch2 * (float)Math.PI/180f;
 		this.cabezaizquierda.rotateAngleY = yaw2 * (float)Math.PI/180f;
+		//TODO: MOvimientos
+	}
+	
+	@Override
+	public void setLivingAnimations(PrumTrakEntity entityIn, float limbSwing, float limbSwingAmount,
+			float partialTick) {
+		super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
 	}
 
 	@Override

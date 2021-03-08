@@ -7,10 +7,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 
 public class ListaBloques {
-	public static final Block bloque_ender_corrupto;
+	public static final Block BLOQUE_ENDER_CORRUPTO;
 	
 	static {
-		bloque_ender_corrupto = new Block(Properties
+		BLOQUE_ENDER_CORRUPTO = new Block(Properties
 				.create(Material.IRON, MaterialColor.IRON)
 				.setRequiresTool()
 				.hardnessAndResistance(5, 6)
