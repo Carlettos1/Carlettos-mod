@@ -9,13 +9,13 @@ import net.minecraft.entity.ai.goal.Goal;
 public class TrakMeleAreaAttackGoal extends Goal{
 	private PrumTrakEntity entity;
 	private double rango;
-	private int time;
-	private int currentTime;
+	private byte aps;
+	private byte currentTime;
 	
-	public TrakMeleAreaAttackGoal(PrumTrakEntity entity, double rango, int time) {
+	public TrakMeleAreaAttackGoal(PrumTrakEntity entity, double rango, byte time) {
 		this.entity = entity;
 		this.rango = rango;
-		this.time = time;
+		this.aps = time;
 		setMutexFlags(EnumSet.noneOf(Goal.Flag.class));
 	}
 
@@ -27,15 +27,17 @@ public class TrakMeleAreaAttackGoal extends Goal{
 	@Override
 	public void resetTask() {
 		this.currentTime = 0;
+		this.entity.setAtacandoAMeleAOE(this.currentTime);
 	}
 	
 	@Override
 	public void tick() {
 		if(this.currentTime <= 0) {
 			this.entity.ataqueEnArea(this.rango);
-			this.currentTime = this.time;
+			this.currentTime = this.aps;
 		} else {
 			--this.currentTime;
 		}
+		this.entity.setAtacandoAMeleAOE(this.currentTime);
 	}
 }

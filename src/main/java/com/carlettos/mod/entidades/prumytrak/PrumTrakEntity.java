@@ -75,7 +75,11 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	public static final DataParameter<Float> PREV_ROTATION_PITCH_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> PREV_ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
-	public static final DataParameter<Integer> FASE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.VARINT);
+	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Byte> ATAQUE_RANGO = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Byte> ATAQUE_RANGO_RANDOM = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Byte> ATAQUE_MELE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Byte> ATAQUE_MELE_AOE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
 	
 	private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS);
 
@@ -89,10 +93,10 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new PrumTrakLookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new PrumTrakLookAtGoal(this, PlayerEntity.class, 20));
-		this.goalSelector.addGoal(3, new TrakMeleAreaAttackGoal(this, 7D, 20));
-		this.goalSelector.addGoal(4, new TrakMeleAttackGoal(this, 1D, true));
-		this.goalSelector.addGoal(5, new PrumRangedAttackGoal(this, 1D, 20, 32F));
-		this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(3, new TrakMeleAreaAttackGoal(this, 7D, (byte)20));
+		//this.goalSelector.addGoal(4, new TrakMeleAttackGoal(this, 1D, true));
+		//this.goalSelector.addGoal(5, new PrumRangedAttackGoal(this, 1D, 20, 32F));
+		//this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
 		
 		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false, TARGET_RUNE_PLAYER));
 	}
@@ -106,7 +110,11 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.dataManager.register(PrumTrakEntity.PREV_ROTATION_PITCH_CABEZA2, 0F);
 		this.dataManager.register(PrumTrakEntity.ROTATION_YAW_HEAD_CABEZA2, 0F);
 		this.dataManager.register(PrumTrakEntity.PREV_ROTATION_YAW_HEAD_CABEZA2, 0F);
-		this.dataManager.register(PrumTrakEntity.FASE, 1);
+		this.dataManager.register(PrumTrakEntity.FASE, (byte)1);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO, (byte)0);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO_RANDOM, (byte)0);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE, (byte)0);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE_AOE, (byte)0);
 	}
 
 	@Override
@@ -180,12 +188,44 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.world.addEntity(proyectil);
 		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1); //TODO: Sonido
 	}
+
+	public byte getAtacandoARango() {
+		return this.dataManager.get(PrumTrakEntity.ATAQUE_RANGO);
+	}
 	
-	public int getFase() {
+	public void setAtacandoARango(byte fase) {
+		this.dataManager.set(PrumTrakEntity.ATAQUE_RANGO, fase);
+	}
+
+	public byte getAtacandoARangoRandom() {
+		return this.dataManager.get(PrumTrakEntity.ATAQUE_RANGO_RANDOM);
+	}
+	
+	public void setAtacandoARangoRandom(byte fase) {
+		this.dataManager.set(PrumTrakEntity.ATAQUE_RANGO_RANDOM, fase);
+	}
+
+	public byte getAtacandoAMele() {
+		return this.dataManager.get(PrumTrakEntity.ATAQUE_MELE);
+	}
+	
+	public void setAtacandoAMele(byte fase) {
+		this.dataManager.set(PrumTrakEntity.ATAQUE_MELE, fase);
+	}
+
+	public byte getAtacandoAMeleAOE() {
+		return this.dataManager.get(PrumTrakEntity.ATAQUE_MELE_AOE);
+	}
+	
+	public void setAtacandoAMeleAOE(byte fase) {
+		this.dataManager.set(PrumTrakEntity.ATAQUE_MELE_AOE, fase);
+	}
+	
+	public byte getFase() {
 		return this.dataManager.get(FASE);
 	}
 	
-	public void setFase(int fase) {
+	public void setFase(byte fase) {
 		this.dataManager.set(FASE, fase);
 	}
 
@@ -320,13 +360,13 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		if(ratio > 2F/3F) {
 		} else if (ratio > 1F/3F) {
 			if(this.getFase() < 2) {
-				this.setFase(2);
+				this.setFase((byte)2);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 9D, AttributeModifier.Operation.ADDITION));
 			}
 		} else {
 			if(this.getFase() < 3) {
-				this.setFase(3);
+				this.setFase((byte)3);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
 			}

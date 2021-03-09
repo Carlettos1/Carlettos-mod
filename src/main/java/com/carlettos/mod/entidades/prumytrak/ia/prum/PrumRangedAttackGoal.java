@@ -10,11 +10,11 @@ import net.minecraft.util.math.MathHelper;
 
 public class PrumRangedAttackGoal extends Goal{
 	private PrumTrakEntity entity;
-	private int attackTime;
-	private int aps;
+	private byte attackTime;
+	private byte aps;
 	private float rango;
 
-	public PrumRangedAttackGoal(PrumTrakEntity attacker, double movespeed, int attackTime, float ditanciaAtaque) {
+	public PrumRangedAttackGoal(PrumTrakEntity attacker, double movespeed, byte attackTime, float ditanciaAtaque) {
 		this.entity = attacker;
 		this.aps = attackTime;
 		this.rango = ditanciaAtaque;
@@ -37,17 +37,6 @@ public class PrumRangedAttackGoal extends Goal{
 	}
 	
 	@Override
-	public void startExecuting() {
-		// TODO: SET AGROED CABEZA 2
-	}
-	
-	@Override
-	public void resetTask() {
-		//TODO: QUITAR AGROED CABEZA 2
-		this.attackTime = -1;
-	}
-	
-	@Override
 	public void tick() {
 		LivingEntity target = this.entity.getAttackTarget();
 		double d0 = this.entity.getDistance(target);
@@ -62,6 +51,7 @@ public class PrumRangedAttackGoal extends Goal{
 			double f1 = MathHelper.clamp(f, 0.1D, 1D);
 			this.entity.attackEntityWithRangedAttack(target, (float)f1);
 			this.attackTime = aps;
-		}
+		} 
+		this.entity.setAtacandoARango(this.attackTime);
 	}
 }

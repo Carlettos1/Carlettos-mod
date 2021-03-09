@@ -8,7 +8,10 @@ import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
-public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
+public class PrumTrakModel extends SegmentedModel<PrumTrakEntity> {
+	private PrumTrakEntity entity;
+	private float tick;
+
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaarriba;
 	private final ModelRenderer piernaderechaabajo;
@@ -37,7 +40,6 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 
 		piernaderecha = new ModelRenderer(this);
 		piernaderecha.setRotationPoint(-7.0F, -8.0F, 0.0F);
-		
 
 		piernaderechaarriba = new ModelRenderer(this);
 		piernaderechaarriba.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -52,7 +54,6 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 
 		piernaizquierda = new ModelRenderer(this);
 		piernaizquierda.setRotationPoint(7.0F, -8.0F, 0.0F);
-		
 
 		piernaizquierdaarriba = new ModelRenderer(this);
 		piernaizquierdaarriba.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -74,7 +75,6 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 
 		brazoderecho = new ModelRenderer(this);
 		brazoderecho.setRotationPoint(-12.0F, -35.0F, 0.0F);
-		
 
 		brazoderechoabajo = new ModelRenderer(this);
 		brazoderechoabajo.setRotationPoint(-4.0F, 14.0F, 0.0F);
@@ -92,7 +92,6 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 
 		brazoizquierdo = new ModelRenderer(this);
 		brazoizquierdo.setRotationPoint(12.0F, -35.0F, 0.0F);
-		
 
 		brazoizquierdoarriba = new ModelRenderer(this);
 		brazoizquierdoarriba.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -157,45 +156,67 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 		barbacabezaderecha.setTextureOffset(0, 42).addBox(0.0F, -1.0F, 0.0F, 1.0F, 8.0F, 1.0F, 0.0F, false);
 		barbacabezaderecha.setTextureOffset(14, 39).addBox(1.0F, -1.0F, 0.0F, 1.0F, 10.0F, 1.0F, 0.0F, false);
 		barbacabezaderecha.setTextureOffset(21, 41).addBox(2.0F, -1.0F, 0.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
-		barbacabezaderecha.setTextureOffset(29, 43).addBox(3.0F, -1.0F, 0.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);}
+		barbacabezaderecha.setTextureOffset(29, 43).addBox(3.0F, -1.0F, 0.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+	}
 
 	@Override
-	public void setRotationAngles(PrumTrakEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		float yaw1 = (interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.prevRotationYawHead, 
-						entity.rotationYawHead)
-					- interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.prevRenderYawOffset, 
-						entity.renderYawOffset));
-		float pitch1 = MathHelper.lerp(ageInTicks - (int)ageInTicks, 
-						entity.prevRotationPitch, 
-						entity.rotationPitch);
-		
-		float yaw2 = (interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRotationYawHeadCabeza2(), 
-						entity.getRotationYawHead())
-					- interpolateAngle(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRenderYawOffsetCabeza2(), 
-						entity.getRenderYawOffsetCabeza2()));
-		float pitch2 = MathHelper.lerp(ageInTicks - (int)ageInTicks, 
-						entity.getPrevRotationPitchCabeza2(), 
-						entity.getRotationPitchCabeza2());
-		
-		this.cabezaderecha.rotateAngleX = pitch1 * (float)Math.PI/180f;
-		this.cabezaderecha.rotateAngleY = yaw1 * (float)Math.PI/180f;
-		this.cabezaizquierda.rotateAngleX = pitch2 * (float)Math.PI/180f;
-		this.cabezaizquierda.rotateAngleY = yaw2 * (float)Math.PI/180f;
-		//TODO: MOvimientos
+	public void setRotationAngles(PrumTrakEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+			float netHeadYaw, float headPitch) {
 	}
-	
+
 	@Override
 	public void setLivingAnimations(PrumTrakEntity entityIn, float limbSwing, float limbSwingAmount,
 			float partialTick) {
-		super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
+		this.entity = entityIn;
+		this.tick = partialTick;
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
+			float green, float blue, float alpha) {
+		matrixStack.push();
+		float yaw1 = (interpolateAngle(this.tick, this.entity.prevRotationYawHead,
+				this.entity.rotationYawHead)
+				- interpolateAngle(this.tick, this.entity.prevRenderYawOffset, this.entity.renderYawOffset));
+		float pitch1 = MathHelper.lerp(this.tick, this.entity.prevRotationPitch, this.entity.rotationPitch);
+
+		float yaw2 = (interpolateAngle(this.tick, this.entity.getPrevRotationYawHeadCabeza2(),
+				this.entity.getRotationYawHeadCabeza2())
+				- interpolateAngle(this.tick, this.entity.getPrevRenderYawOffsetCabeza2(),
+						this.entity.getRenderYawOffsetCabeza2()));
+		float pitch2 = MathHelper.lerp(this.tick, this.entity.getPrevRotationPitchCabeza2(),
+				this.entity.getRotationPitchCabeza2());
+
+		this.cabezaderecha.rotateAngleX = pitch1 * (float) Math.PI / 180f;
+		this.cabezaderecha.rotateAngleY = yaw1 * (float) Math.PI / 180f;
+		this.cabezaizquierda.rotateAngleX = pitch2 * (float) Math.PI / 180f;
+		this.cabezaizquierda.rotateAngleY = yaw2 * (float) Math.PI / 180f;
+		if (this.entity.getAtacandoARango() >= 0) {
+			this.brazoderecho.rotateAngleX = (float) Math.PI;
+			this.brazoderechoabajo.rotateAngleX = (float) Math.PI / 4F;
+		} else {
+			this.brazoderecho.rotateAngleX = 0;
+			this.brazoderechoabajo.rotateAngleX = 0;
+		}
+		if (this.entity.getAtacandoAMele() >= 0) {
+			this.brazoizquierdo.rotateAngleX = (float) Math.PI;
+		} else {
+			this.brazoizquierdo.rotateAngleX = 0;
+		}
+		System.out.println(this.entity.getAtacandoAMeleAOE());
+		if (this.entity.getAtacandoAMeleAOE() >= 0) {
+			float scalar = entity.getAtacandoAMeleAOE() / 20F;
+			matrixStack.translate(0, scalar - 1, 0);
+			this.piernaderecha.rotateAngleX = (float) Math.PI / 2F * scalar;
+			this.piernaderechaabajo.rotateAngleX = -(float) Math.PI / 2F * scalar;
+			this.piernaizquierda.rotateAngleX = -(float) Math.PI / 2F * scalar;
+			this.piernaizquierdaabajo.rotateAngleX = (float) Math.PI / 2F * scalar;
+		} else {
+			this.piernaderecha.rotateAngleX = 0F;
+			this.piernaderechaabajo.rotateAngleX = 0F;
+			this.piernaizquierda.rotateAngleX = 0F;
+			this.piernaizquierdaabajo.rotateAngleX = 0F;
+		}
 		piernaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
 		piernaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		torso.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -203,6 +224,7 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 		brazoizquierdo.render(matrixStack, buffer, packedLight, packedOverlay);
 		cabezaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		cabezaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
+		matrixStack.pop();
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -213,10 +235,11 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity>{
 
 	@Override
 	public Iterable<ModelRenderer> getParts() {
-		return ImmutableList.of(piernaderecha, piernaizquierda, torso, brazoderecho, brazoizquierdo, cabezaizquierda, cabezaderecha);
+		return ImmutableList.of(piernaderecha, piernaizquierda, torso, brazoderecho, brazoizquierdo, cabezaizquierda,
+				cabezaderecha);
 	}
-	
+
 	public static float interpolateAngle(float porcentaje, float angulo1, float angulo2) {
-	      return angulo1 + porcentaje * MathHelper.wrapDegrees(angulo2 - angulo1);
+		return angulo1 + porcentaje * MathHelper.wrapDegrees(angulo2 - angulo1);
 	}
 }
