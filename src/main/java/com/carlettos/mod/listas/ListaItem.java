@@ -12,8 +12,9 @@ import net.minecraft.item.SpawnEggItem;
 public class ListaItem {
 	public static final Item BOLA_ENDER_CORRUPTA;
 	public static final Item BLOQUE_ENDER_CORRUPTO;
-	public static final Item PRUM_Y_TRAK_SPAWN_EGG;
 	public static final Item PRUM_PROYECTIL;
+	public static final Item PRUM_Y_TRAK_SPAWN_EGG;
+	public static final Item TRAK_HENCHMAN_SPAWN_EGG;
 	
 	public static final Item RUNA_AMAN;
 	public static final Item RUNA_DUR;
@@ -35,9 +36,10 @@ public class ListaItem {
 	static {
 		BOLA_ENDER_CORRUPTA = new Item(new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).maxStackSize(16).setNoRepair());
 		BLOQUE_ENDER_CORRUPTO = new BlockItem(ListaBloques.BLOQUE_ENDER_CORRUPTO, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).setNoRepair());
-		PRUM_Y_TRAK_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_Y_TRAK, 0x8E3CD7, 0xA1A1A1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		PRUM_PROYECTIL = new PrumProyectilItem();
-		
+		PRUM_Y_TRAK_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_Y_TRAK, 0x8E3CD7, 0xA1A1A1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+		TRAK_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.TRAK_HENCHMAN, 0xFFFFFF, 0xF0F0F0, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+
 		RUNA_AMAN = new Runa(Letra.AMAN);
 		RUNA_DUR = new Runa(Letra.DUR);
 		RUNA_ERSA = new Runa(Letra.ERSA);

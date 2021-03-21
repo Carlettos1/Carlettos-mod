@@ -35,13 +35,7 @@ public class PrumRandomRangedAttackGoal extends Goal{
 	}
 	
 	@Override
-	public void startExecuting() {
-		// TODO: SET AGROED CABEZA 2
-	}
-	
-	@Override
 	public void resetTask() {
-		//TODO: QUITAR AGROED CABEZA 2
 		this.attackTime = -1;
 	}
 	

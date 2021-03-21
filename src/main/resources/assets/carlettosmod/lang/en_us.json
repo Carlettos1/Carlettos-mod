@@ -1,7 +1,10 @@
 {
   "item.carlettosmod.bola_ender_corrupta": "Corrupted Ender Ball",
   "item.carlettosmod.bloque_ender_corrupto": "Corrupted Ender Block",
+  "item.carlettosmod.prum_proyectil": "Prum Projectile",
   "item.carlettosmod.prum_y_trak_spawn_egg": "Prum and Trak Spawn Egg",
+  "item.carlettosmod.trak_henchman_spawn_egg": "Trak Henchman Spawn Egg",
+  
   "item.carlettosmod.runa_aman": "Aman Rune",
   "item.carlettosmod.runa_dur": "Dur Rune",
   "item.carlettosmod.runa_ersa": "Ersa Rune",
@@ -21,8 +24,9 @@
   
   "block.carlettosmod.bloque_ender_corrupto": "Corrupted Ender Block",
   
-  "entity.carlettosmod.prum_y_trak": "Prum and Trak",
   "entity.carlettosmod.prum_proyectil": "Prum Projectile",
+  "entity.carlettosmod.prum_y_trak": "Prum and Trak",
+  "entity.carlettosmod.trak_henchman": "Trak Henchman",
   
   "death.attack.trak_aoe_damage.fase1.text0": "%2$s doesn't want his health go below %3$s",
   "death.attack.trak_aoe_damage.fase1.text1": "%1$s can't deal with first phase %2$s",

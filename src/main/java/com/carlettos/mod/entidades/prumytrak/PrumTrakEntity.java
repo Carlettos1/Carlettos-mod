@@ -29,6 +29,9 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.BodyController;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -76,10 +79,10 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	public static final DataParameter<Float> ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Float> PREV_ROTATION_YAW_HEAD_CABEZA2 = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
-	public static final DataParameter<Byte> ATAQUE_RANGO = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
-	public static final DataParameter<Byte> ATAQUE_RANGO_RANDOM = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
-	public static final DataParameter<Byte> ATAQUE_MELE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
-	public static final DataParameter<Byte> ATAQUE_MELE_AOE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Boolean> ATAQUE_RANGO = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> ATAQUE_RANGO_RANDOM = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> ATAQUE_MELE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> ATAQUE_MELE_AOE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
 	
 	private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS);
 
@@ -87,16 +90,17 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		super(ListaEntidades.PRUM_Y_TRAK, worldIn);
 		this.lookController = new PrumTrakLookController(this);
 		this.setRotationYawHead(this.rotationYaw);
+		this.experienceValue = 2500;
 	}
 
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new PrumTrakLookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new PrumTrakLookAtGoal(this, PlayerEntity.class, 20));
-		this.goalSelector.addGoal(3, new TrakMeleAreaAttackGoal(this, 7D, (byte)20));
-		//this.goalSelector.addGoal(4, new TrakMeleAttackGoal(this, 1D, true));
-		//this.goalSelector.addGoal(5, new PrumRangedAttackGoal(this, 1D, 20, 32F));
-		//this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
+		this.goalSelector.addGoal(3, new TrakMeleAttackGoal(this, 1D, true));
+		this.goalSelector.addGoal(4, new PrumRangedAttackGoal(this, 1D, (byte)20, 32F));
+		this.goalSelector.addGoal(5, new TrakMeleAreaAttackGoal(this, 7D, (byte)20));
+		this.goalSelector.addGoal(6, new PrumRandomRangedAttackGoal(this, 1D, 20, 32F));
 		
 		this.targetSelector.addGoal(1, new PrumTrakNearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false, TARGET_RUNE_PLAYER));
 	}
@@ -111,10 +115,10 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.dataManager.register(PrumTrakEntity.ROTATION_YAW_HEAD_CABEZA2, 0F);
 		this.dataManager.register(PrumTrakEntity.PREV_ROTATION_YAW_HEAD_CABEZA2, 0F);
 		this.dataManager.register(PrumTrakEntity.FASE, (byte)1);
-		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO, (byte)0);
-		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO_RANDOM, (byte)0);
-		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE, (byte)0);
-		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE_AOE, (byte)0);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO, false);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_RANGO_RANDOM, false);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE, false);
+		this.dataManager.register(PrumTrakEntity.ATAQUE_MELE_AOE, false);
 	}
 
 	@Override
@@ -189,35 +193,35 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 		this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1, 1); //TODO: Sonido
 	}
 
-	public byte getAtacandoARango() {
+	public boolean getAtacandoARango() {
 		return this.dataManager.get(PrumTrakEntity.ATAQUE_RANGO);
 	}
 	
-	public void setAtacandoARango(byte fase) {
+	public void setAtacandoARango(boolean fase) {
 		this.dataManager.set(PrumTrakEntity.ATAQUE_RANGO, fase);
 	}
 
-	public byte getAtacandoARangoRandom() {
+	public boolean getAtacandoARangoRandom() {
 		return this.dataManager.get(PrumTrakEntity.ATAQUE_RANGO_RANDOM);
 	}
 	
-	public void setAtacandoARangoRandom(byte fase) {
+	public void setAtacandoARangoRandom(boolean fase) {
 		this.dataManager.set(PrumTrakEntity.ATAQUE_RANGO_RANDOM, fase);
 	}
 
-	public byte getAtacandoAMele() {
+	public boolean getAtacandoAMele() {
 		return this.dataManager.get(PrumTrakEntity.ATAQUE_MELE);
 	}
 	
-	public void setAtacandoAMele(byte fase) {
+	public void setAtacandoAMele(boolean fase) {
 		this.dataManager.set(PrumTrakEntity.ATAQUE_MELE, fase);
 	}
 
-	public byte getAtacandoAMeleAOE() {
+	public boolean getAtacandoAMeleAOE() {
 		return this.dataManager.get(PrumTrakEntity.ATAQUE_MELE_AOE);
 	}
 	
-	public void setAtacandoAMeleAOE(byte fase) {
+	public void setAtacandoAMeleAOE(boolean fase) {
 		this.dataManager.set(PrumTrakEntity.ATAQUE_MELE_AOE, fase);
 	}
 	
@@ -601,6 +605,18 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 				this.playHurtSound(source);
 			}
 			return true;
+		}
+	}
+	
+	@Override
+	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
+		ItemEntity prum = this.entityDropItem(ListaItem.RUNA_PRUM);
+		ItemEntity trak = this.entityDropItem(ListaItem.RUNA_TRAK);
+		if(prum != null) {
+			prum.setNoDespawn();
+		}
+		if(trak != null) {
+			trak.setNoDespawn();
 		}
 	}
 

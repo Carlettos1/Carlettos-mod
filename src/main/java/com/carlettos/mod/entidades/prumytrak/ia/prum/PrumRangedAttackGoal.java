@@ -32,8 +32,9 @@ public class PrumRangedAttackGoal extends Goal{
 	}
 	
 	@Override
-	public boolean shouldContinueExecuting() {
-		return this.shouldExecute();
+	public void resetTask() {
+		this.attackTime = 0;
+		this.entity.setAtacandoARango(false);
 	}
 	
 	@Override
@@ -47,11 +48,13 @@ public class PrumRangedAttackGoal extends Goal{
 			if(!flag) {
 				return;
 			}
+			this.entity.setAtacandoARango(true);
 			double f = d0 / this.rango;
 			double f1 = MathHelper.clamp(f, 0.1D, 1D);
 			this.entity.attackEntityWithRangedAttack(target, (float)f1);
 			this.attackTime = aps;
-		} 
-		this.entity.setAtacandoARango(this.attackTime);
+		} else {
+			this.entity.setAtacandoARango(false);
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.carlettos.mod.entidades.prumytrak;
 
+import java.util.Calendar;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -9,8 +11,10 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
 public class PrumTrakModel extends SegmentedModel<PrumTrakEntity> {
+	private long aoe = 0;
+	private long mele = 0;
+	private long rango = 0;
 	private PrumTrakEntity entity;
-	private float tick;
 
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaarriba;
@@ -162,61 +166,115 @@ public class PrumTrakModel extends SegmentedModel<PrumTrakEntity> {
 	@Override
 	public void setRotationAngles(PrumTrakEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks,
 			float netHeadYaw, float headPitch) {
-	}
-
-	@Override
-	public void setLivingAnimations(PrumTrakEntity entityIn, float limbSwing, float limbSwingAmount,
-			float partialTick) {
-		this.entity = entityIn;
-		this.tick = partialTick;
-	}
-
-	@Override
-	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
-			float green, float blue, float alpha) {
-		matrixStack.push();
-		float yaw1 = (interpolateAngle(this.tick, this.entity.prevRotationYawHead,
+		float yaw1 = (interpolateAngle(ageInTicks - MathHelper.floor(ageInTicks), this.entity.prevRotationYawHead,
 				this.entity.rotationYawHead)
-				- interpolateAngle(this.tick, this.entity.prevRenderYawOffset, this.entity.renderYawOffset));
-		float pitch1 = MathHelper.lerp(this.tick, this.entity.prevRotationPitch, this.entity.rotationPitch);
+				- interpolateAngle(ageInTicks - MathHelper.floor(ageInTicks), this.entity.prevRenderYawOffset, this.entity.renderYawOffset));
+		float pitch1 = MathHelper.lerp(ageInTicks - MathHelper.floor(ageInTicks), this.entity.prevRotationPitch, this.entity.rotationPitch);
 
-		float yaw2 = (interpolateAngle(this.tick, this.entity.getPrevRotationYawHeadCabeza2(),
+		float yaw2 = (interpolateAngle(ageInTicks - MathHelper.floor(ageInTicks), this.entity.getPrevRotationYawHeadCabeza2(),
 				this.entity.getRotationYawHeadCabeza2())
-				- interpolateAngle(this.tick, this.entity.getPrevRenderYawOffsetCabeza2(),
+				- interpolateAngle(ageInTicks - MathHelper.floor(ageInTicks), this.entity.getPrevRenderYawOffsetCabeza2(),
 						this.entity.getRenderYawOffsetCabeza2()));
-		float pitch2 = MathHelper.lerp(this.tick, this.entity.getPrevRotationPitchCabeza2(),
+		float pitch2 = MathHelper.lerp(ageInTicks - MathHelper.floor(ageInTicks), this.entity.getPrevRotationPitchCabeza2(),
 				this.entity.getRotationPitchCabeza2());
 
 		this.cabezaderecha.rotateAngleX = pitch1 * (float) Math.PI / 180f;
 		this.cabezaderecha.rotateAngleY = yaw1 * (float) Math.PI / 180f;
 		this.cabezaizquierda.rotateAngleX = pitch2 * (float) Math.PI / 180f;
 		this.cabezaizquierda.rotateAngleY = yaw2 * (float) Math.PI / 180f;
-		if (this.entity.getAtacandoARango() >= 0) {
+
+		if(this.rango == 0) {
+	        this.brazoderecho.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.brazoderecho.rotateAngleY = 0.0F;
+	        this.brazoderecho.rotateAngleZ = 0.0F;
+		}
+        
+        if(this.mele == 0) {
+	        this.brazoizquierdo.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.brazoizquierdo.rotateAngleY = 0.0F;
+	        this.brazoizquierdo.rotateAngleZ = 0.0F;
+        }
+        
+        if(this.aoe == 0) {
+	        this.piernaderecha.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+	        this.piernaderecha.rotateAngleY = 0.0F;
+	        this.piernaderecha.rotateAngleZ = 0.0F;
+	        this.piernaizquierda.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+	        this.piernaizquierda.rotateAngleY = 0.0F;
+	        this.piernaizquierda.rotateAngleZ = 0.0F;
+        }
+	}
+
+	@Override
+	public void setLivingAnimations(PrumTrakEntity entityIn, float limbSwing, float limbSwingAmount,
+			float partialTick) {
+		this.entity = entityIn;
+	}
+
+	@Override
+	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
+			float green, float blue, float alpha) {
+		matrixStack.push();
+		if (this.entity.getAtacandoARango()) {
 			this.brazoderecho.rotateAngleX = (float) Math.PI;
 			this.brazoderechoabajo.rotateAngleX = (float) Math.PI / 4F;
 		} else {
 			this.brazoderecho.rotateAngleX = 0;
 			this.brazoderechoabajo.rotateAngleX = 0;
 		}
-		if (this.entity.getAtacandoAMele() >= 0) {
-			this.brazoizquierdo.rotateAngleX = (float) Math.PI;
-		} else {
-			this.brazoizquierdo.rotateAngleX = 0;
+		
+		if(this.entity.getAtacandoARango()) {
+			if(this.rango == 0) {
+				this.rango = Calendar.getInstance().getTimeInMillis();
+			}
 		}
-		System.out.println(this.entity.getAtacandoAMeleAOE());
-		if (this.entity.getAtacandoAMeleAOE() >= 0) {
-			float scalar = entity.getAtacandoAMeleAOE() / 20F;
-			matrixStack.translate(0, scalar - 1, 0);
-			this.piernaderecha.rotateAngleX = (float) Math.PI / 2F * scalar;
-			this.piernaderechaabajo.rotateAngleX = -(float) Math.PI / 2F * scalar;
-			this.piernaizquierda.rotateAngleX = -(float) Math.PI / 2F * scalar;
-			this.piernaizquierdaabajo.rotateAngleX = (float) Math.PI / 2F * scalar;
-		} else {
-			this.piernaderecha.rotateAngleX = 0F;
-			this.piernaderechaabajo.rotateAngleX = 0F;
-			this.piernaizquierda.rotateAngleX = 0F;
-			this.piernaizquierdaabajo.rotateAngleX = 0F;
+		if(this.rango != 0) {
+			float escalarrango= 1 - (Calendar.getInstance().getTimeInMillis() - this.rango) / 1000F / 0.3F;
+			if(Calendar.getInstance().getTimeInMillis() - this.rango >= 1000F * 0.3F) {
+				this.rango = 0;
+				escalarrango = 0;
+			}
+			this.brazoderecho.rotateAngleX = -(float) Math.PI / 2F * escalarrango;
+			this.brazoderecho.rotateAngleY = -(float) Math.PI / 10F * escalarrango;
 		}
+		
+		if (this.entity.isAggressive()) { //TODO: actualizar texturas
+			if(this.mele == 0) {
+				this.mele = Calendar.getInstance().getTimeInMillis();
+			}
+		}
+		if(this.mele !=0) {
+			float escalarmele = 1 - (Calendar.getInstance().getTimeInMillis() - this.mele) / 1000F / 0.3F;
+			if(Calendar.getInstance().getTimeInMillis() - this.mele  >= 1000F * 0.3F) {
+				this.mele = 0;
+				escalarmele = 0;
+			}
+			this.brazoizquierdo.rotateAngleX = -(float) Math.PI / 2F * escalarmele;
+			this.brazoizquieroabajo.rotateAngleX = -(float) Math.PI / 2F * escalarmele;
+		}
+		
+		if(this.entity.getAtacandoAMeleAOE()) {
+			if(this.aoe == 0) {
+				this.aoe = Calendar.getInstance().getTimeInMillis();
+			}
+		}
+		if(this.aoe != 0) {
+			float escalaraoe = (Calendar.getInstance().getTimeInMillis() - this.aoe) / 1000F / 0.3F;
+			if(Calendar.getInstance().getTimeInMillis() - this.aoe >= 1000F * 0.3F) {
+				this.aoe = 0;
+				escalaraoe = 0;
+			}
+			matrixStack.translate(0, escalaraoe - 1, 0);
+			this.piernaderecha.rotateAngleX = (float) Math.PI / 2F * escalaraoe;
+			this.piernaderechaabajo.rotateAngleX = -(float) Math.PI / 2F * escalaraoe;
+			this.piernaizquierda.rotateAngleX = -(float) Math.PI / 2F * escalaraoe;
+			this.piernaizquierdaabajo.rotateAngleX = (float) Math.PI / 2F * escalaraoe;
+		}
+		
+		if(this.aoe == 0) {
+			matrixStack.translate(0, - 1, 0);
+		}
+		
 		piernaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
 		piernaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		torso.render(matrixStack, buffer, packedLight, packedOverlay);

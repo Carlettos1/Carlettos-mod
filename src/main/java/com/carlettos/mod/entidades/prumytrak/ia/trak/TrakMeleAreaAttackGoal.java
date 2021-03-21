@@ -27,17 +27,17 @@ public class TrakMeleAreaAttackGoal extends Goal{
 	@Override
 	public void resetTask() {
 		this.currentTime = 0;
-		this.entity.setAtacandoAMeleAOE(this.currentTime);
+		this.entity.setAtacandoAMeleAOE(false);
 	}
 	
 	@Override
 	public void tick() {
-		if(this.currentTime <= 0) {
+		if(--this.currentTime <= 0) {
+			this.entity.setAtacandoAMeleAOE(true);
 			this.entity.ataqueEnArea(this.rango);
 			this.currentTime = this.aps;
 		} else {
-			--this.currentTime;
+			this.entity.setAtacandoAMeleAOE(false);
 		}
-		this.entity.setAtacandoAMeleAOE(this.currentTime);
 	}
 }
