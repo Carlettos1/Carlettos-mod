@@ -4,10 +4,18 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.IHasArm;
+import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
 
 //Made with Blockbench 3.7.5
-public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity>{
+public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implements IHasArm, IHasHead{
+	private float partial;
+	private float aoe;
+	
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaabajo;
 	private final ModelRenderer piernaizquierda;
@@ -58,22 +66,104 @@ public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity>{
 
 	@Override
 	public void setRotationAngles(TrakHenchmanEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
+		this.cabeza.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+		this.cabeza.rotateAngleY = netHeadYaw * (float)Math.PI / 180F;
+		
+		this.cuerpo.rotateAngleY = 0F;
+
+		this.brazoderecho.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * limbSwingAmount;
+		this.brazoderecho.rotateAngleY = 0F;
+		this.brazoderecho.rotateAngleZ = 0F;
+		
+		this.brazoizquierdo.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
+		this.brazoizquierdo.rotateAngleY = 0F;
+		this.brazoizquierdo.rotateAngleZ = 0F;
+
+		this.piernaderecha.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.piernaderecha.rotateAngleY = 0F;
+		this.piernaderecha.rotateAngleZ = 0F;
+
+		this.piernaizquierda.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+		this.piernaizquierda.rotateAngleY = 0F;
+		this.piernaizquierda.rotateAngleZ = 0F;
+		//TODO: sitting
+		//TODO: actualizar manos dependiendo del arma
+		if(!(this.swingProgress <= 0F)) {
+			HandSide side = entity.getPrimaryHand();
+			side = entity.swingingHand == Hand.MAIN_HAND ? side : side.opposite();
+			ModelRenderer mano = side == HandSide.LEFT ? this.brazoizquierdo : this.brazoderecho;
+			this.cuerpo.rotateAngleY = MathHelper.sin(MathHelper.sqrt(this.swingProgress) * (float)Math.PI * 2F) * 0.2F;
+			if(side == HandSide.LEFT) {
+				this.cuerpo.rotateAngleY *= -1F;
+			}
+			
+			this.brazoderecho.rotateAngleX = -MathHelper.cos(this.cuerpo.rotateAngleY) / 2F;
+			this.brazoderecho.rotateAngleY += this.cuerpo.rotateAngleY;
+			this.brazoderecho.rotateAngleZ = MathHelper.sin(this.cuerpo.rotateAngleY) / 2F;
+			this.brazoizquierdo.rotateAngleX = MathHelper.cos(this.cuerpo.rotateAngleY) / 2F;
+			this.brazoizquierdo.rotateAngleY += this.cuerpo.rotateAngleY;
+			this.brazoizquierdo.rotateAngleZ = -MathHelper.sin(this.cuerpo.rotateAngleY) / 2F;
+			
+			float f = 1F - this.swingProgress;
+			f = 1F - f * f * f * f;
+			float f1 = MathHelper.sin(f * (float)Math.PI);
+			float f2 = MathHelper.sin(this.swingProgress * (float)Math.PI) * -(this.cabeza.rotateAngleX - 0.7F) * 0.75F;
+			mano.rotateAngleX = mano.rotateAngleX - f1 * 1.2F - f2;
+			mano.rotateAngleY += this.cuerpo.rotateAngleY * 2F;
+			mano.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
+		}
 	}
 
 	@Override
 	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+		if(!(this.aoe <= 0F)) {
+			float aoeProgress = this.aoe;
+			float angulo = MathHelper.sin(MathHelper.sqrt(aoeProgress) * (float)Math.PI) * (float)Math.PI / 2F;
+			this.piernaderecha.rotateAngleX = angulo;
+			this.piernaderechaabajo.rotateAngleX = -angulo;
+			this.piernaizquierda.rotateAngleX = -angulo;
+			this.piernaizquierdaabajo.rotateAngleX = angulo;
+			float ajuste = 4F/16F * (1 - MathHelper.cos(angulo));
+			matrixStack.push();
+			matrixStack.translate(0, ajuste, 0);
+		}
 		piernaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
 		piernaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		brazoderecho.render(matrixStack, buffer, packedLight, packedOverlay);
 		brazoizquierdo.render(matrixStack, buffer, packedLight, packedOverlay);
 		cuerpo.render(matrixStack, buffer, packedLight, packedOverlay);
 		cabeza.render(matrixStack, buffer, packedLight, packedOverlay);
+		if(!(this.aoe <= 0F)) {
+			matrixStack.pop();
+		}
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
+	}
+	
+	@Override
+	public void setLivingAnimations(TrakHenchmanEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+		this.partial = partialTick;
+		this.aoe = entityIn.getAOEProgress(this.partial);
+	}
+
+	@Override
+	public ModelRenderer getModelHead() {
+		return this.cabeza;
+	}
+
+	@Override
+	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
+		switch (sideIn) {
+		case RIGHT:
+			this.brazoderecho.translateRotate(matrixStackIn);
+			break;
+		case LEFT:
+			this.brazoizquierdo.translateRotate(matrixStackIn);
+			break;
+		}
 	}
 }
