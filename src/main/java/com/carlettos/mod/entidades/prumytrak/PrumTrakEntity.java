@@ -157,7 +157,7 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 				((ServerWorld)this.world).spawnParticle(ListaParticulas.TRAK_PARTICULA, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 0, 0, 0, 0, 0.05D);
 			}
 			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), null).forEach((entidad) -> {
-				entidad.attackEntityFrom(ListaDamageSources.TRAK_AOE(this), (float) this.getAttributeValue(ListaAtributos.AOE_ATTACK_DAMAGE));
+				entidad.attackEntityFrom(ListaDamageSources.TRAK_AOE(this), (float) this.getAttributeValue(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE));
 			});;
 		}
 	}
@@ -364,13 +364,13 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 			if(this.getFase() < 2) {
 				this.setFase((byte)2);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 9D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 9D, AttributeModifier.Operation.ADDITION));
 			}
 		} else {
 			if(this.getFase() < 3) {
 				this.setFase((byte)3);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
 			}
 		}
 		this.world.getProfiler().endSection();
@@ -626,6 +626,6 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 				.createMutableAttribute(Attributes.ARMOR, 7D)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 20D)
 				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D)
-				.createMutableAttribute(ListaAtributos.AOE_ATTACK_DAMAGE, 8D);
+				.createMutableAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE, 8D);
 	}
 }

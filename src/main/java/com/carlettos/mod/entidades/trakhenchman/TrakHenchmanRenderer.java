@@ -1,7 +1,9 @@
 package com.carlettos.mod.entidades.trakhenchman;
 
 import com.carlettos.mod.util.Util;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -11,6 +13,13 @@ public class TrakHenchmanRenderer extends MobRenderer<TrakHenchmanEntity, TrakHe
 	
 	public TrakHenchmanRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new TrakHenchmanModel(), 0.5F);
+	}
+	
+	@Override
+	public void render(TrakHenchmanEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
+		this.entityModel.aoe = entityIn.getAOEProgress(partialTicks);
+		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
 	@Override

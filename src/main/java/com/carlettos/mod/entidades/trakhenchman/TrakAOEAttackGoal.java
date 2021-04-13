@@ -2,7 +2,7 @@ package com.carlettos.mod.entidades.trakhenchman;
 
 import java.util.EnumSet;
 
-import com.carlettos.mod.util.IAOEMob;
+import com.carlettos.mod.entidades.interfaces.ITrakAOE;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -11,7 +11,7 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.vector.Vector3d;
 
-public class TrakAOEAttackGoal<E extends MonsterEntity & IAOEMob> extends Goal{
+public class TrakAOEAttackGoal<E extends MonsterEntity & ITrakAOE> extends Goal{
 	private final E entity;
 	private final boolean longMemory;
 	private final int intervalo = 20;

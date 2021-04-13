@@ -1,5 +1,9 @@
 package com.carlettos.mod;
 
+import com.carlettos.mod.entidades.aman.AmanEntity;
+import com.carlettos.mod.entidades.aman.AmanRenderer;
+import com.carlettos.mod.entidades.amanspider.AmanSpiderEntity;
+import com.carlettos.mod.entidades.amanspider.AmanSpiderRenderer;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRenderer;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
@@ -45,12 +49,16 @@ public class CarlettosMod {
 	
 	public void commonSetup(FMLCommonSetupEvent evento) {
 		evento.enqueueWork(() -> {
+			GlobalEntityTypeAttributes.put(ListaEntidades.AMAN, AmanEntity.getAtributos().create());
+			GlobalEntityTypeAttributes.put(ListaEntidades.AMAN_SPIDER, AmanSpiderEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_Y_TRAK, PrumTrakEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.TRAK_HENCHMAN, TrakHenchmanEntity.getAtributos().create());
 		});
 	}
 	
 	public void clientSetup(FMLClientSetupEvent evento) {
+		RenderingRegistry.<AmanEntity>registerEntityRenderingHandler(ListaEntidades.AMAN, AmanRenderer::new);
+		RenderingRegistry.<AmanSpiderEntity>registerEntityRenderingHandler(ListaEntidades.AMAN_SPIDER, AmanSpiderRenderer::new);
 		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_Y_TRAK, PrumTrakRenderer::new);
 		RenderingRegistry.<TrakHenchmanEntity>registerEntityRenderingHandler(ListaEntidades.TRAK_HENCHMAN, TrakHenchmanRenderer::new);
 		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_PROYECTIL, PrumProyectilRenderer::new);
@@ -79,6 +87,9 @@ public class CarlettosMod {
 			ListaItem.BOLA_ENDER_CORRUPTA.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
 			ListaItem.BLOQUE_ENDER_CORRUPTO.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
 			ListaItem.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
+
+			ListaItem.AMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spawn_egg"));
+			ListaItem.AMAN_SPIDER_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spider_spawn_egg"));
 			ListaItem.PRUM_Y_TRAK_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
 			ListaItem.TRAK_HENCHMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("trak_henchman_spawn_egg"));
 			
@@ -102,6 +113,9 @@ public class CarlettosMod {
 			event.getRegistry().register(ListaItem.BOLA_ENDER_CORRUPTA);
 			event.getRegistry().register(ListaItem.BLOQUE_ENDER_CORRUPTO);
 			event.getRegistry().register(ListaItem.PRUM_PROYECTIL);
+
+			event.getRegistry().register(ListaItem.AMAN_SPAWN_EGG);
+			event.getRegistry().register(ListaItem.AMAN_SPIDER_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.PRUM_Y_TRAK_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.TRAK_HENCHMAN_SPAWN_EGG);
 			
@@ -132,9 +146,16 @@ public class CarlettosMod {
 		@SubscribeEvent
 		public static void entidades(RegistryEvent.Register<EntityType<?>> evento) {
 			ListaEntidades.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
+
+			ListaEntidades.AMAN.setRegistryName(Util.getResLoc("aman"));
+			ListaEntidades.AMAN_SPIDER.setRegistryName(Util.getResLoc("aman_spider"));
 			ListaEntidades.PRUM_Y_TRAK.setRegistryName(Util.getResLoc("prum_y_trak"));
 			ListaEntidades.TRAK_HENCHMAN.setRegistryName(Util.getResLoc("trak_henchman"));
+			
 			evento.getRegistry().register(ListaEntidades.PRUM_PROYECTIL);
+
+			evento.getRegistry().register(ListaEntidades.AMAN);
+			evento.getRegistry().register(ListaEntidades.AMAN_SPIDER);
 			evento.getRegistry().register(ListaEntidades.PRUM_Y_TRAK);
 			evento.getRegistry().register(ListaEntidades.TRAK_HENCHMAN);
 		}
@@ -143,14 +164,20 @@ public class CarlettosMod {
 		public static void particulas(RegistryEvent.Register<ParticleType<?>> evento) {
 			ListaParticulas.PRUM_PARTICULA.setRegistryName(Util.getResLoc("prum_particula"));
 			ListaParticulas.TRAK_PARTICULA.setRegistryName(Util.getResLoc("trak_particula"));
+			
 			evento.getRegistry().register(ListaParticulas.PRUM_PARTICULA);
 			evento.getRegistry().register(ListaParticulas.TRAK_PARTICULA);
 		}
 		
 		@SubscribeEvent
 		public static void atributos(RegistryEvent.Register<Attribute> evento) {
-			ListaAtributos.AOE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("aoe_attack_damage"));
-			evento.getRegistry().register(ListaAtributos.AOE_ATTACK_DAMAGE);
+			ListaAtributos.TRAK_AOE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("trak_aoe_attack_damage"));
+			ListaAtributos.RANGE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("range_attack_damage"));
+			ListaAtributos.AMAN_EGG_COUNT.setRegistryName(Util.getResLoc("aman_egg_count"));
+
+			evento.getRegistry().register(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE);
+			evento.getRegistry().register(ListaAtributos.RANGE_ATTACK_DAMAGE);
+			evento.getRegistry().register(ListaAtributos.AMAN_EGG_COUNT);
 		}
 	}
 }

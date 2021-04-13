@@ -13,8 +13,7 @@ import net.minecraft.util.math.MathHelper;
 
 //Made with Blockbench 3.7.5
 public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implements IHasArm, IHasHead{
-	private float partial;
-	private float aoe;
+	public float aoe;
 	
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaabajo;
@@ -142,12 +141,6 @@ public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implement
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
-	}
-	
-	@Override
-	public void setLivingAnimations(TrakHenchmanEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-		this.partial = partialTick;
-		this.aoe = entityIn.getAOEProgress(this.partial);
 	}
 
 	@Override

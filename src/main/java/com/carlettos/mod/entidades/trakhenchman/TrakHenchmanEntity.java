@@ -1,9 +1,10 @@
 package com.carlettos.mod.entidades.trakhenchman;
 
+import com.carlettos.mod.entidades.interfaces.ITrakAOE;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaParticulas;
-import com.carlettos.mod.util.IAOEMob;
+import com.carlettos.mod.util.SCAnimatePackage;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 
-public class TrakHenchmanEntity extends MonsterEntity implements IAOEMob{
+public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	public static final DataParameter<Boolean> AOE_AGRESSIVE = EntityDataManager.createKey(TrakHenchmanEntity.class, DataSerializers.BOOLEAN);
 	public float AOEProgress;
 	public float prevAOEProgress;
@@ -33,6 +34,17 @@ public class TrakHenchmanEntity extends MonsterEntity implements IAOEMob{
 		super(ListaEntidades.TRAK_HENCHMAN, worldIn);
 	}
 	
+	public int getMaxAOEProgress() {
+		int base = 10;
+		if(this.isPotionActive(Effects.SPEED)) {
+			base -= this.getActivePotionEffect(Effects.SPEED).getAmplifier() * 2;
+		}
+		if(this.isPotionActive(Effects.SLOWNESS)) {
+			base += this.getActivePotionEffect(Effects.SLOWNESS).getAmplifier() * 6;
+		}
+    	return base;
+	}
+
 	public float getAOEProgress(float partialTick) {
 	      float f = this.AOEProgress - this.prevAOEProgress;
 	      if (f < 0.0F) {
@@ -60,12 +72,12 @@ public class TrakHenchmanEntity extends MonsterEntity implements IAOEMob{
 			this.AOEProgressInt = -1;
 			this.isAOEInProgress = true;
 			if(this.world instanceof ServerWorld) {
-				SAnimateAOEPacket sanimateaoe = new SAnimateAOEPacket(this);
+				SCAnimatePackage scanimate = new SCAnimatePackage(this, SCAnimatePackage.TRAK_AOE_ANIMATION_ID);
 				ServerChunkProvider scp = ((ServerWorld)this.world).getChunkProvider();
 				if(updateSelf) {
-					scp.sendToTrackingAndSelf(this, sanimateaoe);
+					scp.sendToTrackingAndSelf(this, scanimate);
 				} else {
-					scp.sendToAllTracking(this, sanimateaoe);
+					scp.sendToAllTracking(this, scanimate);
 				}
 			}
 		}
@@ -82,23 +94,20 @@ public class TrakHenchmanEntity extends MonsterEntity implements IAOEMob{
 			}
 			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), (entidad) -> {return entidad instanceof LivingEntity;}).forEach((entidad) -> {
 				if(entidad.isAlive()) {
-					entidad.attackEntityFrom(DamageSource.GENERIC, (float) this.getAttributeValue(ListaAtributos.AOE_ATTACK_DAMAGE));
+					entidad.attackEntityFrom(DamageSource.GENERIC, (float) this.getAttributeValue(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE));
 				}
 			});
 		}
 	}
-	
-	public int getMaxAOEProgress() {
-		int base = 10;
-		if(this.isPotionActive(Effects.SPEED)) {
-			base -= this.getActivePotionEffect(Effects.SPEED).getAmplifier() * 2;
-		}
-		if(this.isPotionActive(Effects.SLOWNESS)) {
-			base += this.getActivePotionEffect(Effects.SLOWNESS).getAmplifier() * 6;
-		}
-    	return base;
+
+	public boolean isAOEAgressive() {
+		return this.dataManager.get(AOE_AGRESSIVE);
 	}
 	
+	public void setAOEAgressive(boolean aoed) {
+		this.dataManager.set(AOE_AGRESSIVE, aoed);
+	}
+
 	@Override
 	public void baseTick() {
 		super.baseTick();
@@ -124,20 +133,12 @@ public class TrakHenchmanEntity extends MonsterEntity implements IAOEMob{
 		this.dataManager.register(AOE_AGRESSIVE, false);
 	}
 	
-	public boolean isAOEAgressive() {
-		return this.dataManager.get(AOE_AGRESSIVE);
-	}
-	
-	public void setAOEAgressive(boolean aoed) {
-		this.dataManager.set(AOE_AGRESSIVE, aoed);
-	}
-	
 	public static AttributeModifierMap.MutableAttribute getAtributos(){
 		return MonsterEntity.func_234295_eP_()
 				.createMutableAttribute(Attributes.MAX_HEALTH, 40D)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
 				.createMutableAttribute(Attributes.ARMOR, 4D)
-				.createMutableAttribute(ListaAtributos.AOE_ATTACK_DAMAGE, 5D);
+				.createMutableAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE, 5D);
 	}
 }
