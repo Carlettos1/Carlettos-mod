@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.trakhenchman;
+package com.carlettos.mod.entidades.trak.trakhenchman;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;

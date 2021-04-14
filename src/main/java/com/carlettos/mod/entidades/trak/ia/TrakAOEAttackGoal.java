@@ -1,8 +1,8 @@
-package com.carlettos.mod.entidades.trakhenchman;
+package com.carlettos.mod.entidades.trak.ia;
 
 import java.util.EnumSet;
 
-import com.carlettos.mod.entidades.interfaces.ITrakAOE;
+import com.carlettos.mod.entidades.trak.ITrakAOE;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;

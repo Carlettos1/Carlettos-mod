@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.prumytrak.proyectil;
+package com.carlettos.mod.entidades.prum.prumproyectil;
 
 import com.google.common.collect.ImmutableList;
 

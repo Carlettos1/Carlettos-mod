@@ -2,7 +2,7 @@ package com.carlettos.mod.entidades.aman.ia;
 
 import java.util.EnumSet;
 
-import com.carlettos.mod.entidades.interfaces.IAmanSpit;
+import com.carlettos.mod.entidades.aman.IAmanSpit;
 import com.carlettos.mod.listas.ListaAtributos;
 
 import net.minecraft.entity.LivingEntity;

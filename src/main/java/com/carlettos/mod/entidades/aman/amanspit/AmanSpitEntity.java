@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.amanspit;
+package com.carlettos.mod.entidades.aman.amanspit;
 
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.util.SCSpawnObjectPacket;

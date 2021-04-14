@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.interfaces;
+package com.carlettos.mod.entidades.aman;
 
 /**
  * variables usadas: prevProgress, progress, progressInt e isInProgress.
@@ -9,19 +9,19 @@ package com.carlettos.mod.entidades.interfaces;
  * Importante: en el baseTick debe hacerse que {@code prevProgress = progress;}
  * y registrar el DataParameter para ayudar en el EntityModel.
  */
-public interface IAmanSpit {
+public interface IAmanEggHatch {
 	
 	/**
 	 * Retorna la cantidad de ticks que debe durar la animación. 
 	 * Puede tomar en cuenta efectos de poción o lo que sea necesario.
 	 */
-	public int getMaxSpitProgress();
+	public int getMaxHatchProgress();
 	
 	/**
 	 * Generalmente es la forma {@code prevProgress + partialTick * (progress - prevProgress)}, 
 	 * o sea, retorna el punto {@code partialTick} entre el progreso actual y el anterior.
 	 */
-	public float getSpitProgress(float partialTick);
+	public float getHatchProgress(float partialTick);
 	
 	/**
 	 * Actualiza el progressInt y el progress. 
@@ -30,26 +30,26 @@ public interface IAmanSpit {
 	 * 
 	 * Importante: Se utiliza en el {@code livingTick();}
 	 */
-	public void updateSpitProgress();
+	public void updateHatchProgress();
 
 	/**
 	 * Manda un IPacket al ServerChunkProvider, desde el server, para trackear la animación, pero,
 	 * solo lo hace si la animación no está iniciada, o si se puede interrumpir.
 	 */		
-	public void spitAnimation(boolean updateSelf);
+	public void hatchAnimation(boolean updateSelf);
 	
 	/**
 	 * Efectúa la acción, generalmente un ataque.
 	 */
-	public void spitAttack();
+	public void hatch(int amount);
 	
 	/**
 	 * Retorna el DataParameter, generalmente lo usa el EntityModel.
 	 */
-	public boolean isSpitting();
+	public boolean isHatching();
 	
 	/**
 	 * Cambia el DataParameter, generalmente lo hace el Goal.
 	 */
-	public void setSpitting(boolean spiting);
+	public void setHatching(boolean hatching);
 }

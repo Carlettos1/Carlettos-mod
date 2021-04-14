@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.aman;
+package com.carlettos.mod.entidades.aman.aman;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;

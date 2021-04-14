@@ -1,5 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak.proyectil;
+package com.carlettos.mod.items;
 
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.util.Util;
 
 import net.minecraft.entity.LivingEntity;

@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.amanspider;
+package com.carlettos.mod.entidades.aman.amanspider;
 
 import com.carlettos.mod.listas.ListaAtributos;
 import com.mojang.blaze3d.matrix.MatrixStack;

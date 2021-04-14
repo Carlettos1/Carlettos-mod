@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.interfaces;
+package com.carlettos.mod.entidades.aman;
 
 /**
  * variables usadas: prevProgress, progress, progressInt e isInProgress.
@@ -9,19 +9,19 @@ package com.carlettos.mod.entidades.interfaces;
  * Importante: en el baseTick debe hacerse que {@code prevProgress = progress;}
  * y registrar el DataParameter para ayudar en el EntityModel.
  */
-public interface ITrakAOE {
+public interface IAmanSpit {
 	
 	/**
 	 * Retorna la cantidad de ticks que debe durar la animación. 
 	 * Puede tomar en cuenta efectos de poción o lo que sea necesario.
 	 */
-	public int getMaxAOEProgress();
+	public int getMaxSpitProgress();
 	
 	/**
 	 * Generalmente es la forma {@code prevProgress + partialTick * (progress - prevProgress)}, 
 	 * o sea, retorna el punto {@code partialTick} entre el progreso actual y el anterior.
 	 */
-	public float getAOEProgress(float partialTick);
+	public float getSpitProgress(float partialTick);
 	
 	/**
 	 * Actualiza el progressInt y el progress. 
@@ -30,26 +30,26 @@ public interface ITrakAOE {
 	 * 
 	 * Importante: Se utiliza en el {@code livingTick();}
 	 */
-	public void updateAOEProgress();
-	
+	public void updateSpitProgress();
+
 	/**
 	 * Manda un IPacket al ServerChunkProvider, desde el server, para trackear la animación, pero,
 	 * solo lo hace si la animación no está iniciada, o si se puede interrumpir.
-	 */	
-	public void AOEAnimation(boolean updateSelf);
+	 */		
+	public void spitAnimation(boolean updateSelf);
 	
 	/**
 	 * Efectúa la acción, generalmente un ataque.
 	 */
-	public void AOEAttack(double radio);
+	public void spitAttack();
 	
 	/**
 	 * Retorna el DataParameter, generalmente lo usa el EntityModel.
 	 */
-	public boolean isAOEAgressive();
+	public boolean isSpitting();
 	
 	/**
 	 * Cambia el DataParameter, generalmente lo hace el Goal.
 	 */
-	public void setAOEAgressive(boolean aoed);
+	public void setSpitting(boolean spiting);
 }

@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.amanspit;
+package com.carlettos.mod.entidades.prum.prumproyectil;
 
 import com.carlettos.mod.util.Util;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -9,18 +9,19 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
-public class AmanSpitRenderer extends EntityRenderer<AmanSpitEntity>{
-	public static final ResourceLocation AMAN_SPIT_TEXTURE = Util.getResLoc("textures/entity/aman_spit.png");
-	private final AmanSpitModel modelo = new AmanSpitModel();
+public class PrumProyectilRenderer extends EntityRenderer<PrumProyectilEntity> {
+	public static final ResourceLocation PRUM_PROYECTILE_TEXTURE = Util.getResLoc("textures/entity/prum_proyectil.png");
+	private final PrumProyectilModel modelo = new PrumProyectilModel();
 	
-	public AmanSpitRenderer(EntityRendererManager renderManager) {
-		super(renderManager);
+	public PrumProyectilRenderer(EntityRendererManager renderManagerIn) {
+		super(renderManagerIn);
 	}
 	
 	@Override
-	public void render(AmanSpitEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
+	public void render(PrumProyectilEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
 		matrixStackIn.push();
+		matrixStackIn.translate(0, -1.375F, 0);
 		IVertexBuilder ivertex = bufferIn.getBuffer(this.modelo.getRenderType(this.getEntityTexture(entityIn)));
 		this.modelo.render(matrixStackIn, ivertex, packedLightIn, packedLightIn, packedLightIn, entityYaw, partialTicks, packedLightIn);
 		this.modelo.setRotationAngles(entityIn, 0, 0, 0, entityIn.getYaw(partialTicks), entityIn.getPitch(partialTicks));
@@ -29,7 +30,7 @@ public class AmanSpitRenderer extends EntityRenderer<AmanSpitEntity>{
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(AmanSpitEntity entity) {
-		return AMAN_SPIT_TEXTURE;
+	public ResourceLocation getEntityTexture(PrumProyectilEntity entity) {
+		return PRUM_PROYECTILE_TEXTURE;
 	}
 }

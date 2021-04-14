@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.amanspit;
+package com.carlettos.mod.entidades.aman.amanspit;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;

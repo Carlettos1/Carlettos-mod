@@ -1,6 +1,7 @@
-package com.carlettos.mod.entidades.trakhenchman;
+package com.carlettos.mod.entidades.trak.trakhenchman;
 
-import com.carlettos.mod.entidades.interfaces.ITrakAOE;
+import com.carlettos.mod.entidades.trak.ITrakAOE;
+import com.carlettos.mod.entidades.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaParticulas;

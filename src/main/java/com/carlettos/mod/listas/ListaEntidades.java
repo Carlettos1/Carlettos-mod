@@ -1,11 +1,11 @@
 package com.carlettos.mod.listas;
 
-import com.carlettos.mod.entidades.aman.AmanEntity;
-import com.carlettos.mod.entidades.amanspider.AmanSpiderEntity;
-import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
+import com.carlettos.mod.entidades.aman.aman.AmanEntity;
+import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderEntity;
+import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
-import com.carlettos.mod.entidades.trakhenchman.TrakHenchmanEntity;
+import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanEntity;
 import com.carlettos.mod.util.Util;
 
 import net.minecraft.entity.EntityClassification;

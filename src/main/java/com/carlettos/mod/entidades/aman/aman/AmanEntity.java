@@ -1,46 +1,36 @@
-package com.carlettos.mod.entidades.amanspider;
+package com.carlettos.mod.entidades.aman.aman;
 
+import com.carlettos.mod.entidades.aman.IAmanEggHatch;
+import com.carlettos.mod.entidades.aman.IAmanSpit;
+import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.aman.ia.AmanEggHatchGoal;
 import com.carlettos.mod.entidades.aman.ia.AmanSpitGoal;
-import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
-import com.carlettos.mod.entidades.interfaces.IAmanEggHatch;
-import com.carlettos.mod.entidades.interfaces.IAmanSpit;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.util.SCAnimatePackage;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 
-public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpit {
-	public static final DataParameter<Boolean> HATCHING = EntityDataManager.createKey(AmanSpiderEntity.class, DataSerializers.BOOLEAN);
-	public static final DataParameter<Boolean> SPITING = EntityDataManager.createKey(AmanSpiderEntity.class, DataSerializers.BOOLEAN);
-	
+public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpit{
+	public static final DataParameter<Boolean> HATCHING = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> SPITING = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BYTE);
+
 	public float hatchingProgress;
 	public float prevHatchingProgress;
 	public boolean isHatchInProgress;
@@ -50,76 +40,25 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	public float prevSpitProgress;
 	public boolean isSpitInProgress;
 	public int spitProgressInt;
-
-	private final AmanSpitGoal<AmanSpiderEntity> spitGoal = new AmanSpitGoal<>(this, 20);
-	private final AmanEggHatchGoal<AmanSpiderEntity> hatchGoal = new AmanEggHatchGoal<>(this, 60);
-
-	public AmanSpiderEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
+	
+	public AmanEntity(EntityType<? extends AmanEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
-
-	public AmanSpiderEntity(World worldIn) {
-		super(ListaEntidades.AMAN_SPIDER, worldIn);
-	}
-
+	
 	@Override
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason,
-			ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
-		spawnDataIn = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-		switch (reason) {
-		case REINFORCEMENT:
-			if (spawnDataIn == null) {
-				spawnDataIn = new AmanSpiderEntity.GroupData(this.world.getRandom().nextFloat() >= 0.5F, false);
-			}
-		default:
-			if (spawnDataIn == null) {
-				// numero que hace que el 50% de las arañas no tengan nada y el otro 50% tenga
-				// algo.
-				float f = 1F - 1F / MathHelper.SQRT_2;
-				spawnDataIn = new AmanSpiderEntity.GroupData(this.world.getRandom().nextFloat() >= f,
-						this.world.getRandom().nextFloat() >= f);
-			}
-			if (spawnDataIn instanceof AmanSpiderEntity.GroupData) {
-				if (((AmanSpiderEntity.GroupData) spawnDataIn).isHatch) {
-					AttributeModifier attributeModifier = new AttributeModifier("Random Spawn Start",
-							MathHelper.clamp(this.world.getRandom().nextInt(10) + 1, 2, 10), Operation.ADDITION);
-					this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(attributeModifier);
-				} else {
-					this.goalSelector.removeGoal(this.hatchGoal);
-				}
-				if (((AmanSpiderEntity.GroupData) spawnDataIn).isSpit) {
-					AttributeModifier attributeModifier = new AttributeModifier("Spawn Start", 8D, Operation.ADDITION);
-					this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(attributeModifier);
-				} else {
-					this.goalSelector.removeGoal(this.spitGoal);
-				}
-			}
-			break;
-		}
-		return spawnDataIn;
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(HATCHING, false);
+		this.dataManager.register(SPITING, false);
+		this.dataManager.register(FASE, (byte)1);
 	}
-
-	@Override
-	public void baseTick() {
-		super.baseTick();
-		this.prevHatchingProgress = this.hatchingProgress;
-		this.prevSpitProgress = this.spitProgress;
-	}
-
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		this.updateHatchProgress();
-		this.updateSpitProgress();
-	}
-
+	
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
-		this.goalSelector.addGoal(2, this.hatchGoal);
-		this.goalSelector.addGoal(3, this.spitGoal);
-		this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 0.8D, 1));
-
+		this.goalSelector.addGoal(2, new AmanSpitGoal<>(this, 10));
+		this.goalSelector.addGoal(3, new AmanEggHatchGoal<>(this, 60));
+		
 		this.targetSelector.addGoal(1,
 				new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {
 					return entidad.isAlive();
@@ -129,21 +68,53 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 					return entidad.isAlive();
 				}));
 	}
-
+	
 	@Override
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(HATCHING, false);
-		this.dataManager.register(SPITING, false);
+	public void tick() {
+		super.tick();
+		this.actualizarFase();
+	}
+	
+	@Override
+	public void baseTick() {
+		super.baseTick();
+		this.prevHatchingProgress = this.hatchingProgress;
+		this.prevSpitProgress = this.spitProgress;
+	}
+	
+	@Override
+	public void livingTick() {
+		super.livingTick();
+		this.updateHatchProgress();
+		this.updateSpitProgress();
+	}
+	
+	private void actualizarFase() {
+		double ratio = this.getHealth() / getMaxHealth();
+		if(ratio > 2F/3F) {
+		} else if(ratio > 1F/3F) {
+			if(this.getFase() < 2) {
+				this.setFase((byte)2);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
+			}
+		} else {
+			if(this.getFase() < 3) {
+				this.setFase((byte)3);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
+			}
+		}
 	}
 
-	public static AttributeModifierMap.MutableAttribute getAtributos() {
-		return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MAX_HEALTH, 40D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
-				.createMutableAttribute(Attributes.FOLLOW_RANGE, 64D)
-				.createMutableAttribute(Attributes.ARMOR, 4D)
-				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE)
-				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT);
+	public byte getFase() {
+		return this.dataManager.get(FASE);
+	}
+	
+	public void setFase(byte fase) {
+		this.dataManager.set(FASE, fase);
 	}
 
 	@Override
@@ -268,7 +239,10 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	@Override
 	public void hatch(int amount) {
 		if (!this.world.isRemote) {
-			ListaEntidades.AMAN_SPIDER.spawn((ServerWorld) world, null, null, this.getPosition(), SpawnReason.REINFORCEMENT, false, false);
+			double count = this.getAttributeValue(ListaAtributos.AMAN_EGG_COUNT);
+			for(int i = 0; i < count; i++) {			
+				ListaEntidades.AMAN_SPIDER.spawn((ServerWorld) world, null, null, this.getPosition(), SpawnReason.REINFORCEMENT, false, false);
+			}
 		}
 	}
 
@@ -281,14 +255,14 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	public void setHatching(boolean hatching) {
 		this.dataManager.set(HATCHING, hatching);
 	}
-
-	public static class GroupData implements ILivingEntityData {
-		public final boolean isSpit;
-		public final boolean isHatch;
-
-		public GroupData(boolean isRango, boolean isHatch) {
-			this.isHatch = isHatch;
-			this.isSpit = isRango;
-		}
+	
+	public static AttributeModifierMap.MutableAttribute getAtributos(){
+		return MonsterEntity.func_234295_eP_()
+				.createMutableAttribute(Attributes.MAX_HEALTH, 40D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
+				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
+				.createMutableAttribute(Attributes.ARMOR, 4D)
+				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 8D)
+				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT, 2D);
 	}
 }

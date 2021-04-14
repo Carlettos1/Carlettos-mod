@@ -2,8 +2,8 @@ package com.carlettos.mod.entidades.aman.ia;
 
 import java.util.EnumSet;
 
-import com.carlettos.mod.entidades.aman.AmanEntity;
-import com.carlettos.mod.entidades.interfaces.IAmanEggHatch;
+import com.carlettos.mod.entidades.aman.IAmanEggHatch;
+import com.carlettos.mod.entidades.aman.aman.AmanEntity;
 import com.carlettos.mod.listas.ListaAtributos;
 
 import net.minecraft.entity.LivingEntity;
@@ -67,7 +67,7 @@ public class AmanEggHatchGoal<E extends MonsterEntity & IAmanEggHatch> extends G
 			this.counter = 0;
 			this.entity.hatchAnimation(false);
 			if(entity instanceof AmanEntity) {
-				//TODO: fases de la Aman
+				this.entity.hatch(1);
 			} else {
 				this.entity.hatch(1);
 				this.entity.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("Egg Hatched", -1, Operation.ADDITION));

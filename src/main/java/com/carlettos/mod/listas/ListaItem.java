@@ -1,7 +1,7 @@
 package com.carlettos.mod.listas;
 
-import com.carlettos.mod.Runa;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
+import com.carlettos.mod.items.PrumProyectilItem;
+import com.carlettos.mod.items.Runa;
 import com.carlettos.mod.util.Letra;
 import com.carlettos.mod.util.Util;
 

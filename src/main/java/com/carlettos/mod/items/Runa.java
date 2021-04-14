@@ -1,10 +1,9 @@
-package com.carlettos.mod;
+package com.carlettos.mod.items;
 
 import java.util.List;
 import java.util.Set;
 
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.util.Letra;
 import com.carlettos.mod.util.Util;
@@ -13,8 +12,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.EnderPearlItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
@@ -23,9 +20,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;

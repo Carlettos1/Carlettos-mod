@@ -3,6 +3,7 @@ package com.carlettos.mod.entidades.prumytrak;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakLookAtGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakLookRandomlyGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.PrumTrakNearestAttackableTargetGoal;
@@ -12,8 +13,7 @@ import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRandomRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAreaAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAttackGoal;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilItem;
+import com.carlettos.mod.items.PrumProyectilItem;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaEntidades;

@@ -1,17 +1,17 @@
 package com.carlettos.mod;
 
-import com.carlettos.mod.entidades.aman.AmanEntity;
-import com.carlettos.mod.entidades.aman.AmanRenderer;
-import com.carlettos.mod.entidades.amanspider.AmanSpiderEntity;
-import com.carlettos.mod.entidades.amanspider.AmanSpiderRenderer;
-import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
-import com.carlettos.mod.entidades.amanspit.AmanSpitRenderer;
+import com.carlettos.mod.entidades.aman.aman.AmanEntity;
+import com.carlettos.mod.entidades.aman.aman.AmanRenderer;
+import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderEntity;
+import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderRenderer;
+import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
+import com.carlettos.mod.entidades.aman.amanspit.AmanSpitRenderer;
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
+import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilRenderer;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRenderer;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
-import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilRenderer;
-import com.carlettos.mod.entidades.trakhenchman.TrakHenchmanEntity;
-import com.carlettos.mod.entidades.trakhenchman.TrakHenchmanRenderer;
+import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanEntity;
+import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanRenderer;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaBloques;
 import com.carlettos.mod.listas.ListaEntidades;

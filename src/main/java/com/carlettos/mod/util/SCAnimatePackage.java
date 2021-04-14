@@ -2,9 +2,9 @@ package com.carlettos.mod.util;
 
 import java.io.IOException;
 
-import com.carlettos.mod.entidades.interfaces.IAmanEggHatch;
-import com.carlettos.mod.entidades.interfaces.IAmanSpit;
-import com.carlettos.mod.entidades.interfaces.ITrakAOE;
+import com.carlettos.mod.entidades.aman.IAmanEggHatch;
+import com.carlettos.mod.entidades.aman.IAmanSpit;
+import com.carlettos.mod.entidades.trak.ITrakAOE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
