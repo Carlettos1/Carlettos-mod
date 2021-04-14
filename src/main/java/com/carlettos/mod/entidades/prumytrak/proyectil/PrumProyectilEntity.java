@@ -3,6 +3,7 @@ package com.carlettos.mod.entidades.prumytrak.proyectil;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.listas.ListaParticulas;
+import com.carlettos.mod.util.SCSpawnObjectPacket;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -193,6 +194,6 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		Entity entity = this.func_234616_v_();
-		return new PrumProyectilPacketHandler(this, entity == null ? 0 : entity.getEntityId());
+		return new SCSpawnObjectPacket(this, entity == null ? 0 : entity.getEntityId());
 	}
 }

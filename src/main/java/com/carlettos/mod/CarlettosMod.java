@@ -4,6 +4,8 @@ import com.carlettos.mod.entidades.aman.AmanEntity;
 import com.carlettos.mod.entidades.aman.AmanRenderer;
 import com.carlettos.mod.entidades.amanspider.AmanSpiderEntity;
 import com.carlettos.mod.entidades.amanspider.AmanSpiderRenderer;
+import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
+import com.carlettos.mod.entidades.amanspit.AmanSpitRenderer;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRenderer;
 import com.carlettos.mod.entidades.prumytrak.proyectil.PrumProyectilEntity;
@@ -59,6 +61,8 @@ public class CarlettosMod {
 	public void clientSetup(FMLClientSetupEvent evento) {
 		RenderingRegistry.<AmanEntity>registerEntityRenderingHandler(ListaEntidades.AMAN, AmanRenderer::new);
 		RenderingRegistry.<AmanSpiderEntity>registerEntityRenderingHandler(ListaEntidades.AMAN_SPIDER, AmanSpiderRenderer::new);
+		RenderingRegistry.<AmanSpitEntity>registerEntityRenderingHandler(ListaEntidades.AMAN_SPIT, AmanSpitRenderer::new);
+		
 		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_Y_TRAK, PrumTrakRenderer::new);
 		RenderingRegistry.<TrakHenchmanEntity>registerEntityRenderingHandler(ListaEntidades.TRAK_HENCHMAN, TrakHenchmanRenderer::new);
 		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_PROYECTIL, PrumProyectilRenderer::new);
@@ -145,13 +149,15 @@ public class CarlettosMod {
 		
 		@SubscribeEvent
 		public static void entidades(RegistryEvent.Register<EntityType<?>> evento) {
+			ListaEntidades.AMAN_SPIT.setRegistryName(Util.getResLoc("aman_spit"));
 			ListaEntidades.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
 
 			ListaEntidades.AMAN.setRegistryName(Util.getResLoc("aman"));
 			ListaEntidades.AMAN_SPIDER.setRegistryName(Util.getResLoc("aman_spider"));
 			ListaEntidades.PRUM_Y_TRAK.setRegistryName(Util.getResLoc("prum_y_trak"));
 			ListaEntidades.TRAK_HENCHMAN.setRegistryName(Util.getResLoc("trak_henchman"));
-			
+
+			evento.getRegistry().register(ListaEntidades.AMAN_SPIT);
 			evento.getRegistry().register(ListaEntidades.PRUM_PROYECTIL);
 
 			evento.getRegistry().register(ListaEntidades.AMAN);

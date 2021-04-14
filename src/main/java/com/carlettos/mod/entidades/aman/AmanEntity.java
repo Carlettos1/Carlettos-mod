@@ -2,6 +2,7 @@ package com.carlettos.mod.entidades.aman;
 
 import com.carlettos.mod.entidades.aman.ia.AmanEggHatchGoal;
 import com.carlettos.mod.entidades.aman.ia.AmanSpitGoal;
+import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.interfaces.IAmanEggHatch;
 import com.carlettos.mod.entidades.interfaces.IAmanSpit;
 import com.carlettos.mod.listas.ListaAtributos;
@@ -18,10 +19,6 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -49,6 +46,14 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	}
 	
 	@Override
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(HATCHING, false);
+		this.dataManager.register(SPITING, false);
+		this.dataManager.register(FASE, (byte)1);
+	}
+	
+	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new AmanSpitGoal<>(this, 10));
@@ -65,43 +70,9 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	}
 	
 	@Override
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(HATCHING, false);
-		this.dataManager.register(SPITING, false);
-		this.dataManager.register(FASE, (byte)1);
-	}
-	
-	public static AttributeModifierMap.MutableAttribute getAtributos(){
-		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MAX_HEALTH, 40D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
-				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
-				.createMutableAttribute(Attributes.ARMOR, 4D)
-				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 8D)
-				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT, 2D);
-	}
-	
-	@Override
 	public void tick() {
 		super.tick();
-		double ratio = this.getHealth() / getMaxHealth();
-		if(ratio > 2F/3F) {
-		} else if(ratio > 1F/3F) {
-			if(this.getFase() < 2) {
-				this.setFase((byte)2);
-				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
-			}
-		} else {
-			if(this.getFase() < 3) {
-				this.setFase((byte)3);
-				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 4D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
-				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
-			}
-		}
+		this.actualizarFase();
 	}
 	
 	@Override
@@ -118,6 +89,26 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 		this.updateSpitProgress();
 	}
 	
+	private void actualizarFase() {
+		double ratio = this.getHealth() / getMaxHealth();
+		if(ratio > 2F/3F) {
+		} else if(ratio > 1F/3F) {
+			if(this.getFase() < 2) {
+				this.setFase((byte)2);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
+			}
+		} else {
+			if(this.getFase() < 3) {
+				this.setFase((byte)3);
+				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
+			}
+		}
+	}
+
 	public byte getFase() {
 		return this.dataManager.get(FASE);
 	}
@@ -176,16 +167,15 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	@Override
 	public void spitAttack() {
 		if (!this.world.isRemote) {
-			AbstractArrowEntity arrow = ((ArrowItem) Items.ARROW).createArrow(this.world, ItemStack.EMPTY, this);
-			arrow.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw,
-					this.rotationPitch);
+			AmanSpitEntity spit = new AmanSpitEntity(this.world);
+			spit.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
 			double dx = this.getAttackTarget().getPosX() - this.getPosX();
 			double dy = this.getAttackTarget().getPosYEye() - this.getPosYEye();
 			double dz = this.getAttackTarget().getPosZ() - this.getPosZ();
-			arrow.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
-			arrow.shoot(dx, dy, dz, 1.6F, 2F);
-			// TODO: spit decente
-			this.world.addEntity(arrow);
+			spit.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
+			spit.shoot(dx, dy, dz, 2F, 1F);
+			this.world.addEntity(spit);
+			//TODO: sonido
 		}
 	}
 
@@ -264,5 +254,15 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	@Override
 	public void setHatching(boolean hatching) {
 		this.dataManager.set(HATCHING, hatching);
+	}
+	
+	public static AttributeModifierMap.MutableAttribute getAtributos(){
+		return MonsterEntity.func_234295_eP_()
+				.createMutableAttribute(Attributes.MAX_HEALTH, 40D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
+				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
+				.createMutableAttribute(Attributes.ARMOR, 4D)
+				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 8D)
+				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT, 2D);
 	}
 }

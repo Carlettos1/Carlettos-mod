@@ -2,6 +2,7 @@ package com.carlettos.mod.entidades.amanspider;
 
 import com.carlettos.mod.entidades.aman.ia.AmanEggHatchGoal;
 import com.carlettos.mod.entidades.aman.ia.AmanSpitGoal;
+import com.carlettos.mod.entidades.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.interfaces.IAmanEggHatch;
 import com.carlettos.mod.entidades.interfaces.IAmanSpit;
 import com.carlettos.mod.listas.ListaAtributos;
@@ -195,16 +196,15 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	@Override
 	public void spitAttack() {
 		if (!this.world.isRemote) {
-			AbstractArrowEntity arrow = ((ArrowItem) Items.ARROW).createArrow(this.world, ItemStack.EMPTY, this);
-			arrow.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw,
-					this.rotationPitch);
+			AmanSpitEntity spit = new AmanSpitEntity(this.world);
+			spit.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
 			double dx = this.getAttackTarget().getPosX() - this.getPosX();
 			double dy = this.getAttackTarget().getPosYEye() - this.getPosYEye();
 			double dz = this.getAttackTarget().getPosZ() - this.getPosZ();
-			arrow.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
-			arrow.shoot(dx, dy, dz, 1.6F, 2F);
-			// TODO: spit decente
-			this.world.addEntity(arrow);
+			spit.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
+			spit.shoot(dx, dy, dz, 2F, 1F);
+			this.world.addEntity(spit);
+			//TODO: sonido
 		}
 	}
 
