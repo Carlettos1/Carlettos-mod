@@ -10,8 +10,12 @@ import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilRenderer;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakRenderer;
-import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanEntity;
-import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanRenderer;
+import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanRenderer;
+import com.carlettos.mod.entidades.prumytrak.prumtrakhenchman.PrumTrakHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.prumtrakhenchman.PrumTrakHenchmanRenderer;
+import com.carlettos.mod.entidades.prumytrak.trak.trakhenchman.TrakHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.trak.trakhenchman.TrakHenchmanRenderer;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaBloques;
 import com.carlettos.mod.listas.ListaEntidades;
@@ -55,6 +59,8 @@ public class CarlettosMod {
 			GlobalEntityTypeAttributes.put(ListaEntidades.AMAN_SPIDER, AmanSpiderEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_Y_TRAK, PrumTrakEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.TRAK_HENCHMAN, TrakHenchmanEntity.getAtributos().create());
+			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_HENCHMAN, PrumHenchmanEntity.getAtributos().create());
+			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_TRAK_HENCHMAN, PrumTrakHenchmanEntity.getAtributos().create());
 		});
 	}
 	
@@ -65,6 +71,8 @@ public class CarlettosMod {
 		
 		RenderingRegistry.<PrumTrakEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_Y_TRAK, PrumTrakRenderer::new);
 		RenderingRegistry.<TrakHenchmanEntity>registerEntityRenderingHandler(ListaEntidades.TRAK_HENCHMAN, TrakHenchmanRenderer::new);
+		RenderingRegistry.<PrumHenchmanEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_HENCHMAN, PrumHenchmanRenderer::new);
+		RenderingRegistry.<PrumTrakHenchmanEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_TRAK_HENCHMAN, PrumTrakHenchmanRenderer::new);
 		RenderingRegistry.<PrumProyectilEntity>registerEntityRenderingHandler(ListaEntidades.PRUM_PROYECTIL, PrumProyectilRenderer::new);
 	}
 
@@ -90,12 +98,13 @@ public class CarlettosMod {
 		public static void items(RegistryEvent.Register<Item> event) {
 			ListaItem.BOLA_ENDER_CORRUPTA.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
 			ListaItem.BLOQUE_ENDER_CORRUPTO.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
-			ListaItem.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
 
 			ListaItem.AMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spawn_egg"));
 			ListaItem.AMAN_SPIDER_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spider_spawn_egg"));
 			ListaItem.PRUM_Y_TRAK_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
 			ListaItem.TRAK_HENCHMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("trak_henchman_spawn_egg"));
+			ListaItem.PRUM_HENCHMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_henchman_spawn_egg"));
+			ListaItem.PRUM_TRAK_HENCHMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_trak_henchman_spawn_egg"));
 			
 			ListaItem.RUNA_AMAN.setRegistryName(Util.getResLoc("runa_aman"));
 			ListaItem.RUNA_DUR.setRegistryName(Util.getResLoc("runa_dur"));
@@ -116,12 +125,13 @@ public class CarlettosMod {
 			
 			event.getRegistry().register(ListaItem.BOLA_ENDER_CORRUPTA);
 			event.getRegistry().register(ListaItem.BLOQUE_ENDER_CORRUPTO);
-			event.getRegistry().register(ListaItem.PRUM_PROYECTIL);
 
 			event.getRegistry().register(ListaItem.AMAN_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.AMAN_SPIDER_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.PRUM_Y_TRAK_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.TRAK_HENCHMAN_SPAWN_EGG);
+			event.getRegistry().register(ListaItem.PRUM_HENCHMAN_SPAWN_EGG);
+			event.getRegistry().register(ListaItem.PRUM_TRAK_HENCHMAN_SPAWN_EGG);
 			
 			event.getRegistry().register(ListaItem.RUNA_AMAN);
 			event.getRegistry().register(ListaItem.RUNA_DUR);
@@ -156,6 +166,8 @@ public class CarlettosMod {
 			ListaEntidades.AMAN_SPIDER.setRegistryName(Util.getResLoc("aman_spider"));
 			ListaEntidades.PRUM_Y_TRAK.setRegistryName(Util.getResLoc("prum_y_trak"));
 			ListaEntidades.TRAK_HENCHMAN.setRegistryName(Util.getResLoc("trak_henchman"));
+			ListaEntidades.PRUM_HENCHMAN.setRegistryName(Util.getResLoc("prum_henchman"));
+			ListaEntidades.PRUM_TRAK_HENCHMAN.setRegistryName(Util.getResLoc("prum_trak_henchman"));
 
 			evento.getRegistry().register(ListaEntidades.AMAN_SPIT);
 			evento.getRegistry().register(ListaEntidades.PRUM_PROYECTIL);
@@ -164,6 +176,8 @@ public class CarlettosMod {
 			evento.getRegistry().register(ListaEntidades.AMAN_SPIDER);
 			evento.getRegistry().register(ListaEntidades.PRUM_Y_TRAK);
 			evento.getRegistry().register(ListaEntidades.TRAK_HENCHMAN);
+			evento.getRegistry().register(ListaEntidades.PRUM_HENCHMAN);
+			evento.getRegistry().register(ListaEntidades.PRUM_TRAK_HENCHMAN);
 		}
 		
 		@SubscribeEvent

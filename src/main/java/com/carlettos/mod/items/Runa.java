@@ -41,7 +41,7 @@ public class Runa extends Item{
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if(this.letra.equals(Letra.PRUM)) {
 			if(!worldIn.isRemote){
-				PrumProyectilEntity proyectil = (PrumProyectilEntity) ((PrumProyectilItem)ListaItem.PRUM_PROYECTIL).createArrow(worldIn, new ItemStack(ListaItem.PRUM_PROYECTIL), playerIn);
+				PrumProyectilEntity proyectil = new PrumProyectilEntity(worldIn, playerIn);
 				proyectil.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0, 3, 1);
 				
 				proyectil.setDamage(proyectil.getDamage() + 1D);

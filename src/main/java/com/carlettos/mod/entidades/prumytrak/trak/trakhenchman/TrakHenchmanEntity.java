@@ -1,9 +1,8 @@
-package com.carlettos.mod.entidades.trak.trakhenchman;
+package com.carlettos.mod.entidades.prumytrak.trak.trakhenchman;
 
-import com.carlettos.mod.entidades.trak.ITrakAOE;
-import com.carlettos.mod.entidades.trak.ia.TrakAOEAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
+import com.carlettos.mod.entidades.prumytrak.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
-import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaParticulas;
 import com.carlettos.mod.util.SCAnimatePackage;
 
@@ -32,9 +31,35 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	public boolean isAOEInProgress;
 
 	public TrakHenchmanEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
-		super(ListaEntidades.TRAK_HENCHMAN, worldIn);
+		super(type, worldIn);
 	}
 	
+	@Override
+	public void baseTick() {
+		super.baseTick();
+		this.prevAOEProgress = this.AOEProgress;
+	}
+	
+	@Override
+	public void livingTick() {
+		super.livingTick();
+		this.updateAOEProgress();
+	}
+	
+	@Override
+	protected void registerGoals() {
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.8D, true));
+		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 3D));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.getClass().equals(SheepEntity.class);}));
+	}
+	
+	@Override
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(AOE_AGRESSIVE, false);
+	}
+	
+	@Override
 	public int getMaxAOEProgress() {
 		int base = 10;
 		if(this.isPotionActive(Effects.SPEED)) {
@@ -43,9 +68,10 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 		if(this.isPotionActive(Effects.SLOWNESS)) {
 			base += this.getActivePotionEffect(Effects.SLOWNESS).getAmplifier() * 6;
 		}
-    	return base;
+    	return base < 0 ? 0: base;
 	}
-
+	
+	@Override
 	public float getAOEProgress(float partialTick) {
 	      float f = this.AOEProgress - this.prevAOEProgress;
 	      if (f < 0.0F) {
@@ -54,6 +80,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	      return this.prevAOEProgress + f * partialTick;
 	}
 	
+	@Override
 	public void updateAOEProgress() {
 		int i = this.getMaxAOEProgress();
 		if(this.isAOEInProgress) {
@@ -68,6 +95,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 		this.AOEProgress = (float)this.AOEProgressInt / (float)i;
 	}
 	
+	@Override
 	public void AOEAnimation(boolean updateSelf) {
 		if(!this.isAOEInProgress || this.AOEProgressInt >= this.getMaxAOEProgress() / 2 || this.AOEProgressInt < 0) {
 			this.AOEProgressInt = -1;
@@ -100,38 +128,15 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 			});
 		}
 	}
-
+	
+	@Override
 	public boolean isAOEAgressive() {
 		return this.dataManager.get(AOE_AGRESSIVE);
 	}
 	
+	@Override
 	public void setAOEAgressive(boolean aoed) {
 		this.dataManager.set(AOE_AGRESSIVE, aoed);
-	}
-
-	@Override
-	public void baseTick() {
-		super.baseTick();
-		this.prevAOEProgress = this.AOEProgress;
-	}
-	
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		this.updateAOEProgress();
-	}
-	
-	@Override
-	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.8D, true));
-		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 3D));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.getClass().equals(SheepEntity.class);}));
-	}
-	
-	@Override
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(AOE_AGRESSIVE, false);
 	}
 	
 	public static AttributeModifierMap.MutableAttribute getAtributos(){
@@ -140,6 +145,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
 				.createMutableAttribute(Attributes.ARMOR, 4D)
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 6D)
 				.createMutableAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE, 5D);
 	}
 }

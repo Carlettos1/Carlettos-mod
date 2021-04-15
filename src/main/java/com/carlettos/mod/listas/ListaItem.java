@@ -1,6 +1,5 @@
 package com.carlettos.mod.listas;
 
-import com.carlettos.mod.items.PrumProyectilItem;
 import com.carlettos.mod.items.Runa;
 import com.carlettos.mod.util.Letra;
 import com.carlettos.mod.util.Util;
@@ -12,12 +11,13 @@ import net.minecraft.item.SpawnEggItem;
 public class ListaItem {
 	public static final Item BOLA_ENDER_CORRUPTA;
 	public static final Item BLOQUE_ENDER_CORRUPTO;
-	public static final Item PRUM_PROYECTIL;
 
 	public static final Item AMAN_SPAWN_EGG;
 	public static final Item AMAN_SPIDER_SPAWN_EGG;
 	public static final Item PRUM_Y_TRAK_SPAWN_EGG;
 	public static final Item TRAK_HENCHMAN_SPAWN_EGG;
+	public static final Item PRUM_HENCHMAN_SPAWN_EGG;
+	public static final Item PRUM_TRAK_HENCHMAN_SPAWN_EGG;
 	
 	public static final Item RUNA_AMAN;
 	public static final Item RUNA_DUR;
@@ -39,12 +39,13 @@ public class ListaItem {
 	static {
 		BOLA_ENDER_CORRUPTA = new Item(new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).maxStackSize(16).setNoRepair());
 		BLOQUE_ENDER_CORRUPTO = new BlockItem(ListaBloques.BLOQUE_ENDER_CORRUPTO, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).setNoRepair());
-		PRUM_PROYECTIL = new PrumProyectilItem();
 		
 		AMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN, 0x202020, 0x404040, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		AMAN_SPIDER_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN_SPIDER, 0x404040, 0xFF4040, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		PRUM_Y_TRAK_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_Y_TRAK, 0x8E3CD7, 0xA1A1A1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		TRAK_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.TRAK_HENCHMAN, 0x000000, 0x0F0F0F, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+		PRUM_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_HENCHMAN, 0x101010, 0x0F0F0F, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+		PRUM_TRAK_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_TRAK_HENCHMAN, 0x202020, 0x0F0F0F, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 
 		RUNA_AMAN = new Runa(Letra.AMAN);
 		RUNA_DUR = new Runa(Letra.DUR);

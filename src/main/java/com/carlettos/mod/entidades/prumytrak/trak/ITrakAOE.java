@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.trak;
+package com.carlettos.mod.entidades.prumytrak.trak;
 
 /**
  * variables usadas: prevProgress, progress, progressInt e isInProgress.

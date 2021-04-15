@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import com.carlettos.mod.entidades.aman.IAmanEggHatch;
 import com.carlettos.mod.entidades.aman.IAmanSpit;
-import com.carlettos.mod.entidades.trak.ITrakAOE;
+import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
+import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
@@ -16,6 +17,7 @@ import net.minecraft.network.PacketThreadUtil;
 
 public class SCAnimatePackage implements IPacket<IClientPlayNetHandler>{
 	public static final int TRAK_AOE_ANIMATION_ID = 10;
+	public static final int PRUM_RANGED_ATTACK_ANIMATION_ID = 11;
 	public static final int AMAN_SPIT_ANIMATION_ID = 0;
 	public static final int AMAN_EGG_HATCH_ANIMATION_ID = 1;
 	
@@ -47,6 +49,9 @@ public class SCAnimatePackage implements IPacket<IClientPlayNetHandler>{
 			switch (this.getAnimationId()) {
 			case TRAK_AOE_ANIMATION_ID:
 				((ITrakAOE)entity).AOEAnimation(false);
+				break;
+			case PRUM_RANGED_ATTACK_ANIMATION_ID:
+				((IPrumRangedAttack)entity).RangedAnimation(false);
 				break;
 			case AMAN_EGG_HATCH_ANIMATION_ID:
 				((IAmanEggHatch)entity).hatchAnimation(false);

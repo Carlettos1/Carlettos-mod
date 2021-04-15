@@ -5,7 +5,9 @@ import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderEntity;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
-import com.carlettos.mod.entidades.trak.trakhenchman.TrakHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.prumtrakhenchman.PrumTrakHenchmanEntity;
+import com.carlettos.mod.entidades.prumytrak.trak.trakhenchman.TrakHenchmanEntity;
 import com.carlettos.mod.util.Util;
 
 import net.minecraft.entity.EntityClassification;
@@ -19,6 +21,8 @@ public class ListaEntidades {
 	public static final EntityType<PrumTrakEntity> PRUM_Y_TRAK;
 	public static final EntityType<PrumProyectilEntity> PRUM_PROYECTIL;
 	public static final EntityType<TrakHenchmanEntity> TRAK_HENCHMAN;
+	public static final EntityType<PrumHenchmanEntity> PRUM_HENCHMAN;
+	public static final EntityType<PrumTrakHenchmanEntity> PRUM_TRAK_HENCHMAN;
 	
 	static {
 		AMAN = EntityType.Builder.<AmanEntity>create(AmanEntity::new, EntityClassification.MONSTER).size(2F, 3F).build(Util.MOD_ID + ":aman");
@@ -28,5 +32,7 @@ public class ListaEntidades {
 		PRUM_Y_TRAK = EntityType.Builder.<PrumTrakEntity>create(PrumTrakEntity::new, EntityClassification.MONSTER).size(1.7f, 4.6f).build(Util.MOD_ID + ":prum_y_trak");
 		PRUM_PROYECTIL = EntityType.Builder.<PrumProyectilEntity>create(PrumProyectilEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10).build(Util.MOD_ID + ":prum_proyectil");
 		TRAK_HENCHMAN = EntityType.Builder.<TrakHenchmanEntity>create(TrakHenchmanEntity::new, EntityClassification.MONSTER).size(0.5F, 1.1f).build(Util.MOD_ID + ":trak_henchman");
+		PRUM_HENCHMAN = EntityType.Builder.<PrumHenchmanEntity>create(PrumHenchmanEntity::new, EntityClassification.MONSTER).size(0.5F, 1.1f).build(Util.MOD_ID + ":prum_henchman");
+		PRUM_TRAK_HENCHMAN = EntityType.Builder.<PrumTrakHenchmanEntity>create(PrumTrakHenchmanEntity::new, EntityClassification.MONSTER).size(0.5F, 1.1f).build(Util.MOD_ID + ":prum_trak_henchman");
 	}
 }

@@ -1,5 +1,6 @@
 package com.carlettos.mod.entidades.aman.aman;
 
+import com.carlettos.mod.entidades.IHasFases;
 import com.carlettos.mod.entidades.aman.IAmanEggHatch;
 import com.carlettos.mod.entidades.aman.IAmanSpit;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
@@ -26,7 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 
-public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpit{
+public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpit, IHasFases{
 	public static final DataParameter<Boolean> HATCHING = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Boolean> SPITING = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(AmanEntity.class, DataSerializers.BYTE);
@@ -88,8 +89,10 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 		this.updateHatchProgress();
 		this.updateSpitProgress();
 	}
-	
-	private void actualizarFase() {
+
+	@Override
+	public void actualizarFase() {
+		this.world.getProfiler().startSection("updatefase");
 		double ratio = this.getHealth() / getMaxHealth();
 		if(ratio > 2F/3F) {
 		} else if(ratio > 1F/3F) {
@@ -107,12 +110,15 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
 			}
 		}
+		this.world.getProfiler().endSection();
 	}
 
+	@Override
 	public byte getFase() {
 		return this.dataManager.get(FASE);
 	}
-	
+
+	@Override
 	public void setFase(byte fase) {
 		this.dataManager.set(FASE, fase);
 	}

@@ -13,7 +13,6 @@ import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRandomRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.prum.PrumRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAreaAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.ia.trak.TrakMeleAttackGoal;
-import com.carlettos.mod.items.PrumProyectilItem;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaEntidades;
@@ -168,7 +167,12 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 	
 	public void attackRandomly(int quantity) {
 		for(;quantity > 0; quantity--) {
-			PrumProyectilEntity proyectil = ((PrumProyectilItem)ListaItem.PRUM_PROYECTIL).createArrow(this.world, this, this.getAttackTarget(), 0.5F);
+			PrumProyectilEntity proyectil;
+			if(this.getAttackTarget() != null && this.getAttackTarget().isAlive()) {
+				proyectil  = new PrumProyectilEntity(this.world, this, this.getAttackTarget());
+			} else {
+				proyectil  = new PrumProyectilEntity(this.world, this);
+			}
 			double phi = this.getRNG().nextDouble() * 2D * Math.PI;
 			double theta = this.getRNG().nextDouble() * Math.PI;
 			double x = Math.sin(theta) * Math.cos(phi);
@@ -182,9 +186,9 @@ public class PrumTrakEntity extends MonsterEntity implements IRangedAttackMob {
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-		PrumProyectilEntity proyectil = ((PrumProyectilItem) ListaItem.PRUM_PROYECTIL).createArrow(this.world, this, this.getAttackTarget(), 0.5F);
+		PrumProyectilEntity proyectil = new PrumProyectilEntity(this.world, this, target);
 		double d0 = target.getPosX() - proyectil.getPosX();
-		double d1 = target.getPosYHeight(0.3333333D) - proyectil.getPosY();
+		double d1 = target.getPosYHeight(0.5D) - proyectil.getPosY();
 		double d2 = target.getPosZ() - proyectil.getPosZ();
 		proyectil.shoot(d0, d1, d2, 2F, 0);
 		this.world.addEntity(proyectil);

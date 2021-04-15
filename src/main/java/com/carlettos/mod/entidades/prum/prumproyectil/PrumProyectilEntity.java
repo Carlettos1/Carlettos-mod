@@ -1,7 +1,6 @@
 package com.carlettos.mod.entidades.prum.prumproyectil;
 
 import com.carlettos.mod.listas.ListaEntidades;
-import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.listas.ListaParticulas;
 import com.carlettos.mod.util.SCSpawnObjectPacket;
 
@@ -30,7 +29,6 @@ import net.minecraft.world.World;
 
 public class PrumProyectilEntity extends AbstractArrowEntity{
 	public static final DataParameter<BlockPos> TARGET_BLOCKPOS = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BLOCK_POS);
-	public static final DataParameter<Float> ACELERACION = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.FLOAT);
 	public static final DataParameter<Boolean> HAS_TARGET = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BOOLEAN);
 
 	public PrumProyectilEntity(EntityType<? extends AbstractArrowEntity> type, World worldIn) {
@@ -45,19 +43,14 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		super(ListaEntidades.PRUM_PROYECTIL, shooter, worldIn);
 	}
 	
-	public PrumProyectilEntity(World worldIn, LivingEntity shooter, LivingEntity target, float aceleracion) {
+	public PrumProyectilEntity(World worldIn, LivingEntity shooter, LivingEntity target) {
 		super(ListaEntidades.PRUM_PROYECTIL, shooter, worldIn);
 		this.dataManager.set(HAS_TARGET, true);
 		this.dataManager.set(TARGET_BLOCKPOS, target.getPosition());
-		this.dataManager.set(ACELERACION, aceleracion);
 	}
 	
 	public BlockPos getTargetPos() {
 		return this.dataManager.get(TARGET_BLOCKPOS);
-	}
-	
-	public float getAceleracion() {
-		return this.dataManager.get(ACELERACION);
 	}
 	
 	public boolean hasTarget() {
@@ -68,7 +61,6 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(TARGET_BLOCKPOS, new BlockPos(0, 0, 0));
-		this.dataManager.register(ACELERACION, 0F);
 		this.dataManager.register(HAS_TARGET, false);
 	}
 	
@@ -177,7 +169,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		
 		if(this.hasTarget()) {
 			BlockPos target = this.getTargetPos();
-			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), 2 * (target.getY() - this.getPosY()), target.getZ() - this.getPosZ()).normalize().scale((1 + this.ticksExisted / 10D) * this.getAceleracion());
+			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), 2 * (target.getY() - this.getPosY()), target.getZ() - this.getPosZ()).normalize().scale((1 + this.ticksExisted / 10D));
 			
 			vector3d4 = vector3d4.add(radioVector);
 		}
@@ -188,7 +180,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 
 	@Override
 	protected ItemStack getArrowStack() {
-		return new ItemStack(ListaItem.PRUM_PROYECTIL);
+		return ItemStack.EMPTY;
 	}
 	
 	@Override
