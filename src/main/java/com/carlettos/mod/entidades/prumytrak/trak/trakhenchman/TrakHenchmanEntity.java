@@ -82,6 +82,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	
 	@Override
 	public void updateAOEProgress() {
+		this.world.getProfiler().startSection("update aoe progress");
 		int i = this.getMaxAOEProgress();
 		if(this.isAOEInProgress) {
 			++this.AOEProgressInt;
@@ -93,6 +94,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 			this.AOEProgressInt = 0;
 		}
 		this.AOEProgress = (float)this.AOEProgressInt / (float)i;
+		this.world.getProfiler().endSection();
 	}
 	
 	@Override

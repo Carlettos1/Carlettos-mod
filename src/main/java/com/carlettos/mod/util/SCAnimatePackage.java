@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.carlettos.mod.entidades.aman.IAmanEggHatch;
 import com.carlettos.mod.entidades.aman.IAmanSpit;
+import com.carlettos.mod.entidades.prumytrak.bihead.IBiHead;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 
@@ -20,6 +21,7 @@ public class SCAnimatePackage implements IPacket<IClientPlayNetHandler>{
 	public static final int PRUM_RANGED_ATTACK_ANIMATION_ID = 11;
 	public static final int AMAN_SPIT_ANIMATION_ID = 0;
 	public static final int AMAN_EGG_HATCH_ANIMATION_ID = 1;
+	public static final int GIRO_SEGUNDA_CABEZA_ANIMATION_ID = 2;
 	
 	private int entityId;
 	private int animationId;
@@ -51,13 +53,16 @@ public class SCAnimatePackage implements IPacket<IClientPlayNetHandler>{
 				((ITrakAOE)entity).AOEAnimation(false);
 				break;
 			case PRUM_RANGED_ATTACK_ANIMATION_ID:
-				((IPrumRangedAttack)entity).RangedAnimation(false);
+				((IPrumRangedAttack)entity).rangedAnimation(false);
 				break;
 			case AMAN_EGG_HATCH_ANIMATION_ID:
 				((IAmanEggHatch)entity).hatchAnimation(false);
 				break;
 			case AMAN_SPIT_ANIMATION_ID:
 				((IAmanSpit)entity).spitAnimation(false);
+				break;
+			case GIRO_SEGUNDA_CABEZA_ANIMATION_ID:
+				((IBiHead<?>)entity).girarSegundaCabezaAnimation(false);
 				break;
 			}
 		}

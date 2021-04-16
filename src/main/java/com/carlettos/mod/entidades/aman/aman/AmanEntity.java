@@ -92,7 +92,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 
 	@Override
 	public void actualizarFase() {
-		this.world.getProfiler().startSection("updatefase");
+		this.world.getProfiler().startSection("update fase");
 		double ratio = this.getHealth() / getMaxHealth();
 		if(ratio > 2F/3F) {
 		} else if(ratio > 1F/3F) {
@@ -139,6 +139,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 
 	@Override
 	public void updateSpitProgress() {
+		this.world.getProfiler().startSection("update spit progress");
 		int i = this.getMaxSpitProgress();
 		if (this.isSpitInProgress) {
 			++this.spitProgressInt;
@@ -150,6 +151,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 			this.spitProgressInt = 0;
 		}
 		this.spitProgress = (float) this.spitProgressInt / (float) i;
+		this.world.getProfiler().endSection();
 	}
 
 	@Override
@@ -211,6 +213,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 
 	@Override
 	public void updateHatchProgress() {
+		this.world.getProfiler().startSection("update hatch progress");
 		int i = this.getMaxHatchProgress();
 		if (this.isHatchInProgress) {
 			++this.hatchingProgressInt;
@@ -222,6 +225,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 			this.hatchingProgressInt = 0;
 		}
 		this.hatchingProgress = (float) this.hatchingProgressInt / (float) i;
+		this.world.getProfiler().endSection();
 	}
 
 	@Override

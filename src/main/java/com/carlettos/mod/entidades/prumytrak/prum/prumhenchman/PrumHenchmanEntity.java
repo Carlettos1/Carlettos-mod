@@ -79,6 +79,7 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 
 	@Override
 	public void updateRangedProgress() {
+		this.world.getProfiler().startSection("update ranged progress");
 		int i = this.getMaxRangedProgress();
 		if(this.isRangedInProgress) {
 			++this.rangedProgressInt;
@@ -90,10 +91,11 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 			this.rangedProgressInt = 0;
 		}
 		this.rangedProgress = (float)this.rangedProgressInt / (float)i;
+		this.world.getProfiler().endSection();
 	}
 
 	@Override
-	public void RangedAnimation(boolean updateSelf) {
+	public void rangedAnimation(boolean updateSelf) {
 		if(!this.isRangedInProgress || this.rangedProgressInt >= this.getMaxRangedProgress() / 2 || this.rangedProgressInt < 0) {
 			this.rangedProgressInt = -1;
 			this.isRangedInProgress = true;
@@ -110,7 +112,7 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 	}
 
 	@Override
-	public void RangedAttack(LivingEntity target) {
+	public void rangedAttack(LivingEntity target) {
 		if(this.world instanceof ServerWorld) {
 			PrumProyectilEntity proyectil = new PrumProyectilEntity(this.world, this, target);
 			double d0 = target.getPosX() -  proyectil.getPosX();

@@ -35,6 +35,14 @@ public class BiHeadLookController<E extends MonsterEntity & IBiHead<E>> extends 
 	@Override
 	public void tick() {
 		super.tick();
-		this.entity.setSecondHeadLookingPos(new Vector3f(this.pos2x, this.pos2y, this.pos2z));
+		Vector3f vector = new Vector3f(this.pos2x, this.pos2y, this.pos2z);
+		if(!this.entity.getSecondHeadLookingPos().equals(vector)) {
+			this.entity.setPrevSecondHeadLookingPos(this.entity.getSecondHeadLookingPos());
+			this.entity.setGirandoSegundaCabeza(true);
+			this.entity.girarSegundaCabezaAnimation(false);
+		} else {
+			this.entity.setGirandoSegundaCabeza(false);
+		}
+		this.entity.setSecondHeadLookingPos(vector);
 	}
 }

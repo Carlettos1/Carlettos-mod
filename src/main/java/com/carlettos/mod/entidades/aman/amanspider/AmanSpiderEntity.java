@@ -158,6 +158,7 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 
 	@Override
 	public void updateSpitProgress() {
+		this.world.getProfiler().startSection("update spit progress");
 		int i = this.getMaxSpitProgress();
 		if (this.isSpitInProgress) {
 			++this.spitProgressInt;
@@ -169,6 +170,7 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 			this.spitProgressInt = 0;
 		}
 		this.spitProgress = (float) this.spitProgressInt / (float) i;
+		this.world.getProfiler().endSection();
 	}
 
 	@Override
@@ -230,6 +232,7 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 
 	@Override
 	public void updateHatchProgress() {
+		this.world.getProfiler().startSection("update hatch progress");
 		int i = this.getMaxHatchProgress();
 		if (this.isHatchInProgress) {
 			++this.hatchingProgressInt;
@@ -241,6 +244,7 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 			this.hatchingProgressInt = 0;
 		}
 		this.hatchingProgress = (float) this.hatchingProgressInt / (float) i;
+		this.world.getProfiler().endSection();
 	}
 
 	@Override

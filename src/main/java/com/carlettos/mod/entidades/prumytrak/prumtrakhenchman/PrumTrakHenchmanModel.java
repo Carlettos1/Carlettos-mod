@@ -1,5 +1,6 @@
 package com.carlettos.mod.entidades.prumytrak.prumtrakhenchman;
 
+import com.carlettos.mod.util.Util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -10,6 +11,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 //Made with Blockbench 3.8.3
 public class PrumTrakHenchmanModel extends EntityModel<PrumTrakHenchmanEntity>{
+	private boolean flag;
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaabajo;
 	private final ModelRenderer piernaizquierda;
@@ -73,7 +75,25 @@ public class PrumTrakHenchmanModel extends EntityModel<PrumTrakHenchmanEntity>{
 	@Override
 	public void setLivingAnimations(PrumTrakHenchmanEntity entityIn, float limbSwing, float limbSwingAmount,
 			float partialTick) {
-		Vector3f pos = entityIn.getSecondHeadLookingPos(partialTick);
+		float pct = entityIn.getGirarSegundaCabezaProgress(partialTick);
+		
+		//se activa cuando empieza a girar, o sea, pct = 0 de verdad
+		if (entityIn.isGirandoSegundaCabeza()) {
+			this.flag = false;
+		} else {
+			this.flag = true;
+		}
+		if(this.flag) { //lo setea a pct o 100%
+			pct = pct == 0 ? 1 : pct;
+		}
+
+		System.out.println(this.flag + " - " + entityIn.isGirandoSegundaCabeza());
+		System.out.println(pct + " - " + entityIn.getPrevSecondHeadLookingPos() + " - " + entityIn.getSecondHeadLookingPos());
+		Vector3f pos = Util.vectorLerp(
+				pct,
+				entityIn.getPrevSecondHeadLookingPos(),
+				entityIn.getSecondHeadLookingPos());
+		
 		float x = pos.getX() - (float)entityIn.getPosX();
 		float y = pos.getY() - (float)entityIn.getPosYEye();
 		float z = pos.getZ() - (float)entityIn.getPosZ();
@@ -82,7 +102,6 @@ public class PrumTrakHenchmanModel extends EntityModel<PrumTrakHenchmanEntity>{
 		float pitch2 = (float) -MathHelper.atan2(y, hormag);
 		this.cabezaizquierda.rotateAngleX = pitch2;
 		this.cabezaizquierda.rotateAngleY = yaw2;
-		System.out.println(entityIn.getSecondHeadLookingPos());
 	}
 
 	@Override

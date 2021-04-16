@@ -26,7 +26,6 @@ public class LookRandomlyGoal<E extends MonsterEntity & IBiHead<E>> extends net.
 	@Override
 	public void tick() {
 		super.tick();
-		System.out.println("ticking " + this.lookX);
 		this.entity.getLookController2().setLookPositionCabeza2(lookX + (float)this.entity.getPosX(), (float)this.entity.getPosYEye(), lookZ + (float)this.entity.getPosZ());
 	}
 }

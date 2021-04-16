@@ -38,12 +38,12 @@ public interface IPrumRangedAttack {
 	 * Manda un IPacket al ServerChunkProvider, desde el server, para trackear la animación, pero,
 	 * solo lo hace si la animación no está iniciada, o si se puede interrumpir.
 	 */	
-	public void RangedAnimation(boolean updateSelf);
+	public void rangedAnimation(boolean updateSelf);
 	
 	/**
 	 * Efectúa la acción, generalmente un ataque.
 	 */
-	public void RangedAttack(LivingEntity target);
+	public void rangedAttack(LivingEntity target);
 	
 	/**
 	 * Retorna el DataParameter, generalmente lo usa el EntityModel.

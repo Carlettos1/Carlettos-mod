@@ -54,8 +54,8 @@ public class PrumRangedAttackGoal<E extends MonsterEntity & IPrumRangedAttack> e
 				return;
 			}
 			this.counter = this.intervalo;
-			this.entity.RangedAnimation(false);
-			this.entity.RangedAttack(target);
+			this.entity.rangedAnimation(false);
+			this.entity.rangedAttack(target);
 		}
 		super.tick();
 	}
