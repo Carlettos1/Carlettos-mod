@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades.prum.prumproyectil;
+package com.carlettos.mod.entidades.prumytrak.prum.prumproyectil;
 
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaParticulas;

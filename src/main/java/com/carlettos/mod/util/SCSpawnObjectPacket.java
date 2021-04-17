@@ -1,7 +1,7 @@
 package com.carlettos.mod.util;
 
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
-import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.listas.ListaEntidades;
 
 import net.minecraft.client.Minecraft;

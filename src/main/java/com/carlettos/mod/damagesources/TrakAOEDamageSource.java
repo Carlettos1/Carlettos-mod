@@ -1,28 +1,30 @@
 package com.carlettos.mod.damagesources;
 
-import com.carlettos.mod.entidades.prumytrak.PrumTrakEntity;
+import com.carlettos.mod.entidades.IHasFases;
+import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class TrakAOEDamageSource extends EntityDamageSource{
-	PrumTrakEntity prumtrak;
+public class TrakAOEDamageSource<E extends MonsterEntity & ITrakAOE & IHasFases> extends EntityDamageSource{
+	E entity;
 
-	public TrakAOEDamageSource(PrumTrakEntity damageSourceEntityIn) {
+	public TrakAOEDamageSource(E damageSourceEntityIn) {
 		super("trak_aoe_damage", damageSourceEntityIn);
-		prumtrak = damageSourceEntityIn;
+		entity = damageSourceEntityIn;
 	}
 	
 	@Override
 	public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
-		String text = "death.attack." + this.damageType + ".fase" + this.prumtrak.getFase() + ".text" + this.prumtrak.getRNG().nextInt(3);
+		String text = "death.attack." + this.damageType + ".fase" + this.entity.getFase() + ".text" + this.entity.getRNG().nextInt(3);
 		return new TranslationTextComponent(
 				text, 
 				entityLivingBaseIn.getDisplayName(), 
-				this.prumtrak.getDisplayName(),
-				(int)this.prumtrak.getHealth());
+				this.entity.getDisplayName(),
+				(int)this.entity.getHealth());
 	}
 }
 

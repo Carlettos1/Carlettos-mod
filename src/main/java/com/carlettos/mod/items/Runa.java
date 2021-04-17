@@ -3,7 +3,7 @@ package com.carlettos.mod.items;
 import java.util.List;
 import java.util.Set;
 
-import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.listas.ListaItem;
 import com.carlettos.mod.util.Letra;
 import com.carlettos.mod.util.Util;

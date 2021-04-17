@@ -1,7 +1,9 @@
-package com.carlettos.mod.entidades.prumytrak;
+package com.carlettos.mod.entidades.prumytrak.prumtrak;
 
 import com.carlettos.mod.util.Util;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +15,12 @@ public class PrumTrakRenderer extends MobRenderer<PrumTrakEntity, PrumTrakModel>
 
 	public PrumTrakRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new PrumTrakModel(), 1.5f);
+	}
+	
+	@Override
+	public void render(PrumTrakEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
+		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
 	@Override

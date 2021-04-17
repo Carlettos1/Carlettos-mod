@@ -47,15 +47,15 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	public boolean isSpitInProgress;
 	public int spitProgressInt;
 
-	private final AmanSpitGoal<AmanSpiderEntity> spitGoal = new AmanSpitGoal<>(this, 20);
-	private final AmanEggHatchGoal<AmanSpiderEntity> hatchGoal = new AmanEggHatchGoal<>(this, 60);
+	private AmanEggHatchGoal<AmanSpiderEntity> hatchGoal;
+	private AmanSpitGoal<AmanSpiderEntity> spitGoal;
 
 	public AmanSpiderEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
 
 	public AmanSpiderEntity(World worldIn) {
-		super(ListaEntidades.AMAN_SPIDER, worldIn);
+		this(ListaEntidades.AMAN_SPIDER, worldIn);
 	}
 
 	@Override
@@ -111,11 +111,14 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 
 	@Override
 	protected void registerGoals() {
+		this.hatchGoal = new AmanEggHatchGoal<>(this, 60);
+		this.spitGoal = new AmanSpitGoal<>(this, 20);
+		
 		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, this.hatchGoal);
 		this.goalSelector.addGoal(3, this.spitGoal);
 		this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 0.8D, 1));
-
+		
 		this.targetSelector.addGoal(1,
 				new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {
 					return entidad.isAlive();

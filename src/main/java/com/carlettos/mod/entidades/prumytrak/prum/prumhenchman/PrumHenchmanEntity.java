@@ -1,8 +1,8 @@
 package com.carlettos.mod.entidades.prumytrak.prum.prumhenchman;
 
-import com.carlettos.mod.entidades.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.util.SCAnimatePackage;
 

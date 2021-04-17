@@ -5,6 +5,8 @@ import com.carlettos.mod.util.Util;
 
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /* 
  * Las clases que implementen esta interfaz, deben sustituir el lookcontroller por
@@ -94,4 +96,16 @@ public interface IBiHead<E extends MonsterEntity & IBiHead<E>> {
 	 * Cambia el DataParameter, generalmente lo hace el Goal.
 	 */
 	public void setGirandoSegundaCabeza(boolean girando);
+
+	/**
+	 * Obtiene el yaw en radianes para ser usado por el modelo.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public float getSegundaCabezaYaw(float partialTick);
+	
+	/**
+	 * Obtiene el pitch en radianes para ser usado por el modelo.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public float getSegundaCabezaPitch(float partialTick);
 }

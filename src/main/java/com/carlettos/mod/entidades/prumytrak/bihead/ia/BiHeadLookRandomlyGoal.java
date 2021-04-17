@@ -5,12 +5,12 @@ import com.carlettos.mod.entidades.prumytrak.bihead.IBiHead;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.math.MathHelper;
 
-public class LookRandomlyGoal<E extends MonsterEntity & IBiHead<E>> extends net.minecraft.entity.ai.goal.LookRandomlyGoal{
+public class BiHeadLookRandomlyGoal<E extends MonsterEntity & IBiHead<E>> extends net.minecraft.entity.ai.goal.LookRandomlyGoal{
 	private final E entity;
 	private float lookX;
 	private float lookZ;
 
-	public LookRandomlyGoal(E entity) {
+	public BiHeadLookRandomlyGoal(E entity) {
 		super(entity);
 		this.entity = entity;
 	}
