@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.carlettos.mod.entidades.aman.IAmanEggHatch;
 import com.carlettos.mod.entidades.aman.IAmanSpit;
-import com.carlettos.mod.entidades.prumytrak.bihead.IBiHead;
+import com.carlettos.mod.entidades.bihead.IBiHead;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 

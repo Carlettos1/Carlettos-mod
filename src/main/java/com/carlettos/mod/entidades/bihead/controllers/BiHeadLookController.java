@@ -1,6 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak.bihead.controllers;
+package com.carlettos.mod.entidades.bihead.controllers;
 
-import com.carlettos.mod.entidades.prumytrak.bihead.IBiHead;
+import com.carlettos.mod.entidades.bihead.IBiHead;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.controller.LookController;

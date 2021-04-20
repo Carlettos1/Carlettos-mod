@@ -1,4 +1,4 @@
-package com.carlettos.mod.entidades;
+package com.carlettos.mod.entidades.interfaces;
 
 public interface IHasFases {
 	/* 

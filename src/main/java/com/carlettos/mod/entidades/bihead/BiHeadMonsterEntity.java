@@ -1,6 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak.bihead;
+package com.carlettos.mod.entidades.bihead;
 
-import com.carlettos.mod.entidades.prumytrak.bihead.controllers.BiHeadLookController;
+import com.carlettos.mod.entidades.bihead.controllers.BiHeadLookController;
 import com.carlettos.mod.listas.ListaSerializers;
 import com.carlettos.mod.util.SCAnimatePackage;
 import com.carlettos.mod.util.Util;

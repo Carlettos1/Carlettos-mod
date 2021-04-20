@@ -1,11 +1,11 @@
 package com.carlettos.mod.entidades.aman.aman;
 
-import com.carlettos.mod.entidades.IHasFases;
 import com.carlettos.mod.entidades.aman.IAmanEggHatch;
 import com.carlettos.mod.entidades.aman.IAmanSpit;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.aman.ia.AmanEggHatchGoal;
 import com.carlettos.mod.entidades.aman.ia.AmanSpitGoal;
+import com.carlettos.mod.entidades.interfaces.IHasFases;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.util.SCAnimatePackage;

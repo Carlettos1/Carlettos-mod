@@ -1,6 +1,6 @@
 package com.carlettos.mod.damagesources;
 
-import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
+import com.carlettos.mod.entidades.aman.IAmanSpit;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -8,11 +8,11 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class TrakAOEDamageSource<E extends MonsterEntity & ITrakAOE> extends EntityDamageSource{
+public class AmanSpitDamageSource<E extends MonsterEntity & IAmanSpit> extends EntityDamageSource {
 	private final E entity;
-
-	public TrakAOEDamageSource(E damageSourceEntityIn) {
-		super("trak_aoe_damage", damageSourceEntityIn);
+	
+	public AmanSpitDamageSource(E damageSourceEntityIn) {
+		super("aman_spit_damage", damageSourceEntityIn);
 		this.entity = damageSourceEntityIn;
 	}
 	
@@ -29,4 +29,3 @@ public class TrakAOEDamageSource<E extends MonsterEntity & ITrakAOE> extends Ent
 				this.entity.getDisplayName());
 	}
 }
-

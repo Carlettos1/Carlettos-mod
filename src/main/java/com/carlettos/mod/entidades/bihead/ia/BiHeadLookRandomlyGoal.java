@@ -1,6 +1,6 @@
-package com.carlettos.mod.entidades.prumytrak.bihead.ia;
+package com.carlettos.mod.entidades.bihead.ia;
 
-import com.carlettos.mod.entidades.prumytrak.bihead.IBiHead;
+import com.carlettos.mod.entidades.bihead.IBiHead;
 
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.math.MathHelper;

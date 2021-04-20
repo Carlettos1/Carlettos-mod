@@ -3,9 +3,9 @@ package com.carlettos.mod.entidades.prumytrak.prumtrak;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.carlettos.mod.entidades.IHasFases;
-import com.carlettos.mod.entidades.prumytrak.bihead.BiHeadMonsterEntity;
-import com.carlettos.mod.entidades.prumytrak.bihead.ia.BiHeadLookRandomlyGoal;
+import com.carlettos.mod.entidades.bihead.BiHeadMonsterEntity;
+import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
+import com.carlettos.mod.entidades.interfaces.IHasFases;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;

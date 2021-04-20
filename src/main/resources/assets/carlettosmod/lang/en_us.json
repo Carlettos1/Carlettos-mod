@@ -30,15 +30,9 @@
   "entity.carlettosmod.prum_y_trak": "Prum and Trak",
   "entity.carlettosmod.trak_henchman": "Trak Henchman",
   
-  "death.attack.trak_aoe_damage.fase1.text0": "%2$s doesn't want his health go below %3$s",
-  "death.attack.trak_aoe_damage.fase1.text1": "%1$s can't deal with first phase %2$s",
-  "death.attack.trak_aoe_damage.fase1.text2": "%1$s was pulverized by first phase %2$s",
-  "death.attack.trak_aoe_damage.fase2.text0": "%1$s was pulverized by second phase %2$s",
-  "death.attack.trak_aoe_damage.fase2.text1": "%1$s was pulverized by %3$s health %2$s",
-  "death.attack.trak_aoe_damage.fase2.text2": "%2$s pulverized %1$s without hesitation",
-  "death.attack.trak_aoe_damage.fase3.text0": "%1$s was pulverized by third phase %2$s",
-  "death.attack.trak_aoe_damage.fase3.text1": "Trak did a good joob pulverizing %1$s",
-  "death.attack.trak_aoe_damage.fase3.text2": "%2$s pulverized %1$s with only %3$s of heath",
+  "death.attack.trak_aoe_damage": "%1$s was pulverized by %2$s",
+  "death.attack.prum_proyectil_damage": "%2$s shoot %1$s",
+  "death.attack.aman_spit_damage": "%1$s was spited by %2$s",
   
   "itemGroup.carlettosmodtab" : "Carlettos' Mod"
 }

@@ -1,7 +1,7 @@
 package com.carlettos.mod.entidades.prumytrak.prumtrakhenchman;
 
-import com.carlettos.mod.entidades.prumytrak.bihead.BiHeadMonsterEntity;
-import com.carlettos.mod.entidades.prumytrak.bihead.ia.BiHeadLookRandomlyGoal;
+import com.carlettos.mod.entidades.bihead.BiHeadMonsterEntity;
+import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
 import com.carlettos.mod.listas.ListaAtributos;
 
 import net.minecraft.entity.EntityType;
