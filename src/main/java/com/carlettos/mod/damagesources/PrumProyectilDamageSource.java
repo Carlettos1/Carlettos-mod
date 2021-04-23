@@ -1,19 +1,19 @@
 package com.carlettos.mod.damagesources;
 
-import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
+import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class PrumProyectilDamageSource<E extends MonsterEntity & IPrumRangedAttack> extends EntityDamageSource {
-	private final E entity;
+public class PrumProyectilDamageSource extends IndirectEntityDamageSource {
+	private final Entity shooter;
 	
-	public PrumProyectilDamageSource(E damageSourceEntityIn) {
-		super("prum_proyectil_damage", damageSourceEntityIn);
-		this.entity = damageSourceEntityIn;
+	public PrumProyectilDamageSource(PrumProyectilEntity source, Entity shooter) {
+		super("prum_proyectil_damage", source, shooter);
+		this.shooter = shooter;
 	}
 	
 	/**
@@ -26,6 +26,6 @@ public class PrumProyectilDamageSource<E extends MonsterEntity & IPrumRangedAtta
 		return new TranslationTextComponent(
 				text, 
 				entityLivingBaseIn.getDisplayName(), 
-				this.entity.getDisplayName());
+				this.shooter.getDisplayName());
 	}
 }

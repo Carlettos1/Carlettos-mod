@@ -84,7 +84,8 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 10));
 		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 7));
 		this.goalSelector.addGoal(3, new BiHeadLookRandomlyGoal<>(this));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.getClass().equals(SheepEntity.class);}));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.isAlive();}));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, (entidad) -> {return entidad.isAlive();}));
 	}
 	
 	@Override
@@ -391,9 +392,10 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 			}
 			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), (entidad) -> {return entidad instanceof LivingEntity;}).forEach((entidad) -> {
 				if(entidad.isAlive()) {
-					entidad.attackEntityFrom(ListaDamageSources.<PrumTrakEntity>TRAK_AOE(this), (float) this.getAttributeValue(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE));
+					entidad.attackEntityFrom(ListaDamageSources.FASED_ENTITY(this, ListaDamageSources.TRAK_AOE(this)), (float) this.getAttributeValue(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE));
 				}
 			});
+			//TODO: sonido
 		}
 	}
 	
@@ -457,8 +459,9 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 	public void rangedAttack(LivingEntity target) {
 		if(this.world instanceof ServerWorld) {
 			PrumProyectilEntity proyectil = new PrumProyectilEntity(this.world, this, target);
+			proyectil.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
 			double d0 = target.getPosX() -  proyectil.getPosX();
-			double d1 = target.getPosYHeight(0.333333D) -  proyectil.getPosY();
+			double d1 = target.getPosYHeight(0.5D) -  proyectil.getPosY();
 			double d2 = target.getPosZ() -  proyectil.getPosZ();
 			proyectil.shoot(d0, d1, d2, 2F, 1F);
 			this.world.addEntity(proyectil);

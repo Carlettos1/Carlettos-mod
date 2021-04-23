@@ -1,21 +1,29 @@
 package com.carlettos.mod.entidades.prumytrak.prum.prumproyectil;
 
+import com.carlettos.mod.entidades.interfaces.IHasFases;
+import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.listas.ListaParticulas;
+import com.carlettos.mod.listas.ListaSerializers;
 import com.carlettos.mod.util.SCSpawnObjectPacket;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SChangeGameStatePacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -28,7 +36,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class PrumProyectilEntity extends AbstractArrowEntity{
-	public static final DataParameter<BlockPos> TARGET_BLOCKPOS = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BLOCK_POS);
+	public static final DataParameter<Vector3d> TARGET_POSITION= EntityDataManager.createKey(PrumProyectilEntity.class, ListaSerializers.VECTOR3D);
 	public static final DataParameter<Boolean> HAS_TARGET = EntityDataManager.createKey(PrumProyectilEntity.class, DataSerializers.BOOLEAN);
 
 	public PrumProyectilEntity(EntityType<? extends AbstractArrowEntity> type, World worldIn) {
@@ -45,12 +53,12 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	
 	public PrumProyectilEntity(World worldIn, LivingEntity shooter, LivingEntity target) {
 		super(ListaEntidades.PRUM_PROYECTIL, shooter, worldIn);
+		this.dataManager.set(TARGET_POSITION, target.getPositionVec());
 		this.dataManager.set(HAS_TARGET, true);
-		this.dataManager.set(TARGET_BLOCKPOS, target.getPosition());
 	}
 	
-	public BlockPos getTargetPos() {
-		return this.dataManager.get(TARGET_BLOCKPOS);
+	public Vector3d getTargetPos() {
+		return this.dataManager.get(TARGET_POSITION);
 	}
 	
 	public boolean hasTarget() {
@@ -60,13 +68,59 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	@Override
 	protected void registerData() {
 		super.registerData();
-		this.dataManager.register(TARGET_BLOCKPOS, new BlockPos(0, 0, 0));
+		this.dataManager.register(TARGET_POSITION, Vector3d.ZERO);
 		this.dataManager.register(HAS_TARGET, false);
 	}
 	
 	@Override
-	protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
-		super.onEntityHit(p_213868_1_); //TODO: reescribir esto para cambiar damageSources y comportamientos
+	protected void onEntityHit(EntityRayTraceResult raytrace) {
+		Entity objetivo = raytrace.getEntity();
+		double motion = this.getMotion().length();      
+		int i = MathHelper.ceil(MathHelper.clamp(motion * this.getDamage(), 0.0D, 2.147483647E9D));
+		Entity shooter = this.func_234616_v_();
+		DamageSource source;
+		if(shooter == null) {
+			source = ListaDamageSources.PRUM_PROYECTIL(this, this);
+		} else {
+			source = ListaDamageSources.PRUM_PROYECTIL(this, shooter);
+			if(shooter instanceof IHasFases) {
+				source = ListaDamageSources.FASED_ENTITY((MonsterEntity & IHasFases)shooter, source);
+			}
+			if(shooter instanceof LivingEntity) {
+				((LivingEntity) shooter).setLastAttackedEntity(objetivo);
+			}
+		}
+		boolean isEnderman = objetivo.getType() == EntityType.ENDERMAN;
+		int k = objetivo.getFireTimer();
+		if(this.isBurning() && !isEnderman) {
+			objetivo.setFire(5);
+		}
+		
+		if(objetivo.attackEntityFrom(source, i)) {
+			if(isEnderman) {
+				return;
+			}
+			
+			if(objetivo instanceof LivingEntity) {
+				if(!this.world.isRemote && shooter instanceof LivingEntity) {
+					EnchantmentHelper.applyThornEnchantments((LivingEntity) objetivo, shooter);
+					EnchantmentHelper.applyArthropodEnchantments((LivingEntity) shooter, objetivo);
+				}
+			}
+			
+			this.arrowHit((LivingEntity) objetivo);
+			if(shooter != null && objetivo != shooter && objetivo instanceof PlayerEntity && shooter instanceof ServerPlayerEntity && !this.isSilent()) {
+				((ServerPlayerEntity)shooter).connection.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.field_241770_g_, 0F));
+			}
+		} else {
+			objetivo.forceFireTicks(k);
+			this.setMotion(this.getMotion().scale(-0.1D));
+			this.rotationYaw += 180F;
+			this.prevRotationYaw += 180F;
+			if(!this.world.isRemote && this.getMotion().lengthSquared() < 1.0E-7D) {
+				this.remove();
+			}
+		}
 	}
 	
 	@Override
@@ -76,7 +130,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	
 	@Override
 	protected void func_225516_i_() {
-		this.remove();
+		this.remove(); //groundTick
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -168,10 +222,10 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		Vector3d vector3d4 = this.getMotion();
 		
 		if(this.hasTarget()) {
-			BlockPos target = this.getTargetPos();
-			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), 2 * (target.getY() - this.getPosY()), target.getZ() - this.getPosZ()).normalize().scale((1 + this.ticksExisted / 10D));
+			Vector3d target = this.getTargetPos();
+			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), target.getY() - this.getPosY(), target.getZ() - this.getPosZ());
 			
-			vector3d4 = vector3d4.add(radioVector);
+			vector3d4 = vector3d4.add(radioVector).normalize().scale(this.getMotion().length());
 		}
 		this.setMotion(vector3d4.x, vector3d4.y, vector3d4.z);
 		this.setPosition(xfinal, yfinal, zfinal);
