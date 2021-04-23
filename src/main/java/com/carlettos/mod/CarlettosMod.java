@@ -105,6 +105,7 @@ public class CarlettosMod {
 			ListaItem.BOLA_ENDER_CORRUPTA.setRegistryName(Util.getResLoc("bola_ender_corrupta"));
 			ListaItem.BLOQUE_ENDER_CORRUPTO.setRegistryName(Util.getResLoc("bloque_ender_corrupto"));
 
+			ListaItem.DUMMY_BOI_SPAWN_EGG.setRegistryName(Util.getResLoc("dummy_boi_spawn_egg"));
 			ListaItem.AMAN_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spawn_egg"));
 			ListaItem.AMAN_SPIDER_SPAWN_EGG.setRegistryName(Util.getResLoc("aman_spider_spawn_egg"));
 			ListaItem.PRUM_Y_TRAK_SPAWN_EGG.setRegistryName(Util.getResLoc("prum_y_trak_spawn_egg"));
@@ -132,6 +133,7 @@ public class CarlettosMod {
 			event.getRegistry().register(ListaItem.BOLA_ENDER_CORRUPTA);
 			event.getRegistry().register(ListaItem.BLOQUE_ENDER_CORRUPTO);
 
+			event.getRegistry().register(ListaItem.DUMMY_BOI_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.AMAN_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.AMAN_SPIDER_SPAWN_EGG);
 			event.getRegistry().register(ListaItem.PRUM_Y_TRAK_SPAWN_EGG);

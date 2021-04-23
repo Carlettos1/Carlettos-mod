@@ -1,5 +1,8 @@
 package com.carlettos.mod.entidades.dummyboi;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -9,7 +12,8 @@ import net.minecraft.util.HandSide;
 import net.minecraft.world.World;
 
 public class DummyBoiEntity extends LivingEntity{
-
+	public static final Predicate<LivingEntity> PREDICATE = (entidad) -> {return entidad.isAlive();};
+	
 	public DummyBoiEntity(EntityType<? extends LivingEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
@@ -22,15 +26,20 @@ public class DummyBoiEntity extends LivingEntity{
 	@Override
 	protected void damageEntity(DamageSource damageSrc, float damageAmount) {
 	}
+	
+	@Override
+	public void onKillCommand() {
+		this.remove();
+	}
 
 	@Override
 	public Iterable<ItemStack> getArmorInventoryList() {
-		return null;
+		return List.of(ItemStack.EMPTY);
 	}
 
 	@Override
 	public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -39,7 +48,6 @@ public class DummyBoiEntity extends LivingEntity{
 
 	@Override
 	public HandSide getPrimaryHand() {
-		return null;
+		return HandSide.RIGHT;
 	}
-	
 }

@@ -28,7 +28,7 @@ public class ListaEntidades {
 	public static final EntityType<PrumTrakHenchmanEntity> PRUM_TRAK_HENCHMAN;
 	
 	static {
-		DUMMY_BOI = EntityType.Builder.<DummyBoiEntity>create(DummyBoiEntity::new, EntityClassification.MISC).size(0.7F, 0.7F).build(Util.MOD_ID + ":dummy_boy");
+		DUMMY_BOI = EntityType.Builder.<DummyBoiEntity>create(DummyBoiEntity::new, EntityClassification.MISC).size(0.6F, 1.5F).build(Util.MOD_ID + ":dummy_boy");
 		
 		AMAN = EntityType.Builder.<AmanEntity>create(AmanEntity::new, EntityClassification.MONSTER).size(2F, 3F).build(Util.MOD_ID + ":aman");
 		AMAN_SPIDER = EntityType.Builder.<AmanSpiderEntity>create(AmanSpiderEntity::new, EntityClassification.MONSTER).size(1.6F, 1.2F).build(Util.MOD_ID + ":aman_spider");

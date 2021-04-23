@@ -1,5 +1,6 @@
 package com.carlettos.mod.entidades.prumytrak.prum.prumhenchman;
 
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
@@ -12,7 +13,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -35,7 +35,7 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 20));		
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.getClass().equals(SheepEntity.class);}));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
 	@Override

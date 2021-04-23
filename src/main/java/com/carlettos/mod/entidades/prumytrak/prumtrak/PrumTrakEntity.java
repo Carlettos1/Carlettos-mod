@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import com.carlettos.mod.entidades.bihead.BiHeadMonsterEntity;
 import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.interfaces.IHasFases;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
@@ -26,7 +27,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -84,8 +84,7 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 10));
 		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 7));
 		this.goalSelector.addGoal(3, new BiHeadLookRandomlyGoal<>(this));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {return entidad.isAlive();}));
-		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, (entidad) -> {return entidad.isAlive();}));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
 	@Override

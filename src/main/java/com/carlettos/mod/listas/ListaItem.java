@@ -12,6 +12,7 @@ public class ListaItem {
 	public static final Item BOLA_ENDER_CORRUPTA;
 	public static final Item BLOQUE_ENDER_CORRUPTO;
 
+	public static final Item DUMMY_BOI_SPAWN_EGG;
 	public static final Item AMAN_SPAWN_EGG;
 	public static final Item AMAN_SPIDER_SPAWN_EGG;
 	public static final Item PRUM_Y_TRAK_SPAWN_EGG;
@@ -40,6 +41,7 @@ public class ListaItem {
 		BOLA_ENDER_CORRUPTA = new Item(new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).maxStackSize(16).setNoRepair());
 		BLOQUE_ENDER_CORRUPTO = new BlockItem(ListaBloques.BLOQUE_ENDER_CORRUPTO, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD).setNoRepair());
 		
+		DUMMY_BOI_SPAWN_EGG = new SpawnEggItem(ListaEntidades.DUMMY_BOI, 0xf1f1f1, 0xe1e1e1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		AMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN, 0x202020, 0x404040, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		AMAN_SPIDER_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN_SPIDER, 0x404040, 0xFF4040, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		PRUM_Y_TRAK_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_Y_TRAK, 0x8E3CD7, 0xA1A1A1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));

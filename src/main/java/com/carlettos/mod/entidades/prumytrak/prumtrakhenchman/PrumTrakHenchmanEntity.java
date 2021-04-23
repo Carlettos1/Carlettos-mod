@@ -2,11 +2,13 @@ package com.carlettos.mod.entidades.prumytrak.prumtrakhenchman;
 
 import com.carlettos.mod.entidades.bihead.BiHeadMonsterEntity;
 import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.listas.ListaAtributos;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
 
@@ -19,6 +21,7 @@ public class PrumTrakHenchmanEntity extends BiHeadMonsterEntity{
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new BiHeadLookRandomlyGoal<>(this));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
 	public static AttributeModifierMap.MutableAttribute getAtributos(){

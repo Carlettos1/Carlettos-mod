@@ -5,6 +5,7 @@ import com.carlettos.mod.entidades.aman.IAmanSpit;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.aman.ia.AmanEggHatchGoal;
 import com.carlettos.mod.entidades.aman.ia.AmanSpitGoal;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaEntidades;
 import com.carlettos.mod.util.SCAnimatePackage;
@@ -20,8 +21,6 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -119,14 +118,7 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 		this.goalSelector.addGoal(3, this.spitGoal);
 		this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 0.8D, 1));
 		
-		this.targetSelector.addGoal(1,
-				new NearestAttackableTargetGoal<SheepEntity>(this, SheepEntity.class, 0, true, false, (entidad) -> {
-					return entidad.isAlive();
-				}));
-		this.targetSelector.addGoal(2,
-				new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, (entidad) -> {
-					return entidad.isAlive();
-				}));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 
 	@Override
