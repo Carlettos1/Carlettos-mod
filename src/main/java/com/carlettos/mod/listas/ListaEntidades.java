@@ -3,6 +3,7 @@ package com.carlettos.mod.listas;
 import com.carlettos.mod.entidades.aman.aman.AmanEntity;
 import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderEntity;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.prumtrak.PrumTrakEntity;
@@ -14,6 +15,8 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 
 public class ListaEntidades {
+	public static final EntityType<DummyBoiEntity> DUMMY_BOI;
+	
 	public static final EntityType<AmanEntity> AMAN;
 	public static final EntityType<AmanSpiderEntity> AMAN_SPIDER;
 	public static final EntityType<AmanSpitEntity> AMAN_SPIT;
@@ -25,6 +28,8 @@ public class ListaEntidades {
 	public static final EntityType<PrumTrakHenchmanEntity> PRUM_TRAK_HENCHMAN;
 	
 	static {
+		DUMMY_BOI = EntityType.Builder.<DummyBoiEntity>create(DummyBoiEntity::new, EntityClassification.MISC).size(0.7F, 0.7F).build(Util.MOD_ID + ":dummy_boy");
+		
 		AMAN = EntityType.Builder.<AmanEntity>create(AmanEntity::new, EntityClassification.MONSTER).size(2F, 3F).build(Util.MOD_ID + ":aman");
 		AMAN_SPIDER = EntityType.Builder.<AmanSpiderEntity>create(AmanSpiderEntity::new, EntityClassification.MONSTER).size(1.6F, 1.2F).build(Util.MOD_ID + ":aman_spider");
 		AMAN_SPIT = EntityType.Builder.<AmanSpitEntity>create(AmanSpitEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(Util.MOD_ID + ":aman_spit");

@@ -6,6 +6,8 @@ import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderEntity;
 import com.carlettos.mod.entidades.aman.amanspider.AmanSpiderRenderer;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitRenderer;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
+import com.carlettos.mod.entidades.dummyboi.DummyBoiRenderer;
 import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.prumhenchman.PrumHenchmanRenderer;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
@@ -28,6 +30,7 @@ import com.carlettos.mod.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
@@ -55,6 +58,7 @@ public class CarlettosMod {
 	
 	public void commonSetup(FMLCommonSetupEvent evento) {
 		evento.enqueueWork(() -> {
+			GlobalEntityTypeAttributes.put(ListaEntidades.DUMMY_BOI, LivingEntity.registerAttributes().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.AMAN, AmanEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.AMAN_SPIDER, AmanSpiderEntity.getAtributos().create());
 			GlobalEntityTypeAttributes.put(ListaEntidades.PRUM_Y_TRAK, PrumTrakEntity.getAtributos().create());
@@ -65,6 +69,8 @@ public class CarlettosMod {
 	}
 	
 	public void clientSetup(FMLClientSetupEvent evento) {
+		RenderingRegistry.<DummyBoiEntity>registerEntityRenderingHandler(ListaEntidades.DUMMY_BOI, DummyBoiRenderer::new);
+		
 		RenderingRegistry.<AmanEntity>registerEntityRenderingHandler(ListaEntidades.AMAN, AmanRenderer::new);
 		RenderingRegistry.<AmanSpiderEntity>registerEntityRenderingHandler(ListaEntidades.AMAN_SPIDER, AmanSpiderRenderer::new);
 		RenderingRegistry.<AmanSpitEntity>registerEntityRenderingHandler(ListaEntidades.AMAN_SPIT, AmanSpitRenderer::new);
@@ -159,6 +165,7 @@ public class CarlettosMod {
 		
 		@SubscribeEvent
 		public static void entidades(RegistryEvent.Register<EntityType<?>> evento) {
+			ListaEntidades.DUMMY_BOI.setRegistryName(Util.getResLoc("dummy_boi"));
 			ListaEntidades.AMAN_SPIT.setRegistryName(Util.getResLoc("aman_spit"));
 			ListaEntidades.PRUM_PROYECTIL.setRegistryName(Util.getResLoc("prum_proyectil"));
 
@@ -169,6 +176,7 @@ public class CarlettosMod {
 			ListaEntidades.PRUM_HENCHMAN.setRegistryName(Util.getResLoc("prum_henchman"));
 			ListaEntidades.PRUM_TRAK_HENCHMAN.setRegistryName(Util.getResLoc("prum_trak_henchman"));
 
+			evento.getRegistry().register(ListaEntidades.DUMMY_BOI);
 			evento.getRegistry().register(ListaEntidades.AMAN_SPIT);
 			evento.getRegistry().register(ListaEntidades.PRUM_PROYECTIL);
 
