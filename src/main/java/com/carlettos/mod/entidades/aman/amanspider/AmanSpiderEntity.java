@@ -113,10 +113,10 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 		this.hatchGoal = new AmanEggHatchGoal<>(this, 60);
 		this.spitGoal = new AmanSpitGoal<>(this, 20);
 		
-		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
+		//this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, this.hatchGoal);
 		this.goalSelector.addGoal(3, this.spitGoal);
-		this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 0.8D, 1));
+		//this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 0.8D, 1));
 		
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
@@ -133,13 +133,14 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 64D)
 				.createMutableAttribute(Attributes.ARMOR, 4D)
+				.createMutableAttribute(ListaAtributos.EFFECT_AMPLIFIER, 0D)
 				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE)
 				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT);
 	}
 
 	@Override
 	public int getMaxSpitProgress() {
-		return 10;
+		return 20;
 	}
 
 	@Override
@@ -189,10 +190,10 @@ public class AmanSpiderEntity extends MonsterEntity implements IAmanEggHatch, IA
 	@Override
 	public void spitAttack() {
 		if (!this.world.isRemote) {
-			AmanSpitEntity spit = new AmanSpitEntity(this.world);
+			AmanSpitEntity spit = new AmanSpitEntity(this.world, (int)this.getAttributeValue(ListaAtributos.EFFECT_AMPLIFIER));
 			spit.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
 			double dx = this.getAttackTarget().getPosX() - this.getPosX();
-			double dy = this.getAttackTarget().getPosYEye() - this.getPosYEye();
+			double dy = this.getAttackTarget().getPosYHeight(this.getRNG().nextFloat()) - this.getPosYEye();
 			double dz = this.getAttackTarget().getPosZ() - this.getPosZ();
 			spit.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
 			spit.shoot(dx, dy, dz, 2F, 1F);

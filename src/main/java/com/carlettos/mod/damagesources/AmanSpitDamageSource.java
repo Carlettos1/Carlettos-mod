@@ -1,19 +1,19 @@
 package com.carlettos.mod.damagesources;
 
-import com.carlettos.mod.entidades.aman.IAmanSpit;
+import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class AmanSpitDamageSource<E extends MonsterEntity & IAmanSpit> extends EntityDamageSource {
-	private final E entity;
+public class AmanSpitDamageSource extends IndirectEntityDamageSource {
+	private final Entity shooter;
 	
-	public AmanSpitDamageSource(E damageSourceEntityIn) {
-		super("aman_spit_damage", damageSourceEntityIn);
-		this.entity = damageSourceEntityIn;
+	public AmanSpitDamageSource(AmanSpitEntity source, Entity shooter) {
+		super("aman_spit_damage", source, shooter);
+		this.shooter = shooter;
 	}
 	
 	/**
@@ -26,6 +26,6 @@ public class AmanSpitDamageSource<E extends MonsterEntity & IAmanSpit> extends E
 		return new TranslationTextComponent(
 				text, 
 				entityLivingBaseIn.getDisplayName(), 
-				this.entity.getDisplayName());
+				this.shooter.getDisplayName());
 	}
 }

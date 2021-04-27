@@ -203,10 +203,12 @@ public class CarlettosMod {
 		public static void atributos(RegistryEvent.Register<Attribute> evento) {
 			ListaAtributos.TRAK_AOE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("trak_aoe_attack_damage"));
 			ListaAtributos.RANGE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("range_attack_damage"));
+			ListaAtributos.EFFECT_AMPLIFIER.setRegistryName(Util.getResLoc("effect_amplifier"));
 			ListaAtributos.AMAN_EGG_COUNT.setRegistryName(Util.getResLoc("aman_egg_count"));
 
 			evento.getRegistry().register(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE);
 			evento.getRegistry().register(ListaAtributos.RANGE_ATTACK_DAMAGE);
+			evento.getRegistry().register(ListaAtributos.EFFECT_AMPLIFIER);
 			evento.getRegistry().register(ListaAtributos.AMAN_EGG_COUNT);
 		}
 	}

@@ -10,7 +10,7 @@ Algunas deidades no aguantaron la maldición y asesinan a cualquier ente que se 
 
 Es la diosa representativa de las **Arañas**.
 
-Es una araña que aprendió a mantener a sus huevos dentro de ella para poder usarlos como **refuerzos en el combate**. Además, desarrolló una habilidad para lanzar saliva de veneno relentizador y poder **atacar a distancia**, mientras, sus recién nacidas hijas acaban con el enemigo.
+Es una araña que aprendió a mantener a sus huevos dentro de ella para poder usarlos como **refuerzos en el combate**. Además, desarrolló una habilidad para lanzar saliva de veneno relentizador y poder **atacar a distancia**.
 
 Pese a ser una de las arañas más sabias, **ha caído en la locura** otorgada por la maldición, y asesina a cualquier ente que considere hostil.
 

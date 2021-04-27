@@ -21,6 +21,7 @@ public class PrumTrakHenchmanEntity extends BiHeadMonsterEntity{
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new BiHeadLookRandomlyGoal<>(this));
+		//TODO: disparar y aoe
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	

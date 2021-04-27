@@ -5,6 +5,9 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
 
 //Modelo hecho con Blockbench 3.8.3
 public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
@@ -166,6 +169,49 @@ public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
 			float netHeadYaw, float headPitch) {
 		this.cabezaderecha.rotateAngleX = headPitch * (float) Math.PI / 180f;
 		this.cabezaderecha.rotateAngleY = netHeadYaw * (float) Math.PI / 180f;
+	
+		this.torso.rotateAngleY = 0F;
+
+		this.brazoderecho.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * limbSwingAmount;
+		this.brazoderecho.rotateAngleY = 0F;
+		this.brazoderecho.rotateAngleZ = 0F;
+		
+		this.brazoizquierdo.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
+		this.brazoizquierdo.rotateAngleY = 0F;
+		this.brazoizquierdo.rotateAngleZ = 0F;
+		
+		this.piernaderecha.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.piernaderecha.rotateAngleY = 0F;
+		this.piernaderecha.rotateAngleZ = 0F;
+		
+		this.piernaizquierda.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+		this.piernaizquierda.rotateAngleY = 0F;
+		this.piernaizquierda.rotateAngleZ = 0F;
+		
+		if(!(this.swingProgress <= 0F)) {
+			HandSide side = entity.getPrimaryHand();
+			side = entity.swingingHand == Hand.MAIN_HAND ? side : side.opposite();
+			ModelRenderer mano = side == HandSide.LEFT ? this.brazoizquierdo : this.brazoderecho;
+			this.torso.rotateAngleY = MathHelper.sin(MathHelper.sqrt(this.swingProgress) * (float)Math.PI * 2F) * 0.2F;
+			if(side == HandSide.LEFT) {
+				this.torso.rotateAngleY *= -1F;
+			}
+
+			this.brazoderecho.rotateAngleX = -MathHelper.cos(this.torso.rotateAngleY) / 2F;
+			this.brazoderecho.rotateAngleY += this.torso.rotateAngleY;
+			this.brazoderecho.rotateAngleZ = MathHelper.sin(this.torso.rotateAngleY) / 2F;
+			this.brazoizquierdo.rotateAngleX = MathHelper.cos(this.torso.rotateAngleY) / 2F;
+			this.brazoizquierdo.rotateAngleY += this.torso.rotateAngleY;
+			this.brazoizquierdo.rotateAngleZ = -MathHelper.sin(this.torso.rotateAngleY) / 2F;
+			
+			float f = 1F - this.swingProgress;
+			f = 1F - f * f * f * f;
+			float f1 = MathHelper.sin(f * (float)Math.PI);
+			float f2 = MathHelper.sin(this.swingProgress * (float)Math.PI) * -(this.torso.rotateAngleX - 0.7F) * 0.75F;
+			mano.rotateAngleX = mano.rotateAngleX - f1 * 1.2F - f2;
+			mano.rotateAngleY += this.torso.rotateAngleY * 2F;
+			mano.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
+		}
 	}
 
 	@Override

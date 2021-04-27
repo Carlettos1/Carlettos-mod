@@ -30,7 +30,7 @@ public class ListaEntidades {
 	static {
 		DUMMY_BOI = EntityType.Builder.<DummyBoiEntity>create(DummyBoiEntity::new, EntityClassification.MISC).size(0.6F, 1.5F).build(Util.MOD_ID + ":dummy_boy");
 		
-		AMAN = EntityType.Builder.<AmanEntity>create(AmanEntity::new, EntityClassification.MONSTER).size(2F, 3F).build(Util.MOD_ID + ":aman");
+		AMAN = EntityType.Builder.<AmanEntity>create(AmanEntity::new, EntityClassification.MONSTER).size(2.4F, 1.8F).build(Util.MOD_ID + ":aman");
 		AMAN_SPIDER = EntityType.Builder.<AmanSpiderEntity>create(AmanSpiderEntity::new, EntityClassification.MONSTER).size(1.6F, 1.2F).build(Util.MOD_ID + ":aman_spider");
 		AMAN_SPIT = EntityType.Builder.<AmanSpitEntity>create(AmanSpitEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(Util.MOD_ID + ":aman_spit");
 		

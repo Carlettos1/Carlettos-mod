@@ -55,7 +55,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
+		//this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
 		this.goalSelector.addGoal(2, new AmanSpitGoal<>(this, 10));
 		this.goalSelector.addGoal(3, new AmanEggHatchGoal<>(this, 60));
 		
@@ -91,6 +91,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 			if(this.getFase() < 2) {
 				this.setFase((byte)2);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.EFFECT_AMPLIFIER).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 1D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 2D, AttributeModifier.Operation.ADDITION));
 			}
@@ -98,6 +99,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 			if(this.getFase() < 3) {
 				this.setFase((byte)3);
 				this.getAttribute(Attributes.ARMOR).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.EFFECT_AMPLIFIER).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 1D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.AMAN_EGG_COUNT).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 3D, AttributeModifier.Operation.ADDITION));
 			}
@@ -167,10 +169,10 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 	@Override
 	public void spitAttack() {
 		if (!this.world.isRemote) {
-			AmanSpitEntity spit = new AmanSpitEntity(this.world);
+			AmanSpitEntity spit = new AmanSpitEntity(this.world, (int)this.getAttributeValue(ListaAtributos.EFFECT_AMPLIFIER));
 			spit.setLocationAndAngles(this.getPosX(), this.getPosYEye(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
 			double dx = this.getAttackTarget().getPosX() - this.getPosX();
-			double dy = this.getAttackTarget().getPosYEye() - this.getPosYEye();
+			double dy = this.getAttackTarget().getPosYHeight(this.getRNG().nextFloat()) - this.getPosYEye();
 			double dz = this.getAttackTarget().getPosZ() - this.getPosZ();
 			spit.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
 			spit.shoot(dx, dy, dz, 2F, 1F);
@@ -264,6 +266,7 @@ public class AmanEntity extends MonsterEntity implements IAmanEggHatch, IAmanSpi
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
 				.createMutableAttribute(Attributes.ARMOR, 4D)
+				.createMutableAttribute(ListaAtributos.EFFECT_AMPLIFIER, 1D)
 				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 8D)
 				.createMutableAttribute(ListaAtributos.AMAN_EGG_COUNT, 2D);
 	}

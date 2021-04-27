@@ -24,6 +24,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -84,6 +85,7 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 10));
 		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 7));
 		this.goalSelector.addGoal(3, new BiHeadLookRandomlyGoal<>(this));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.8D, true));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	

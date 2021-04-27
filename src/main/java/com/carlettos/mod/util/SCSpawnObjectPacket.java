@@ -1,5 +1,7 @@
 package com.carlettos.mod.util;
 
+import javax.annotation.Nullable;
+
 import com.carlettos.mod.entidades.aman.amanspit.AmanSpitEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.listas.ListaEntidades;
@@ -14,8 +16,11 @@ import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.world.World;
 
 public class SCSpawnObjectPacket extends SSpawnObjectPacket{
-	public SCSpawnObjectPacket(Entity entity, int type) {
+	private int amplifier;
+	
+	public SCSpawnObjectPacket(Entity entity, int type, @Nullable int amplifier) {
 		super(entity, type);
+		this.amplifier = amplifier;
 	}
 	@Override
 	public void processPacket(IClientPlayNetHandler handler) {
@@ -25,7 +30,7 @@ public class SCSpawnObjectPacket extends SSpawnObjectPacket{
 		
 		if(getType() == ListaEntidades.AMAN_SPIT) {
 			Entity entity1 = world.getEntityByID(this.getData());
-			entity = new AmanSpitEntity(world, this.getX(), this.getY(), this.getZ());
+			entity = new AmanSpitEntity(world, this.getX(), this.getY(), this.getZ(), this.getAmplifier());
 			if(entity1 != null) {
 				((AmanSpitEntity)entity).setShooter(entity1);
 			}
@@ -50,5 +55,9 @@ public class SCSpawnObjectPacket extends SSpawnObjectPacket{
 				((ClientWorld)world).addEntity(getEntityID(), entity);
 			}
 		}
+	}
+	
+	public int getAmplifier() {
+		return amplifier;
 	}
 }
