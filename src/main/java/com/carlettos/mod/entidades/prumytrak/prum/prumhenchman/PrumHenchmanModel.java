@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
@@ -85,31 +84,11 @@ public class PrumHenchmanModel extends EntityModel<PrumHenchmanEntity> implement
 		this.piernaizquierda.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
 		this.piernaizquierda.rotateAngleY = 0F;
 		this.piernaizquierda.rotateAngleZ = 0F;
-		//TODO: sitting
-		//TODO: actualizar manos dependiendo del arma
-		if(!(this.swingProgress <= 0F)) {
-			HandSide side = entity.getPrimaryHand();
-			side = entity.swingingHand == Hand.MAIN_HAND ? side : side.opposite();
-			ModelRenderer mano = side == HandSide.LEFT ? this.brazoizquierdo : this.brazoderecho;
-			this.cuerpo.rotateAngleY = MathHelper.sin(MathHelper.sqrt(this.swingProgress) * (float)Math.PI * 2F) * 0.2F;
-			if(side == HandSide.LEFT) {
-				this.cuerpo.rotateAngleY *= -1F;
-			}
-			
-			this.brazoderecho.rotateAngleX = -MathHelper.cos(this.cuerpo.rotateAngleY) / 2F;
-			this.brazoderecho.rotateAngleY += this.cuerpo.rotateAngleY;
-			this.brazoderecho.rotateAngleZ = MathHelper.sin(this.cuerpo.rotateAngleY) / 2F;
-			this.brazoizquierdo.rotateAngleX = MathHelper.cos(this.cuerpo.rotateAngleY) / 2F;
-			this.brazoizquierdo.rotateAngleY += this.cuerpo.rotateAngleY;
-			this.brazoizquierdo.rotateAngleZ = -MathHelper.sin(this.cuerpo.rotateAngleY) / 2F;
-			
-			float f = 1F - this.swingProgress;
-			f = 1F - f * f * f * f;
-			float f1 = MathHelper.sin(f * (float)Math.PI);
-			float f2 = MathHelper.sin(this.swingProgress * (float)Math.PI) * -(this.cabeza.rotateAngleX - 0.7F) * 0.75F;
-			mano.rotateAngleX = mano.rotateAngleX - f1 * 1.2F - f2;
-			mano.rotateAngleY += this.cuerpo.rotateAngleY * 2F;
-			mano.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
+
+		if(!(this.ranged <= 0F)) {			
+			this.brazoderecho.rotateAngleX = -80F * (1 - MathHelper.sqrt(this.ranged)) * (float) Math.PI / 180f;
+			this.brazoderecho.rotateAngleY = -10F * this.ranged * (float) Math.PI / 180f;
+			this.brazoderecho.rotateAngleZ = -10F * this.ranged * (float) Math.PI / 180f;
 		}
 	}
 

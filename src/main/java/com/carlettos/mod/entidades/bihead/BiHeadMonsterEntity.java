@@ -26,7 +26,7 @@ public class BiHeadMonsterEntity extends MonsterEntity implements IBiHead<BiHead
 	public int girandoProgressInt;
 	public boolean isGirandoInProgress;
 	
-	protected BiHeadMonsterEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
+	protected BiHeadMonsterEntity(EntityType<? extends BiHeadMonsterEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.lookController = new BiHeadLookController<BiHeadMonsterEntity>(this);
 	}

@@ -115,8 +115,9 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 	public void rangedAttack(LivingEntity target) {
 		if(this.world instanceof ServerWorld) {
 			PrumProyectilEntity proyectil = new PrumProyectilEntity(this.world, this, target);
+			proyectil.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
 			double d0 = target.getPosX() -  proyectil.getPosX();
-			double d1 = target.getPosYHeight(0.333333D) -  proyectil.getPosY();
+			double d1 = target.getPosYHeight(0.5D) -  proyectil.getPosY();
 			double d2 = target.getPosZ() -  proyectil.getPosZ();
 			proyectil.shoot(d0, d1, d2, 2F, 1F);
 			this.world.addEntity(proyectil);
@@ -137,9 +138,9 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 	public static AttributeModifierMap.MutableAttribute getAtributos(){
 		return MonsterEntity.func_234295_eP_()
 				.createMutableAttribute(Attributes.MAX_HEALTH, 40D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1.8D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 32D)
 				.createMutableAttribute(Attributes.ARMOR, 4D)
-				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 10D);
+				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 7D);
 	}
 }

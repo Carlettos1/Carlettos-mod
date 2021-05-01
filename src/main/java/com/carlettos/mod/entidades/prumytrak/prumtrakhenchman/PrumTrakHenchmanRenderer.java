@@ -18,6 +18,8 @@ public class PrumTrakHenchmanRenderer extends MobRenderer<PrumTrakHenchmanEntity
 	@Override
 	public void render(PrumTrakHenchmanEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
+		this.entityModel.aoe = entityIn.getAOEProgress(partialTicks);
+		this.entityModel.range = entityIn.getRangedProgress(partialTicks);
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 

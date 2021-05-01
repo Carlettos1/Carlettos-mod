@@ -241,6 +241,6 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		Entity entity = this.func_234616_v_();
-		return new SCSpawnObjectPacket(this, entity == null ? 0 : entity.getEntityId(), (Integer) null);
+		return new SCSpawnObjectPacket(this, entity == null ? 0 : entity.getEntityId(), 0);
 	}
 }

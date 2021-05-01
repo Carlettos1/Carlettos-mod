@@ -20,6 +20,8 @@ public class PrumTrakRenderer extends MobRenderer<PrumTrakEntity, PrumTrakModel>
 	@Override
 	public void render(PrumTrakEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
+		this.entityModel.aoe = entityIn.getAOEProgress(partialTicks);
+		this.entityModel.range = entityIn.getRangedProgress(partialTicks);
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 

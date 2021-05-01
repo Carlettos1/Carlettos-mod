@@ -5,12 +5,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
 //Modelo hecho con Blockbench 3.8.3
 public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
+	public float aoe;
+	public float range;
+	private float tamañofemur = 16F;
+	
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaarriba;
 	private final ModelRenderer piernaderechaabajo;
@@ -179,6 +181,10 @@ public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
 		this.brazoizquierdo.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
 		this.brazoizquierdo.rotateAngleY = 0F;
 		this.brazoizquierdo.rotateAngleZ = 0F;
+
+		this.brazoizquieroabajo.rotateAngleX = 0F;
+		this.brazoizquieroabajo.rotateAngleY = 0F;
+		this.brazoizquieroabajo.rotateAngleZ = 0F;
 		
 		this.piernaderecha.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		this.piernaderecha.rotateAngleY = 0F;
@@ -189,34 +195,37 @@ public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
 		this.piernaizquierda.rotateAngleZ = 0F;
 		
 		if(!(this.swingProgress <= 0F)) {
-			HandSide side = entity.getPrimaryHand();
-			side = entity.swingingHand == Hand.MAIN_HAND ? side : side.opposite();
-			ModelRenderer mano = side == HandSide.LEFT ? this.brazoizquierdo : this.brazoderecho;
-			this.torso.rotateAngleY = MathHelper.sin(MathHelper.sqrt(this.swingProgress) * (float)Math.PI * 2F) * 0.2F;
-			if(side == HandSide.LEFT) {
-				this.torso.rotateAngleY *= -1F;
-			}
-
-			this.brazoderecho.rotateAngleX = -MathHelper.cos(this.torso.rotateAngleY) / 2F;
-			this.brazoderecho.rotateAngleY += this.torso.rotateAngleY;
-			this.brazoderecho.rotateAngleZ = MathHelper.sin(this.torso.rotateAngleY) / 2F;
-			this.brazoizquierdo.rotateAngleX = MathHelper.cos(this.torso.rotateAngleY) / 2F;
-			this.brazoizquierdo.rotateAngleY += this.torso.rotateAngleY;
-			this.brazoizquierdo.rotateAngleZ = -MathHelper.sin(this.torso.rotateAngleY) / 2F;
-			
-			float f = 1F - this.swingProgress;
-			f = 1F - f * f * f * f;
-			float f1 = MathHelper.sin(f * (float)Math.PI);
-			float f2 = MathHelper.sin(this.swingProgress * (float)Math.PI) * -(this.torso.rotateAngleX - 0.7F) * 0.75F;
-			mano.rotateAngleX = mano.rotateAngleX - f1 * 1.2F - f2;
-			mano.rotateAngleY += this.torso.rotateAngleY * 2F;
-			mano.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
+			float f = this.swingProgress;
+			this.torso.rotateAngleY = (float) Math.toRadians(15F * f);
+			this.brazoizquierdo.rotateAngleX = (float) Math.toRadians(-90F * f);
+			this.brazoizquieroabajo.rotateAngleZ = (float) Math.toRadians(45F * f);
+		}
+		
+		if(!(this.range <= 0F)) {
+			this.brazoderecho.rotateAngleX = -80F * (1 - MathHelper.sqrt(this.range)) * (float) Math.PI / 180f;
+			this.brazoderecho.rotateAngleY = -10F * this.range * (float) Math.PI / 180f;
+			this.brazoderecho.rotateAngleZ = -10F * this.range * (float) Math.PI / 180f;
 		}
 	}
 
 	@Override
 	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red,
 			float green, float blue, float alpha) {
+		this.piernaderecha.rotateAngleX = 0;
+		this.piernaderechaabajo.rotateAngleX = 0;
+		this.piernaizquierda.rotateAngleX = 0;
+		this.piernaizquierdaabajo.rotateAngleX = 0;
+		if(!(this.aoe <= 0F)) {
+			float aoeProgress = this.aoe;
+			float angulo = MathHelper.sin(MathHelper.sqrt(aoeProgress) * (float)Math.PI) * (float)Math.PI / 2F;
+			this.piernaderecha.rotateAngleX = angulo;
+			this.piernaderechaabajo.rotateAngleX = -angulo;
+			this.piernaizquierda.rotateAngleX = -angulo;
+			this.piernaizquierdaabajo.rotateAngleX = angulo;
+			float ajuste = this.tamañofemur/16F * (1 - MathHelper.cos(angulo));
+			matrixStack.push();
+			matrixStack.translate(0, ajuste, 0);
+		}
 		piernaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
 		piernaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		torso.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -224,6 +233,9 @@ public class PrumTrakModel extends EntityModel<PrumTrakEntity> {
 		brazoizquierdo.render(matrixStack, buffer, packedLight, packedOverlay);
 		cabezaizquierda.render(matrixStack, buffer, packedLight, packedOverlay);
 		cabezaderecha.render(matrixStack, buffer, packedLight, packedOverlay);
+		if(!(this.aoe <= 0F)) {
+			matrixStack.pop();
+		}
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {

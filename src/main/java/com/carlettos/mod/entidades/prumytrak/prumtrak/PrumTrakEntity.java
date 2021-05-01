@@ -3,20 +3,14 @@ package com.carlettos.mod.entidades.prumytrak.prumtrak;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.carlettos.mod.entidades.bihead.BiHeadMonsterEntity;
 import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
 import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.interfaces.IHasFases;
-import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
+import com.carlettos.mod.entidades.prumytrak.PrumTrakMonsterEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
-import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
-import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 import com.carlettos.mod.entidades.prumytrak.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
-import com.carlettos.mod.listas.ListaDamageSources;
 import com.carlettos.mod.listas.ListaItem;
-import com.carlettos.mod.listas.ListaParticulas;
-import com.carlettos.mod.util.SCAnimatePackage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -43,18 +37,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 
 //TODO: que no despawnee
 //TODO: que el agua no le haga counter
-public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAttack, ITrakAOE, IHasFases{
+public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 	public static final Set<Item> RUNAS_PRUM = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH);
 	public static final Set<Item> RUNAS_TRAK = Set.of(ListaItem.RUNA_TRAK, ListaItem.RUNA_RUDU, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
 	public static final Set<Item> RUNAS_PRUM_Y_TRAK = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH, ListaItem.RUNA_TRAK, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
-	public static final DataParameter<Boolean> AOE_AGRESSIVE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
-	public static final DataParameter<Boolean> RANGED_AGRESSIVE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
 	public static final Predicate<LivingEntity> TARGET_RUNE_PLAYER = (entidad) -> {
 		if(!(entidad instanceof PlayerEntity)) {
@@ -65,35 +55,24 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 	
 	private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS);
 	
-	public float AOEProgress;
-	public float prevAOEProgress;
-	public int AOEProgressInt;
-	public boolean isAOEInProgress;
 	
-	public float rangedProgress;
-	public float prevRangedProgress;
-	public int rangedProgressInt;
-	public boolean isRangedInProgress;
-	
-	public PrumTrakEntity(EntityType<? extends MonsterEntity> type, World worldIn) {
-		super(type, worldIn);
+	public PrumTrakEntity(EntityType<? extends PrumTrakEntity> type, World worldIn) {
+		super(type, worldIn, 10, 10);
 		this.experienceValue = 2500;
 	}
 	
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 10));
-		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 7));
-		this.goalSelector.addGoal(3, new BiHeadLookRandomlyGoal<>(this));
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.8D, true));
+		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1D, false));
+		this.goalSelector.addGoal(2, new PrumRangedAttackGoal<>(this, 20));
+		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 7D));
+		this.goalSelector.addGoal(4, new BiHeadLookRandomlyGoal<>(this));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
 	@Override
 	protected void registerData() {
 		super.registerData();
-		this.dataManager.register(AOE_AGRESSIVE, false);
-		this.dataManager.register(RANGED_AGRESSIVE, false);
 		this.dataManager.register(FASE, (byte) 0);
 	}
 	
@@ -101,20 +80,6 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 	public void tick() {
 		super.tick();
 		this.actualizarFase();
-	}
-	
-	@Override
-	public void baseTick() {
-		super.baseTick();
-		this.prevAOEProgress = this.AOEProgress;
-		this.prevRangedProgress = this.rangedProgress;
-	}
-	
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		this.updateAOEProgress();
-		this.updateRangedProgress();
 	}
 	
 	@Override
@@ -336,154 +301,10 @@ public class PrumTrakEntity extends BiHeadMonsterEntity implements IPrumRangedAt
 		this.dataManager.set(FASE, fase);
 	}
 	
-	@Override
-	public int getMaxAOEProgress() {
-		return 10;
-	}
-	
-	@Override
-	public float getAOEProgress(float partialTick) {
-	      float f = this.AOEProgress - this.prevAOEProgress;
-	      if (f < 0.0F) {
-	         ++f;
-	      }
-	      return this.prevAOEProgress + f * partialTick;
-	}
-	
-	@Override
-	public void updateAOEProgress() {
-		int i = this.getMaxAOEProgress();
-		if(this.isAOEInProgress) {
-			++this.AOEProgressInt;
-			if(this.AOEProgressInt >= i) {
-				this.AOEProgressInt = 0;
-				this.isAOEInProgress = false;
-			}
-		} else {
-			this.AOEProgressInt = 0;
-		}
-		this.AOEProgress = (float)this.AOEProgressInt / (float)i;
-	}
-	
-	@Override
-	public void AOEAnimation(boolean updateSelf) {
-		if(!this.isAOEInProgress || this.AOEProgressInt >= this.getMaxAOEProgress() / 2 || this.AOEProgressInt < 0) {
-			this.AOEProgressInt = -1;
-			this.isAOEInProgress = true;
-			if(this.world instanceof ServerWorld) {
-				SCAnimatePackage scanimate = new SCAnimatePackage(this, SCAnimatePackage.TRAK_AOE_ANIMATION_ID);
-				ServerChunkProvider scp = ((ServerWorld)this.world).getChunkProvider();
-				if(updateSelf) {
-					scp.sendToTrackingAndSelf(this, scanimate);
-				} else {
-					scp.sendToAllTracking(this, scanimate);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void AOEAttack(double radio) {
-		if(!this.world.isRemote) {
-			for(int i = 0; i < radio * radio * radio * 4; i++) {
-				double x = 2D * radio * (0.5D - this.getRNG().nextDouble());
-				double y = radio * this.getRNG().nextDouble();
-				double z = 2D * radio * (0.5D - this.getRNG().nextDouble());
-				((ServerWorld)this.world).spawnParticle(ListaParticulas.TRAK_PARTICULA, this.getPosX() + x, this.getPosY() + y, this.getPosZ() + z, 1, 0D, 0D, 0D, 0.1D);
-			}
-			this.world.getEntitiesInAABBexcluding(this, getBoundingBox().grow(radio), (entidad) -> {return entidad instanceof LivingEntity;}).forEach((entidad) -> {
-				if(entidad.isAlive()) {
-					entidad.attackEntityFrom(ListaDamageSources.FASED_ENTITY(this, ListaDamageSources.TRAK_AOE(this)), (float) this.getAttributeValue(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE));
-				}
-			});
-			//TODO: sonido
-		}
-	}
-	
-	@Override
-	public boolean isAOEAgressive() {
-		return this.dataManager.get(AOE_AGRESSIVE);
-	}
-	
-	@Override
-	public void setAOEAgressive(boolean aoed) {
-		this.dataManager.set(AOE_AGRESSIVE, aoed);
-	}
-
-	@Override
-	public int getMaxRangedProgress() {
-		return 10;
-	}
-
-	@Override
-	public float getRangedProgress(float partialTick) {
-		float f = this.rangedProgress - this.prevRangedProgress;
-		if(f < 0.0F) {
-			++f;
-		}
-		return this.prevRangedProgress + f * partialTick;
-	}
-
-	@Override
-	public void updateRangedProgress() {
-		int i = this.getMaxRangedProgress();
-		if(this.isRangedInProgress) {
-			++this.rangedProgressInt;
-			if(this.rangedProgressInt >= i) {
-				this.rangedProgressInt = 0;
-				this.isRangedInProgress = false;
-			}
-		} else {
-			this.rangedProgressInt = 0;
-		}
-		this.rangedProgress = (float)this.rangedProgressInt / (float)i;
-	}
-
-	@Override
-	public void rangedAnimation(boolean updateSelf) {
-		if(!this.isRangedInProgress || this.rangedProgressInt >= this.getMaxRangedProgress() / 2 || this.rangedProgressInt < 0) {
-			this.rangedProgressInt = -1;
-			this.isRangedInProgress = true;
-			if(this.world instanceof ServerWorld) {
-				SCAnimatePackage scanimate = new SCAnimatePackage(this, SCAnimatePackage.PRUM_RANGED_ATTACK_ANIMATION_ID);
-				ServerChunkProvider scp = ((ServerWorld)this.world).getChunkProvider();
-				if(updateSelf) {
-					scp.sendToTrackingAndSelf(this, scanimate);
-				} else {
-					scp.sendToAllTracking(this, scanimate);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void rangedAttack(LivingEntity target) {
-		if(this.world instanceof ServerWorld) {
-			PrumProyectilEntity proyectil = new PrumProyectilEntity(this.world, this, target);
-			proyectil.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
-			double d0 = target.getPosX() -  proyectil.getPosX();
-			double d1 = target.getPosYHeight(0.5D) -  proyectil.getPosY();
-			double d2 = target.getPosZ() -  proyectil.getPosZ();
-			proyectil.shoot(d0, d1, d2, 2F, 1F);
-			this.world.addEntity(proyectil);
-			//TODO: SONIDO
-		}
-	}
-
-	@Override
-	public boolean isRangedAgressive() {
-		return this.dataManager.get(RANGED_AGRESSIVE);
-	}
-
-	@Override
-	public void setRangedAgressive(boolean ranged) {
-		this.dataManager.set(RANGED_AGRESSIVE, ranged);
-	}
-	
 	public static AttributeModifierMap.MutableAttribute getAtributos(){
 		return MonsterEntity.func_234295_eP_()
 				.createMutableAttribute(Attributes.MAX_HEALTH, 210D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 128D)
 				.createMutableAttribute(Attributes.ARMOR, 7D)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 10D)

@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 //Made with Blockbench 3.7.5
 public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implements IHasArm, IHasHead{
 	public float aoe;
+	private float tamañofemur = 4F;
 	
 	private final ModelRenderer piernaderecha;
 	private final ModelRenderer piernaderechaabajo;
@@ -115,6 +116,10 @@ public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implement
 
 	@Override
 	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+		this.piernaderecha.rotateAngleX = 0F;
+		this.piernaderechaabajo.rotateAngleX = 0F;
+		this.piernaizquierda.rotateAngleX = 0F;
+		this.piernaizquierdaabajo.rotateAngleX = 0F;
 		if(!(this.aoe <= 0F)) {
 			float aoeProgress = this.aoe;
 			float angulo = MathHelper.sin(MathHelper.sqrt(aoeProgress) * (float)Math.PI) * (float)Math.PI / 2F;
@@ -122,7 +127,7 @@ public class TrakHenchmanModel extends EntityModel<TrakHenchmanEntity> implement
 			this.piernaderechaabajo.rotateAngleX = -angulo;
 			this.piernaizquierda.rotateAngleX = -angulo;
 			this.piernaizquierdaabajo.rotateAngleX = angulo;
-			float ajuste = 4F/16F * (1 - MathHelper.cos(angulo));
+			float ajuste = this.tamañofemur/16F * (1 - MathHelper.cos(angulo));
 			matrixStack.push();
 			matrixStack.translate(0, ajuste, 0);
 		}
