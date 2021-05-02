@@ -223,7 +223,7 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		
 		if(this.hasTarget()) {
 			Vector3d target = this.getTargetPos();
-			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), target.getY() - this.getPosY(), target.getZ() - this.getPosZ());
+			Vector3d radioVector = new Vector3d(target.getX() - this.getPosX(), target.getY() - this.getPosY(), target.getZ() - this.getPosZ()).normalize();
 			
 			vector3d4 = vector3d4.add(radioVector).normalize().scale(this.getMotion().length());
 		}
@@ -237,7 +237,6 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 		return ItemStack.EMPTY;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		Entity entity = this.func_234616_v_();

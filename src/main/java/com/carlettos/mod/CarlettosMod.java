@@ -205,11 +205,13 @@ public class CarlettosMod {
 			ListaAtributos.RANGE_ATTACK_DAMAGE.setRegistryName(Util.getResLoc("range_attack_damage"));
 			ListaAtributos.EFFECT_AMPLIFIER.setRegistryName(Util.getResLoc("effect_amplifier"));
 			ListaAtributos.AMAN_EGG_COUNT.setRegistryName(Util.getResLoc("aman_egg_count"));
+			ListaAtributos.CANTIDAD_PROYECTILES.setRegistryName(Util.getResLoc("cantidad_proyectiles"));
 
 			evento.getRegistry().register(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE);
 			evento.getRegistry().register(ListaAtributos.RANGE_ATTACK_DAMAGE);
 			evento.getRegistry().register(ListaAtributos.EFFECT_AMPLIFIER);
 			evento.getRegistry().register(ListaAtributos.AMAN_EGG_COUNT);
+			evento.getRegistry().register(ListaAtributos.CANTIDAD_PROYECTILES);
 		}
 	}
 }

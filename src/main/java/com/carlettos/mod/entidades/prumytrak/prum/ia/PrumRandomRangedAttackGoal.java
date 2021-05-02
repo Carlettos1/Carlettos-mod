@@ -2,22 +2,22 @@ package com.carlettos.mod.entidades.prumytrak.prum.ia;
 
 import java.util.EnumSet;
 
-import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
+import com.carlettos.mod.entidades.prumytrak.prum.IPrumRandomRangedAttack;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.EntityPredicates;
 
-public class PrumRangedAttackGoal<E extends MonsterEntity & IPrumRangedAttack> extends Goal{
+public class PrumRandomRangedAttackGoal<E extends MonsterEntity & IPrumRandomRangedAttack> extends Goal{
 	private final E entity;
 	private final int intervalo;
 	private int counter;
 	
-	public PrumRangedAttackGoal(E entity, int intervalo) {
+	public PrumRandomRangedAttackGoal(E entity, int intervalo) {
 		this.entity = entity;
 		this.intervalo = intervalo;
-		this.setMutexFlags(EnumSet.of(Goal.Flag.LOOK));
+		this.setMutexFlags(EnumSet.noneOf(Goal.Flag.class));
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class PrumRangedAttackGoal<E extends MonsterEntity & IPrumRangedAttack> e
 	
 	@Override
 	public void startExecuting() {
-		this.entity.setRangedAgressive(true);
+		this.entity.setRandomRangedAgressive(true);
 		this.counter = 0;
 	}
 	
@@ -42,20 +42,18 @@ public class PrumRangedAttackGoal<E extends MonsterEntity & IPrumRangedAttack> e
 		if(!EntityPredicates.CAN_AI_TARGET.test(target)) {
 			this.entity.setAttackTarget(null);
 		}
-		this.entity.setRangedAgressive(false);
+		this.entity.setRandomRangedAgressive(false);
 	}
 	
 	@Override
 	public void tick() {
 		LivingEntity target = this.entity.getAttackTarget();
-		this.entity.getLookController().setLookPositionWithEntity(target, 30F, 30F);
 		if(--this.counter <= 0) {
 			if(!this.entity.getEntitySenses().canSee(target)) {
 				return;
 			}
 			this.counter = this.intervalo;
-			this.entity.rangedAnimation(false);
-			this.entity.rangedAttack(target);
+			this.entity.randomRangedAttack(target);
 		}
 	}
 }

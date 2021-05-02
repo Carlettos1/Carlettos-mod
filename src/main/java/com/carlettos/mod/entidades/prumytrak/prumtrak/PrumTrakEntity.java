@@ -7,8 +7,11 @@ import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
 import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.interfaces.IHasFases;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakMonsterEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.IPrumRandomRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
+import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRandomRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
 import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 import com.carlettos.mod.entidades.prumytrak.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
@@ -43,11 +46,12 @@ import net.minecraftforge.common.ForgeHooks;
 
 //TODO: que no despawnee
 //TODO: que el agua no le haga counter
-public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
+public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases, IPrumRandomRangedAttack{
 	public static final Set<Item> RUNAS_PRUM = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH);
 	public static final Set<Item> RUNAS_TRAK = Set.of(ListaItem.RUNA_TRAK, ListaItem.RUNA_RUDU, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
 	public static final Set<Item> RUNAS_PRUM_Y_TRAK = Set.of(ListaItem.RUNA_PRUM, ListaItem.RUNA_RUDU, ListaItem.RUNA_UNK, ListaItem.RUNA_MIH, ListaItem.RUNA_TRAK, ListaItem.RUNA_AMAN, ListaItem.RUNA_KEL);
 	public static final DataParameter<Byte> FASE = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BYTE);
+	public static final DataParameter<Boolean> RANDOM_RANGED_AGGROED = EntityDataManager.createKey(PrumTrakEntity.class, DataSerializers.BOOLEAN);
 	public static final Predicate<LivingEntity> TARGET_RUNE_PLAYER = (entidad) -> {
 		if(!(entidad instanceof PlayerEntity)) {
 			return false;
@@ -69,6 +73,7 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 		this.goalSelector.addGoal(2, new PrumRangedAttackGoal<>(this, 20));
 		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 7D, 20));
 		this.goalSelector.addGoal(4, new BiHeadLookRandomlyGoal<>(this));
+		this.goalSelector.addGoal(5, new PrumRandomRangedAttackGoal<>(this, 20));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
@@ -76,6 +81,7 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(FASE, (byte) 0);
+		this.dataManager.register(RANDOM_RANGED_AGGROED, false);
 	}
 	
 	@Override
@@ -272,6 +278,7 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 				this.getAttribute(Attributes.ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 4D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 9D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.CANTIDAD_PROYECTILES).applyPersistentModifier(new AttributeModifier("bonus segunda fase", 10D, AttributeModifier.Operation.ADDITION));
 			}
 		} else {
 			if(this.getFase() < 3) {
@@ -280,6 +287,7 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 				this.getAttribute(Attributes.ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 5D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 11D, AttributeModifier.Operation.ADDITION));
 				this.getAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 10D, AttributeModifier.Operation.ADDITION));
+				this.getAttribute(ListaAtributos.CANTIDAD_PROYECTILES).applyPersistentModifier(new AttributeModifier("bonus tercera fase", 10D, AttributeModifier.Operation.ADDITION));
 			}
 		}
 		this.world.getProfiler().endSection();
@@ -314,6 +322,33 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 10D)
 				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D)
 				.createMutableAttribute(ListaAtributos.TRAK_AOE_ATTACK_DAMAGE, 8D)
-				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 10D);
+				.createMutableAttribute(ListaAtributos.RANGE_ATTACK_DAMAGE, 10D)
+				.createMutableAttribute(ListaAtributos.CANTIDAD_PROYECTILES, 10D);
+	}
+
+	@Override
+	public void randomRangedAttack(LivingEntity target) {
+		for (int i = (int) this.getAttributeValue(ListaAtributos.CANTIDAD_PROYECTILES); i >=0; i--) {
+			PrumProyectilEntity proyectil = new PrumProyectilEntity(world, this, target);
+			proyectil.setDamage(this.getAttributeValue(ListaAtributos.RANGE_ATTACK_DAMAGE));
+			double phi = this.getRNG().nextDouble() * 2D * Math.PI;
+			double theta = this.getRNG().nextDouble() * Math.PI;
+			double x = Math.sin(theta) * Math.cos(phi);
+			double y = Math.cos(theta);
+			double z = Math.sin(theta) * Math.sin(phi);
+			proyectil.shoot(x, y, z, 2F, 1F);
+			this.world.addEntity(proyectil);
+		}
+		//TODO: sonido
+	}
+
+	@Override
+	public boolean isRandomRangedAgressive() {
+		return this.dataManager.get(RANDOM_RANGED_AGGROED);
+	}
+
+	@Override
+	public void setRandomRangedAgressive(boolean ranged) {
+		this.dataManager.set(RANDOM_RANGED_AGGROED, ranged);
 	}
 }
