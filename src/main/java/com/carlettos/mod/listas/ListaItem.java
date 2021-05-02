@@ -15,6 +15,9 @@ public class ListaItem {
 	public static final Item DUMMY_BOI_SPAWN_EGG;
 	public static final Item AMAN_SPAWN_EGG;
 	public static final Item AMAN_SPIDER_SPAWN_EGG;
+	
+	public static final Item HUL_KUT_SPAWN_EGG;
+	
 	public static final Item PRUM_Y_TRAK_SPAWN_EGG;
 	public static final Item TRAK_HENCHMAN_SPAWN_EGG;
 	public static final Item PRUM_HENCHMAN_SPAWN_EGG;
@@ -44,6 +47,9 @@ public class ListaItem {
 		DUMMY_BOI_SPAWN_EGG = new SpawnEggItem(ListaEntidades.DUMMY_BOI, 0x804000, 0x808080, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		AMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN, 0xffff00, 0x670000, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		AMAN_SPIDER_SPAWN_EGG = new SpawnEggItem(ListaEntidades.AMAN_SPIDER, 0x404040, 0xFF4040, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+		
+		HUL_KUT_SPAWN_EGG = new SpawnEggItem(ListaEntidades.HUL_KUT, 0x000000, 0xff0000, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
+		
 		PRUM_Y_TRAK_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_Y_TRAK, 0x8E3CD7, 0xA1A1A1, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		TRAK_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.TRAK_HENCHMAN, 0x000000, 0x0F0F0F, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
 		PRUM_HENCHMAN_SPAWN_EGG = new SpawnEggItem(ListaEntidades.PRUM_HENCHMAN, 0x101010, 0x0F0F0F, new Item.Properties().group(Util.GRUPO_CARLETTOS_MOD));
