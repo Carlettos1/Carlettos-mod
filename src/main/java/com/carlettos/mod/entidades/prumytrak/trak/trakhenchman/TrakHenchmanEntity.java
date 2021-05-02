@@ -1,6 +1,7 @@
 package com.carlettos.mod.entidades.prumytrak.trak.trakhenchman;
 
 import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 import com.carlettos.mod.entidades.prumytrak.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
@@ -19,7 +20,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
@@ -38,7 +39,7 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1D, true));
-		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 3D));
+		this.goalSelector.addGoal(2, new TrakAOEAttackGoal<>(this, true, 3D, 30));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
@@ -66,15 +67,16 @@ public class TrakHenchmanEntity extends MonsterEntity implements ITrakAOE{
 	}
 	
 	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if(source.getTrueSource() instanceof IPrumRangedAttack || source.getTrueSource() instanceof ITrakAOE ) {
+			return false;
+		}
+		return super.attackEntityFrom(source, amount);
+	}
+	
+	@Override
 	public int getMaxAOEProgress() {
-		int base = 10;
-		if(this.isPotionActive(Effects.SPEED)) {
-			base -= this.getActivePotionEffect(Effects.SPEED).getAmplifier() * 2;
-		}
-		if(this.isPotionActive(Effects.SLOWNESS)) {
-			base += this.getActivePotionEffect(Effects.SLOWNESS).getAmplifier() * 6;
-		}
-    	return base < 0 ? 0: base;
+		return 10;
 	}
 	
 	@Override

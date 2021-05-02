@@ -4,6 +4,7 @@ import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
 import com.carlettos.mod.entidades.prumytrak.prum.prumproyectil.PrumProyectilEntity;
+import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.util.SCAnimatePackage;
 
@@ -16,7 +17,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
@@ -34,7 +35,7 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 	
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 20));		
+		this.goalSelector.addGoal(1, new PrumRangedAttackGoal<>(this, 30));		
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
 	
@@ -55,17 +56,18 @@ public class PrumHenchmanEntity extends MonsterEntity implements IPrumRangedAtta
 		super.livingTick();
 		this.updateRangedProgress();
 	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if(source.getTrueSource() instanceof IPrumRangedAttack || source.getTrueSource() instanceof ITrakAOE ) {
+			return false;
+		}
+		return super.attackEntityFrom(source, amount);
+	}
 
 	@Override
 	public int getMaxRangedProgress() {
-		int base = 10;
-		if(this.isPotionActive(Effects.HASTE)) {
-			base -= this.getActivePotionEffect(Effects.HASTE).getAmplifier() * 2;
-		} 
-		if(this.isPotionActive(Effects.MINING_FATIGUE)) {
-			base += this.getActivePotionEffect(Effects.MINING_FATIGUE).getAmplifier() * 6;
-		}
-		return base < 0 ? 0: base;
+		return 10;
 	}
 
 	@Override

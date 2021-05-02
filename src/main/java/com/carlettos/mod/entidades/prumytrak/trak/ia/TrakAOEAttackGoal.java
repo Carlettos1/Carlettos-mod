@@ -14,17 +14,18 @@ import net.minecraft.util.math.vector.Vector3d;
 public class TrakAOEAttackGoal<E extends MonsterEntity & ITrakAOE> extends Goal{
 	private final E entity;
 	private final boolean longMemory;
-	private final int intervalo = 20;
+	private final int intervalo;
 	private final double radio;
 	private Vector3d targetPos = new Vector3d(0D, 0D, 0D);
 	private int delayCounter;
 	private int otroCounter;
 	private long time;
 	
-	public TrakAOEAttackGoal(E entity, boolean longMemory, double radio) {
+	public TrakAOEAttackGoal(E entity, boolean longMemory, double radio, int intervalo) {
 		this.entity = entity;
 		this.longMemory = longMemory;
 		this.radio = radio;
+		this.intervalo = intervalo;
 		this.setMutexFlags(EnumSet.noneOf(Goal.Flag.class));
 	}
 	

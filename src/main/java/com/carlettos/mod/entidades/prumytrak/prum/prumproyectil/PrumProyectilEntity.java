@@ -114,9 +114,9 @@ public class PrumProyectilEntity extends AbstractArrowEntity{
 			}
 		} else {
 			objetivo.forceFireTicks(k);
-			this.setMotion(this.getMotion().scale(-0.1D));
-			this.rotationYaw += 180F;
-			this.prevRotationYaw += 180F;
+			//this.setMotion(this.getMotion().scale(-0.1D));
+			//this.rotationYaw += 180F;
+			//this.prevRotationYaw += 180F;
 			if(!this.world.isRemote && this.getMotion().lengthSquared() < 1.0E-7D) {
 				this.remove();
 			}

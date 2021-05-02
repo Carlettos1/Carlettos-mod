@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.Hand;
 
 public class PrumRangedAttackGoal<E extends MonsterEntity & IPrumRangedAttack> extends Goal{
 	private final E entity;

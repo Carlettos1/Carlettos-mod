@@ -7,7 +7,9 @@ import com.carlettos.mod.entidades.bihead.ia.BiHeadLookRandomlyGoal;
 import com.carlettos.mod.entidades.dummyboi.DummyBoiEntity;
 import com.carlettos.mod.entidades.interfaces.IHasFases;
 import com.carlettos.mod.entidades.prumytrak.PrumTrakMonsterEntity;
+import com.carlettos.mod.entidades.prumytrak.prum.IPrumRangedAttack;
 import com.carlettos.mod.entidades.prumytrak.prum.ia.PrumRangedAttackGoal;
+import com.carlettos.mod.entidades.prumytrak.trak.ITrakAOE;
 import com.carlettos.mod.entidades.prumytrak.trak.ia.TrakAOEAttackGoal;
 import com.carlettos.mod.listas.ListaAtributos;
 import com.carlettos.mod.listas.ListaItem;
@@ -65,7 +67,7 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1D, false));
 		this.goalSelector.addGoal(2, new PrumRangedAttackGoal<>(this, 20));
-		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 7D));
+		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 7D, 20));
 		this.goalSelector.addGoal(4, new BiHeadLookRandomlyGoal<>(this));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
@@ -151,7 +153,9 @@ public class PrumTrakEntity extends PrumTrakMonsterEntity implements IHasFases{
 	//TODO: AttackEntityFrom
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if(isInvulnerableTo(source)) {
+		if(source.getTrueSource() instanceof IPrumRangedAttack || source.getTrueSource() instanceof ITrakAOE ) {
+			return false;
+		} else if(isInvulnerableTo(source)) {
 			return false;
 		} else if(amount < 5F) {
 			return false;

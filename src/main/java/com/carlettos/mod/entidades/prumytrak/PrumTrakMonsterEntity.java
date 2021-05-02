@@ -69,6 +69,14 @@ public class PrumTrakMonsterEntity extends BiHeadMonsterEntity implements IPrumR
 		this.updateAOEProgress();
 		this.updateRangedProgress();
 	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if(source.getTrueSource() instanceof IPrumRangedAttack || source.getTrueSource() instanceof ITrakAOE ) {
+			return false;
+		}
+		return super.attackEntityFrom(source, amount);
+	}
 
 	@Override
 	public int getMaxAOEProgress() {

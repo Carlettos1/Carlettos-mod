@@ -18,14 +18,14 @@ import net.minecraft.world.World;
 public class PrumTrakHenchmanEntity extends PrumTrakMonsterEntity{
 	
 	public PrumTrakHenchmanEntity(EntityType<? extends PrumTrakHenchmanEntity> type, World worldIn) {
-		super(type, worldIn, 40, 20);
+		super(type, worldIn, 10, 10);
 	}
 	
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1D, false));
-		this.goalSelector.addGoal(2, new PrumRangedAttackGoal<>(this, 20));
-		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 3D));
+		this.goalSelector.addGoal(2, new PrumRangedAttackGoal<>(this, 30));
+		this.goalSelector.addGoal(3, new TrakAOEAttackGoal<>(this, true, 3D, 30));
 		this.goalSelector.addGoal(4, new BiHeadLookRandomlyGoal<>(this));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<DummyBoiEntity>(this, DummyBoiEntity.class, 0, true, false, DummyBoiEntity.PREDICATE));
 	}
