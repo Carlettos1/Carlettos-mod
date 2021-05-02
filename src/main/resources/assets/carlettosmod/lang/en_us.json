@@ -1,11 +1,16 @@
 {
   "item.carlettosmod.bola_ender_corrupta": "Corrupted Ender Ball",
   "item.carlettosmod.bloque_ender_corrupto": "Corrupted Ender Block",
+  
   "item.carlettosmod.prum_proyectil": "Prum Projectile",
   "item.carlettosmod.prum_y_trak_spawn_egg": "Prum and Trak Spawn Egg",
   "item.carlettosmod.trak_henchman_spawn_egg": "Trak Henchman Spawn Egg",
   "item.carlettosmod.prum_henchman_spawn_egg": "Prum Henchman Spawn Egg",
   "item.carlettosmod.prum_trak_henchman_spawn_egg": "Prum and Trak Henchman Spawn Egg",
+  
+  "item.carlettosmod.dummy_boi_spawn_egg": "Dummy Boi Spawn Egg",
+  "item.carlettosmod.aman_spawn_egg": "Aman Spawn Egg",
+  "item.carlettosmod.aman_spider_spawn_egg": "Aman Spider Spawn Egg",
   
   "item.carlettosmod.runa_aman": "Aman Rune",
   "item.carlettosmod.runa_dur": "Dur Rune",
