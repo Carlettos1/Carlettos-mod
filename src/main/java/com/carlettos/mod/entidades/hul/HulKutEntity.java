@@ -19,11 +19,13 @@ public class HulKutEntity extends MonsterEntity{
 
 	public HulKutEntity(EntityType<? extends HulKutEntity> type, World worldIn) {
 		super(type, worldIn);
+		this.indefiniciones.add(this);
 	}
 
 	public HulKutEntity(World worldIn, HulKutEntity hulkut) {
 		super(ListaEntidades.HUL_KUT, worldIn);
 		this.indefiniciones.add(hulkut);
+		hulkut.indefiniciones.add(this);
 		this.indefiniciones.addAll(hulkut.indefiniciones);
 		for (HulKutEntity hk : this.indefiniciones) {
 			hk.indefiniciones.add(this);
@@ -52,7 +54,7 @@ public class HulKutEntity extends MonsterEntity{
 	public void quantificar() {
 		HulKutEntity hulkut = new HulKutEntity(this.world, this);
 		this.indefiniciones.add(hulkut);
-		hulkut.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
+		hulkut.setPosition(this.getPosX() + (1 - 2 * this.getRNG().nextDouble()), this.getPosY(), this.getPosZ() + (1 - 2 * this.getRNG().nextDouble()));
 		this.world.addEntity(hulkut);
 	}
 	

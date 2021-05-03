@@ -37,7 +37,7 @@ public class ListaEntidades {
 		AMAN_SPIDER = EntityType.Builder.<AmanSpiderEntity>create(AmanSpiderEntity::new, EntityClassification.MONSTER).size(1.6F, 1.2F).build(Util.MOD_ID + ":aman_spider");
 		AMAN_SPIT = EntityType.Builder.<AmanSpitEntity>create(AmanSpitEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(Util.MOD_ID + ":aman_spit");
 		
-		HUL_KUT = EntityType.Builder.<HulKutEntity>create(HulKutEntity::new, EntityClassification.MONSTER).size(0.1F, 0.1F).build(Util.MOD_ID + ":hul_kut");
+		HUL_KUT = EntityType.Builder.<HulKutEntity>create(HulKutEntity::new, EntityClassification.MONSTER).size(0.1F, 0.7F).build(Util.MOD_ID + ":hul_kut");
 		
 		PRUM_Y_TRAK = EntityType.Builder.<PrumTrakEntity>create(PrumTrakEntity::new, EntityClassification.MONSTER).size(1.7f, 4.6f).build(Util.MOD_ID + ":prum_y_trak");
 		PRUM_PROYECTIL = EntityType.Builder.<PrumProyectilEntity>create(PrumProyectilEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10).build(Util.MOD_ID + ":prum_proyectil");
